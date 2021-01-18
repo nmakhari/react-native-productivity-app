@@ -6,8 +6,28 @@ const GROUP_SCHEMA: string = 'Group';
 const READING_SCHEMA: string = 'Reading';
 const TODO_SCHEMA: string = 'Todo';
 const READING_TODO_SCHEMA: string = 'ReadingTodo';
+const GROUP_TODO_SCHEMA: string = 'GroupTodo';
 
 // Schema declarations
+
+class GroupTodo extends Realm.Object {
+  static schema = {
+    name: GROUP_TODO_SCHEMA,
+    primaryKey: 'id',
+    properties: {
+      id: 'int', // primary key
+      name: 'string',
+      done: {type: 'bool', default: false},
+      points: 'int',
+      group: {
+        // points to an object (reverse one to many)
+        type: 'linkingObjects',
+        objectType: GROUP_SCHEMA,
+        property: 'items',
+      },
+    },
+  };
+}
 
 class ReadingTodo extends Realm.Object {
   static schema = {
@@ -37,12 +57,6 @@ class Todo extends Realm.Object {
       id: 'int', // primary key
       name: 'string',
       done: {type: 'bool', default: false},
-      group: {
-        // points to an object (reverse one to many)
-        type: 'linkingObjects',
-        objectType: GROUP_SCHEMA,
-        property: 'items',
-      },
     },
   };
 }
@@ -71,7 +85,7 @@ class Group extends Realm.Object {
       name: 'string',
       creationDate: 'date',
       description: 'string?',
-      items: {type: 'list', objectType: TODO_SCHEMA}, // to many relationship
+      items: {type: 'list', objectType: GROUP_TODO_SCHEMA}, // to many relationship
     },
   };
 }
@@ -89,5 +103,5 @@ class TodoList extends Realm.Object {
 }
 
 export default new Realm({
-  schema: [ReadingTodo, Todo, Group, Reading, TodoList],
+  schema: [GroupTodo, ReadingTodo, Todo, Group, Reading, TodoList],
 });
