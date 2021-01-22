@@ -1,18 +1,20 @@
 import Realm from 'realm';
 
 // schema name constants
-const TODO_LIST_SCHEMA: string = 'TodoList';
-const GROUP_SCHEMA: string = 'Group';
-const READING_SCHEMA: string = 'Reading';
-const TODO_SCHEMA: string = 'Todo';
-const READING_TODO_SCHEMA: string = 'ReadingTodo';
-const GROUP_TODO_SCHEMA: string = 'GroupTodo';
+export enum SchemaNames {
+  TODO_LIST_SCHEMA = 'TodoList',
+  GROUP_SCHEMA = 'Group',
+  READING_SCHEMA = 'Reading',
+  TODO_SCHEMA = 'Todo',
+  READING_TODO_SCHEMA = 'ReadingTodo',
+  GROUP_TODO_SCHEMA = 'GroupTodo',
+}
 
 // Schema declarations
 
-class GroupTodo extends Realm.Object {
-  static schema = {
-    name: GROUP_TODO_SCHEMA,
+export class GroupTodo extends Realm.Object {
+  static schema: Realm.ObjectSchema = {
+    name: SchemaNames.GROUP_TODO_SCHEMA,
     primaryKey: 'id',
     properties: {
       id: 'int', // primary key
@@ -22,16 +24,16 @@ class GroupTodo extends Realm.Object {
       group: {
         // points to an object (reverse one to many)
         type: 'linkingObjects',
-        objectType: GROUP_SCHEMA,
+        objectType: SchemaNames.GROUP_SCHEMA,
         property: 'items',
       },
     },
   };
 }
 
-class ReadingTodo extends Realm.Object {
-  static schema = {
-    name: READING_TODO_SCHEMA,
+export class ReadingTodo extends Realm.Object {
+  static schema: Realm.ObjectSchema = {
+    name: SchemaNames.READING_TODO_SCHEMA,
     primaryKey: 'id',
     properties: {
       id: 'int', // primary key
@@ -42,16 +44,16 @@ class ReadingTodo extends Realm.Object {
       reading: {
         // points to an object (reverse one to many)
         type: 'linkingObjects',
-        objectType: READING_SCHEMA,
+        objectType: SchemaNames.READING_SCHEMA,
         property: 'readings',
       },
     },
   };
 }
 
-class Todo extends Realm.Object {
-  static schema = {
-    name: TODO_SCHEMA,
+export class Todo extends Realm.Object {
+  static schema: Realm.ObjectSchema = {
+    name: SchemaNames.TODO_SCHEMA,
     primaryKey: 'id',
     properties: {
       id: 'int', // primary key
@@ -61,9 +63,9 @@ class Todo extends Realm.Object {
   };
 }
 
-class Reading extends Realm.Object {
-  static schema = {
-    name: READING_SCHEMA,
+export class Reading extends Realm.Object {
+  static schema: Realm.ObjectSchema = {
+    name: SchemaNames.READING_SCHEMA,
     primaryKey: 'id',
     properties: {
       id: 'int', // primary key
@@ -71,35 +73,45 @@ class Reading extends Realm.Object {
       creationDate: 'date',
       pagesComplete: 'int',
       pagesTotal: 'int',
-      readings: {type: 'list', objectType: READING_TODO_SCHEMA}, // to many relationship
+      readings: {type: 'list', objectType: SchemaNames.READING_TODO_SCHEMA}, // to many relationship
     },
   };
 }
 
-class Group extends Realm.Object {
-  static schema = {
-    name: GROUP_SCHEMA,
+export class Group extends Realm.Object {
+  static schema: Realm.ObjectSchema = {
+    name: SchemaNames.GROUP_SCHEMA,
     primaryKey: 'id', // primary key
     properties: {
       id: 'int',
       name: 'string',
       creationDate: 'date',
       description: 'string?',
-      items: {type: 'list', objectType: GROUP_TODO_SCHEMA}, // to many relationship
+      items: {type: 'list', objectType: SchemaNames.GROUP_TODO_SCHEMA}, // to many relationship
     },
   };
 }
 
-class TodoList extends Realm.Object {
-  static schema = {
-    name: TODO_LIST_SCHEMA,
+export class TodoList extends Realm.Object {
+  static schema: Realm.ObjectSchema = {
+    name: SchemaNames.TODO_LIST_SCHEMA,
     properties: {
       creationDate: 'date',
-      groups: {type: 'list', objectType: GROUP_SCHEMA},
-      readings: {type: 'list', objectType: READING_SCHEMA},
-      items: {type: 'list', objectType: TODO_SCHEMA},
+      groups: {type: 'list', objectType: SchemaNames.GROUP_SCHEMA},
+      readings: {type: 'list', objectType: SchemaNames.READING_SCHEMA},
+      items: {type: 'list', objectType: SchemaNames.TODO_SCHEMA},
     },
   };
+
+  // creationDate: Date;
+  // groups?: Realm.List<Group & Realm.Object>;
+  // readings?: Realm.List<Reading & Realm.Object>;
+  // items?: Realm.List<Todo & Realm.Object>;
+
+  // constructor() {
+  //   super();
+  //   this.creationDate = new Date();
+  // }
 }
 
 export default new Realm({
