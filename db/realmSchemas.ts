@@ -93,7 +93,7 @@ export class Group extends Realm.Object {
 }
 
 export class TodoList extends Realm.Object {
-  static schema: Realm.ObjectSchema = {
+  public static schema: Realm.ObjectSchema = {
     name: SchemaNames.TODO_LIST_SCHEMA,
     properties: {
       creationDate: 'date',
@@ -103,15 +103,23 @@ export class TodoList extends Realm.Object {
     },
   };
 
-  // creationDate: Date;
-  // groups?: Realm.List<Group & Realm.Object>;
-  // readings?: Realm.List<Reading & Realm.Object>;
-  // items?: Realm.List<Todo & Realm.Object>;
+  public creationDate: Date;
+  public groups?: Realm.List<Group & Realm.Object> | null;
+  public readings?: Realm.List<Reading & Realm.Object> | null;
+  public items?: Realm.List<Todo & Realm.Object> | null;
 
-  // constructor() {
-  //   super();
-  //   this.creationDate = new Date();
-  // }
+  constructor(
+    creationDate: Date,
+    groups?: Realm.List<Group & Realm.Object> | null,
+    readings?: Realm.List<Reading & Realm.Object> | null,
+    items?: Realm.List<Todo & Realm.Object> | null,
+  ) {
+    super();
+    this.creationDate = creationDate;
+    this.groups = groups;
+    this.readings = readings;
+    this.items = items;
+  }
 }
 
 export default new Realm({
