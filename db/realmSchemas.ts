@@ -232,4 +232,19 @@ export class TodoList extends Realm.Object {
 
 export default new Realm({
   schema: [GroupTodo, ReadingTodo, Todo, Group, Reading, TodoList],
+  schemaVersion: 1,
+  migration: (oldRealm, newRealm) => {
+    if (oldRealm.schemaVersion < 1) {
+      const oldGroups: Realm.Results<
+        Group & Realm.Object
+      > = oldRealm.objects<Group>(SchemaNames.GROUP_SCHEMA);
+      const newGroups: Realm.Results<
+        Group & Realm.Object
+      > = newRealm.objects<Group>(SchemaNames.GROUP_SCHEMA);
+
+      for (let i = 0; i < oldGroups.length; i++) {
+        newGroups[i].pointTotal = oldGroups[i].items?.sum('points') ?? 0;
+      }
+    }
+  },
 });

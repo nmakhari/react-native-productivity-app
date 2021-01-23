@@ -1,4 +1,3 @@
-import {Results} from 'realm';
 import realm, {
   SchemaNames,
   TodoList,
