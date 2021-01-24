@@ -15,17 +15,21 @@ export interface ITodoListStore {
   readonly todos?: Realm.List<Todo & Realm.Object> | null;
 
   createTodo(name: string): void;
+  getTodo(id: number): Todo | undefined;
   toggleTodoState(id: number): void;
   deleteTodo(id: number): void;
 
-  createGroup(name: string, pointTotal: number, description?: string): void;
+  createGroup(name: string, description?: string): void;
+  getGroup(id: number): Group | undefined;
   deleteGroup(id: number): void;
 
   createGroupTodo(name: string, points: number, group: Group): void;
+  getGroupTodo(id: number): GroupTodo | undefined;
   toggleGroupTodoState(id: number): void;
   deleteGroupTodo(id: number): void;
 
   createReading(name: string, pagesTotal: number, pagesComplete?: number): void;
+  getReading(id: number): Reading | undefined;
   deleteReading(id: number): void;
 
   // TODO: Add pointsCompleted property on groups + migration
@@ -62,7 +66,12 @@ export class TodoListStore implements ITodoListStore {
       | Realm.Results<Todo & Realm.Object>
       | undefined = this.todos?.sorted('id', true);
 
-    const id: number = orderedTodos ? orderedTodos[0].id + 1 : 1;
+    let id: number = 1;
+
+    if (orderedTodos) {
+      id = orderedTodos[0] ? orderedTodos[0].id + 1 : 1;
+    }
+
     const newTodo = new Todo(id, name, false);
 
     try {
@@ -74,11 +83,12 @@ export class TodoListStore implements ITodoListStore {
     }
   }
 
+  getTodo(id: number): Todo | undefined {
+    return realm.objectForPrimaryKey<Todo>(Todo.schema.name, id);
+  }
+
   toggleTodoState(id: number) {
-    const selectedTodo: Todo | undefined = realm.objectForPrimaryKey<Todo>(
-      Todo.schema.name,
-      id,
-    );
+    const selectedTodo: Todo | undefined = this.getTodo(id);
 
     if (selectedTodo) {
       try {
@@ -101,10 +111,7 @@ export class TodoListStore implements ITodoListStore {
   }
 
   deleteTodo(id: number) {
-    const selectedTodo: Todo | undefined = realm.objectForPrimaryKey<Todo>(
-      Todo.schema.name,
-      id,
-    );
+    const selectedTodo: Todo | undefined = this.getTodo(id);
 
     if (selectedTodo) {
       try {
@@ -126,12 +133,17 @@ export class TodoListStore implements ITodoListStore {
     console.log(kLogTag + ' error deleting todo, id: ' + id + ' not found');
   }
 
-  createGroup(name: string, pointTotal: number, description?: string) {
+  createGroup(name: string, description?: string) {
     const orderedGroups:
       | Realm.Results<Group & Realm.Object>
       | undefined = this.groups?.sorted('id', true);
 
-    const id: number = orderedGroups ? orderedGroups[0].id + 1 : 1;
+    let id: number = 1;
+
+    if (orderedGroups) {
+      id = orderedGroups[0] ? orderedGroups[0].id + 1 : 1;
+    }
+
     const newGroup: Group = new Group(id, name, new Date(), description);
 
     try {
@@ -143,11 +155,12 @@ export class TodoListStore implements ITodoListStore {
     }
   }
 
+  getGroup(id: number): Group | undefined {
+    return realm.objectForPrimaryKey<Group>(Group.schema.name, id);
+  }
+
   deleteGroup(id: number) {
-    const selectedGroup: Group | undefined = realm.objectForPrimaryKey<Group>(
-      Group.schema.name,
-      id,
-    );
+    const selectedGroup: Group | undefined = this.getGroup(id);
     if (selectedGroup) {
       try {
         realm.write(() => {
@@ -165,17 +178,19 @@ export class TodoListStore implements ITodoListStore {
   }
 
   createGroupTodo(name: string, points: number, group: Group) {
-    const selectedGroup: Group | undefined = realm.objectForPrimaryKey<Group>(
-      Group.schema.name,
-      group.id,
-    );
+    const selectedGroup: Group | undefined = this.getGroup(group.id);
 
     if (selectedGroup) {
       const orderedGroupTodos:
         | Realm.Results<GroupTodo & Realm.Object>
         | undefined = group.items?.sorted('id', true);
 
-      const id = orderedGroupTodos ? orderedGroupTodos[0].id + 1 : 1;
+      let id: number = 1;
+
+      if (orderedGroupTodos) {
+        id = orderedGroupTodos[0] ? orderedGroupTodos[0].id + 1 : 1;
+      }
+
       const newGroupTodo = new GroupTodo(id, name, points, group);
       try {
         realm.write(() => {
@@ -195,13 +210,12 @@ export class TodoListStore implements ITodoListStore {
     }
   }
 
+  getGroupTodo(id: number): GroupTodo | undefined {
+    return realm.objectForPrimaryKey<GroupTodo>(GroupTodo.schema.name, id);
+  }
+
   toggleGroupTodoState(id: number) {
-    const selectedGroupTodo:
-      | GroupTodo
-      | undefined = realm.objectForPrimaryKey<GroupTodo>(
-      GroupTodo.schema.name,
-      id,
-    );
+    const selectedGroupTodo: GroupTodo | undefined = this.getGroupTodo(id);
 
     if (selectedGroupTodo) {
       try {
@@ -224,12 +238,7 @@ export class TodoListStore implements ITodoListStore {
   }
 
   deleteGroupTodo(id: number) {
-    const selectedGroupTodo:
-      | GroupTodo
-      | undefined = realm.objectForPrimaryKey<GroupTodo>(
-      GroupTodo.schema.name,
-      id,
-    );
+    const selectedGroupTodo: GroupTodo | undefined = this.getGroupTodo(id);
 
     if (selectedGroupTodo) {
       try {
@@ -256,7 +265,12 @@ export class TodoListStore implements ITodoListStore {
       | Realm.Results<Reading & Realm.Object>
       | undefined = this.todoList.readings?.sorted('id', true);
 
-    const id: number = orderedReadings ? orderedReadings[0].id + 1 : 1;
+    let id: number = 1;
+
+    if (orderedReadings) {
+      id = orderedReadings[0] ? orderedReadings[0].id + 1 : 1;
+    }
+
     const newReading: Reading = new Reading(
       id,
       name,
@@ -276,10 +290,12 @@ export class TodoListStore implements ITodoListStore {
     }
   }
 
+  getReading(id: number): Reading | undefined {
+    return realm.objectForPrimaryKey<Reading>(Reading.schema.name, id);
+  }
+
   deleteReading(id: number) {
-    const selectedReading:
-      | Reading
-      | undefined = realm.objectForPrimaryKey<Reading>(Reading.schema.name, id);
+    const selectedReading: Reading | undefined = this.getReading(id);
 
     if (selectedReading) {
       try {
