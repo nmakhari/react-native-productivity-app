@@ -171,6 +171,7 @@ export class Group extends Realm.Object {
       name: 'string',
       creationDate: 'date',
       description: 'string?',
+      pointsCompleted: 'int',
       pointTotal: 'int',
       items: {type: 'list', objectType: SchemaNames.GROUP_TODO_SCHEMA}, // to many relationship
     },
@@ -180,6 +181,7 @@ export class Group extends Realm.Object {
   name: string;
   creationDate: Date;
   description?: string | null;
+  pointsCompleted: number;
   pointTotal: number;
   items?: Realm.List<GroupTodo & Realm.Object> | null;
 
@@ -193,6 +195,7 @@ export class Group extends Realm.Object {
     super();
     this.id = id;
     this.name = name;
+    this.pointsCompleted = items?.filtered('done = true').sum('points') ?? 0;
     this.pointTotal = items?.sum('points') ?? 0;
     this.creationDate = creationDate;
     this.description = description;
@@ -232,7 +235,7 @@ export class TodoList extends Realm.Object {
 
 export default new Realm({
   schema: [GroupTodo, ReadingTodo, Todo, Group, Reading, TodoList],
-  schemaVersion: 1,
+  schemaVersion: 2,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 1) {
       const oldGroups: Realm.Results<
@@ -244,6 +247,20 @@ export default new Realm({
 
       for (let i = 0; i < oldGroups.length; i++) {
         newGroups[i].pointTotal = oldGroups[i].items?.sum('points') ?? 0;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 2) {
+      const oldGroups: Realm.Results<
+        Group & Realm.Object
+      > = oldRealm.objects<Group>(SchemaNames.GROUP_SCHEMA);
+      const newGroups: Realm.Results<
+        Group & Realm.Object
+      > = newRealm.objects<Group>(SchemaNames.GROUP_SCHEMA);
+
+      for (let i = 0; i < oldGroups.length; i++) {
+        newGroups[i].pointsCompleted =
+          oldGroups[i].items?.filtered('done = true').sum('points') ?? 0;
       }
     }
   },

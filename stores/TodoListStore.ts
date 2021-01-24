@@ -32,8 +32,6 @@ export interface ITodoListStore {
   getReading(id: number): Reading | undefined;
   deleteReading(id: number): void;
 
-  // TODO: Add pointsCompleted property on groups + migration
-
   // TODO: propagate pages read and group todo points to the parent todo under create, toggle and delete
 
   // TODO: ReadingTodo crud
@@ -164,6 +162,7 @@ export class TodoListStore implements ITodoListStore {
     if (selectedGroup) {
       try {
         realm.write(() => {
+          realm.delete(selectedGroup.items);
           realm.delete(selectedGroup);
         });
       } catch (error) {
@@ -197,6 +196,7 @@ export class TodoListStore implements ITodoListStore {
           selectedGroup.items?.push(
             realm.create(GroupTodo.schema.name, newGroupTodo),
           );
+          selectedGroup.pointTotal += points;
         });
       } catch (error) {
         console.log(
@@ -221,6 +221,12 @@ export class TodoListStore implements ITodoListStore {
       try {
         realm.write(() => {
           selectedGroupTodo.done = !selectedGroupTodo.done;
+
+          if (selectedGroupTodo.done) {
+            selectedGroupTodo.group.pointsCompleted += selectedGroupTodo.points;
+          } else {
+            selectedGroupTodo.group.pointsCompleted -= selectedGroupTodo.points;
+          }
         });
       } catch (error) {
         console.log(
@@ -243,6 +249,10 @@ export class TodoListStore implements ITodoListStore {
     if (selectedGroupTodo) {
       try {
         realm.write(() => {
+          selectedGroupTodo.group.pointTotal -= selectedGroupTodo.points;
+          if (selectedGroupTodo.done) {
+            selectedGroupTodo.group.pointsCompleted -= selectedGroupTodo.points;
+          }
           realm.delete(selectedGroupTodo);
         });
       } catch (error) {
@@ -300,6 +310,7 @@ export class TodoListStore implements ITodoListStore {
     if (selectedReading) {
       try {
         realm.write(() => {
+          realm.delete(selectedReading.readings);
           realm.delete(selectedReading);
         });
       } catch (error) {
