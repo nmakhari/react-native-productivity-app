@@ -4,7 +4,7 @@ import realm, {
   Reading,
   Todo,
   GroupTodo,
-} from '../db/RealmSchemas';
+} from '../db/realmSchemas';
 
 const kLogTag = 'TodoListStore';
 
@@ -32,9 +32,7 @@ export interface ITodoListStore {
   getReading(id: number): Reading | undefined;
   deleteReading(id: number): void;
 
-  // TODO: propagate pages read and group todo points to the parent todo under create, toggle and delete
-
-  // TODO: ReadingTodo crud
+  // TODO: ReadingTodo crud + propagate to parent reading
 }
 
 export class TodoListStore implements ITodoListStore {
@@ -77,7 +75,7 @@ export class TodoListStore implements ITodoListStore {
         this.todoList.items?.push(realm.create(Todo.schema.name, newTodo));
       });
     } catch (error) {
-      console.log(kLogTag + ' error adding Todo');
+      console.log(kLogTag + ' error adding Todo' + ' error: ' + error);
     }
   }
 
@@ -204,10 +202,18 @@ export class TodoListStore implements ITodoListStore {
             ' error creating group todo name: ' +
             name +
             ' group name: ' +
-            group.name,
+            group.name +
+            ' error: ' +
+            error,
         );
       }
+      return;
     }
+    console.log(
+      kLogTag +
+        ' error couldnt find selected group to create groupTodo name: ' +
+        name,
+    );
   }
 
   getGroupTodo(id: number): GroupTodo | undefined {
@@ -218,14 +224,30 @@ export class TodoListStore implements ITodoListStore {
     const selectedGroupTodo: GroupTodo | undefined = this.getGroupTodo(id);
 
     if (selectedGroupTodo) {
+      const parentGroup: Group | undefined = this.getGroup(
+        selectedGroupTodo.group.id,
+      );
+
+      if (!parentGroup) {
+        console.log(
+          kLogTag +
+            ' error parent group of groupTodo name: ' +
+            selectedGroupTodo.name +
+            ' could not be found during toggle',
+        );
+        return;
+      }
+
       try {
         realm.write(() => {
           selectedGroupTodo.done = !selectedGroupTodo.done;
 
           if (selectedGroupTodo.done) {
-            selectedGroupTodo.group.pointsCompleted += selectedGroupTodo.points;
+            parentGroup.pointsCompleted += selectedGroupTodo.points;
+            console.log('incrementing group points on toggle');
           } else {
-            selectedGroupTodo.group.pointsCompleted -= selectedGroupTodo.points;
+            parentGroup.pointsCompleted -= selectedGroupTodo.points;
+            console.log('decrementing group points on toggle');
           }
         });
       } catch (error) {
@@ -237,6 +259,7 @@ export class TodoListStore implements ITodoListStore {
             id,
         );
       }
+      return;
     }
     console.log(
       kLogTag + ' error, could not find GroupTodo => id: ' + id + ' to toggle',
@@ -264,6 +287,7 @@ export class TodoListStore implements ITodoListStore {
             id,
         );
       }
+      return;
     }
     console.log(
       kLogTag + ' error, could not find GroupTodo => id: ' + id + ' to delete',
