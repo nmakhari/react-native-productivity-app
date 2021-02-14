@@ -33,12 +33,7 @@ export const ReadingTodoSchema: ObjectSchema = {
     pageStart: 'int',
     pageEnd: 'int',
     done: {type: 'bool', default: false},
-    reading: {
-      // points to an object (reverse one to many)
-      type: 'linkingObjects',
-      objectType: SchemaNames.READING_SCHEMA,
-      property: 'readings',
-    },
+    reading: SchemaNames.READING_SCHEMA.toString(),
   },
 };
 
@@ -59,7 +54,7 @@ export const ReadingSchema: ObjectSchema = {
     id: 'int', // primary key
     name: 'string',
     creationDate: 'date',
-    pagesComplete: 'int',
+    pagesComplete: {type: 'int', default: 0},
     pagesTotal: 'int',
     readings: {type: 'list', objectType: SchemaNames.READING_TODO_SCHEMA}, // to many relationship
   },

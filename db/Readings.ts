@@ -1,10 +1,12 @@
+import Realm from 'realm';
+
 export interface IReading {
   id: number;
   name: string;
   creationDate: Date;
   pagesComplete: number;
   pagesTotal: number;
-  readings: IReadingTodo[];
+  readings: Realm.List<IReadingTodo>;
 }
 
 export interface IReadingTodo {

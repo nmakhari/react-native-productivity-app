@@ -34,11 +34,19 @@ export interface ITodoListStore {
   toggleGroupTodoState(id: number): void;
   deleteGroupTodo(id: number): void;
 
-  // createReading(name: string, pagesTotal: number, pagesComplete?: number): void;
-  // getReading(id: number): IReading | undefined;
-  // deleteReading(id: number): void;
+  createReading(name: string, pagesTotal: number, pagesComplete?: number): void;
+  getReading(id: number): IReading | undefined;
+  deleteReading(id: number): void;
 
-  // TODO: ReadingTodo crud + propagate to parent reading
+  createReadingTodo(
+    name: string,
+    pageStart: number,
+    pageEnd: number,
+    reading: IReading,
+  ): void;
+  getReadingTodo(id: number): IReadingTodo | undefined;
+  toggleReadingTodoState(id: number): void;
+  deleteReadingTodo(id: number): void;
 }
 
 export class TodoListStore implements ITodoListStore {
@@ -289,10 +297,7 @@ export class TodoListStore implements ITodoListStore {
     if (selectedGroupTodo) {
       try {
         realm.write(() => {
-          const parentGroup = realm.objectForPrimaryKey<IGroup>(
-            GroupSchema.name,
-            selectedGroupTodo.group.id,
-          );
+          const parentGroup = this.getGroup(selectedGroupTodo.group.id);
           parentGroup!.pointsTotal -= selectedGroupTodo.points;
           if (selectedGroupTodo.done) {
             parentGroup!.pointsCompleted -= selectedGroupTodo.points;
@@ -315,59 +320,195 @@ export class TodoListStore implements ITodoListStore {
     );
   }
 
-  // createReading(name: string, pagesTotal: number, pagesComplete?: number) {
-  //   const orderedReadings:
-  //     | Realm.Results<Reading & Realm.Object>
-  //     | undefined = this.todoList.readings?.sorted('id', true);
+  createReading(name: string, pagesTotal: number, pagesComplete?: number) {
+    let id = 1;
 
-  //   let id: number = 1;
+    const currentReadings = this.todoList.readings;
 
-  //   if (orderedReadings) {
-  //     id = orderedReadings[0] ? orderedReadings[0].id + 1 : 1;
-  //   }
+    if (currentReadings.length > 0) {
+      id = currentReadings[0].id + 1;
+    }
 
-  //   const newReading: Reading = new Reading(
-  //     id,
-  //     name,
-  //     new Date(),
-  //     pagesTotal,
-  //     pagesComplete,
-  //   );
+    const newReading = {
+      id: id,
+      name: name,
+      creationDate: new Date(),
+      pagesTotal: pagesTotal,
+      pagesComplete: pagesComplete ?? 0,
+    };
 
-  //   try {
-  //     realm.write(() => {
-  //       this.todoList.readings?.push(
-  //         realm.create(Reading.schema.name, newReading),
-  //       );
-  //     });
-  //   } catch (error) {
-  //     console.log(kLogTag + ' error creating reading => name: ' + name);
-  //   }
-  // }
+    try {
+      realm.write(() => {
+        this.todoList.readings.push(
+          realm.create(ReadingSchema.name, newReading),
+        );
+      });
+    } catch (error) {
+      console.log(kLogTag + ' error creating reading => name: ' + name);
+    }
+  }
 
-  // getReading(id: number): Reading | undefined {
-  //   return realm.objectForPrimaryKey<Reading>(Reading.schema.name, id);
-  // }
+  getReading(id: number): IReading | undefined {
+    return realm.objectForPrimaryKey<IReading>(ReadingSchema.name, id);
+  }
 
-  // deleteReading(id: number) {
-  //   const selectedReading: Reading | undefined = this.getReading(id);
+  deleteReading(id: number) {
+    const selectedReading = this.getReading(id);
 
-  //   if (selectedReading) {
-  //     try {
-  //       realm.write(() => {
-  //         realm.delete(selectedReading.readings);
-  //         realm.delete(selectedReading);
-  //       });
-  //     } catch (error) {
-  //       console.log(kLogTag + ' error deleting reading => id: ' + id);
-  //     }
-  //     return;
-  //   }
+    if (selectedReading) {
+      try {
+        realm.write(() => {
+          realm.delete(selectedReading.readings);
+          realm.delete(selectedReading);
+        });
+      } catch (error) {
+        console.log(kLogTag + ' error deleting reading => id: ' + id);
+      }
+      return;
+    }
 
-  //   console.log(
-  //     kLogTag + ' could not find reading with id: ' + id + ' to delete',
-  //   );
-  // }
+    console.log(
+      kLogTag + ' could not find reading with id: ' + id + ' to delete',
+    );
+  }
+
+  createReadingTodo(
+    name: string,
+    pageStart: number,
+    pageEnd: number,
+    reading: IReading,
+  ) {
+    const selectedReading = this.getReading(reading.id);
+
+    if (selectedReading) {
+      let id = 1;
+
+      const currentReadingTodos = selectedReading.readings.sorted('id', true);
+
+      if (currentReadingTodos.length > 0) {
+        id = currentReadingTodos[0].id + 1;
+      }
+
+      const newReadingTodo = {
+        id: id,
+        name: name,
+        pageStart: pageStart,
+        pageEnd: pageEnd,
+        done: false,
+        reading: selectedReading,
+      };
+
+      try {
+        realm.write(() => {
+          selectedReading.readings.push(
+            realm.create(ReadingTodoSchema.name, newReadingTodo),
+          );
+        });
+      } catch (error) {
+        console.log(
+          kLogTag +
+            ' error creating reading todo with name: ' +
+            name +
+            ' id: ' +
+            id +
+            ' error: ' +
+            error,
+        );
+      }
+      return;
+    }
+    console.log(
+      kLogTag +
+        ' error could not find parent reading to create ReadingTodo with name: ' +
+        name,
+    );
+  }
+
+  getReadingTodo(id: number): IReadingTodo | undefined {
+    return realm.objectForPrimaryKey<IReadingTodo>(ReadingTodoSchema.name, id);
+  }
+
+  toggleReadingTodoState(id: number) {
+    const selectedReadingTodo = this.getReadingTodo(id);
+
+    if (selectedReadingTodo) {
+      const parentReading = this.getReading(selectedReadingTodo.reading.id);
+
+      if (!parentReading) {
+        console.log(
+          kLogTag +
+            ' error, could not find parent reading to toggle ReadingTodo name: ' +
+            selectedReadingTodo.name +
+            ' id: ' +
+            id +
+            ' parent reading id: ' +
+            id,
+        );
+        return;
+      }
+
+      try {
+        realm.write(() => {
+          selectedReadingTodo.done = !selectedReadingTodo.done;
+          if (selectedReadingTodo.done) {
+            parentReading.pagesComplete +=
+              selectedReadingTodo.pageEnd - selectedReadingTodo.pageStart;
+          } else {
+            parentReading.pagesComplete -=
+              selectedReadingTodo.pageEnd - selectedReadingTodo.pageStart;
+          }
+        });
+      } catch (error) {
+        console.log(
+          kLogTag +
+            ' error, could not toggle ReadingTodo name: ' +
+            selectedReadingTodo.name +
+            ' id: ' +
+            id +
+            ' error: ' +
+            error,
+        );
+      }
+      return;
+    }
+    console.log(
+      kLogTag +
+        ' error, could not find ReadingTodo with id: ' +
+        id +
+        ' to toggle',
+    );
+  }
+  deleteReadingTodo(id: number) {
+    const selectedReadingTodo = this.getReadingTodo(id);
+
+    if (selectedReadingTodo) {
+      try {
+        realm.write(() => {
+          const parentReading = this.getReading(selectedReadingTodo.reading.id);
+          if (selectedReadingTodo.done) {
+            parentReading!.pagesComplete -=
+              selectedReadingTodo.pageEnd - selectedReadingTodo.pageStart;
+          }
+          realm.delete(selectedReadingTodo);
+        });
+      } catch (error) {
+        console.log(
+          kLogTag +
+            ' error could not delete ReadingTodo with name: ' +
+            selectedReadingTodo.name +
+            ' error: ' +
+            error,
+        );
+      }
+      return;
+    }
+    console.log(
+      kLogTag +
+        ' error, could not find selected ReadingTodo with id: ' +
+        id +
+        ' to delete',
+    );
+  }
 
   @computed
   get groups(): Realm.List<IGroup> {
