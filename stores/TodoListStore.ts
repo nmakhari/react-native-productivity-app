@@ -25,14 +25,14 @@ export interface ITodoListStore {
   toggleTodoState(id: number): void;
   deleteTodo(id: number): void;
 
-  // createGroup(name: string, description?: string): void;
-  // getGroup(id: number): IGroup | undefined;
-  // deleteGroup(id: number): void;
+  createGroup(name: string, description?: string): void;
+  getGroup(id: number): IGroup | undefined;
+  deleteGroup(id: number): void;
 
-  // createGroupTodo(name: string, points: number, group: IGroup): void;
-  // getGroupTodo(id: number): IGroupTodo | undefined;
-  // toggleGroupTodoState(id: number): void;
-  // deleteGroupTodo(id: number): void;
+  createGroupTodo(name: string, points: number, group: IGroup): void;
+  getGroupTodo(id: number): IGroupTodo | undefined;
+  toggleGroupTodoState(id: number): void;
+  deleteGroupTodo(id: number): void;
 
   // createReading(name: string, pagesTotal: number, pagesComplete?: number): void;
   // getReading(id: number): IReading | undefined;
@@ -133,170 +133,187 @@ export class TodoListStore implements ITodoListStore {
     console.log(kLogTag + ' error deleting todo, id: ' + id + ' not found');
   }
 
-  // createGroup(name: string, description?: string) {
-  //   const orderedGroups:
-  //     | Realm.Results<Group & Realm.Object>
-  //     | undefined = this.groups?.sorted('id', true);
+  @action
+  createGroup(name: string, description?: string) {
+    let id = 1;
 
-  //   let id: number = 1;
+    const currentGroups = this.groups.sorted('id', true);
 
-  //   if (orderedGroups) {
-  //     id = orderedGroups[0] ? orderedGroups[0].id + 1 : 1;
-  //   }
+    if (currentGroups.length > 0) {
+      id = currentGroups[0].id + 1;
+    }
 
-  //   const newGroup: Group = new Group(id, name, new Date(), description);
+    const newGroup = {
+      id: id,
+      name: name,
+      creationDate: new Date(),
+      description: description,
+      pointsCompleted: 0,
+      pointsTotal: 0,
+      items: [],
+    };
 
-  //   try {
-  //     realm.write(() => {
-  //       this.todoList.groups?.push(realm.create(Group.schema.name, newGroup));
-  //     });
-  //   } catch (error) {
-  //     console.log(kLogTag + ' error creating group => name: ' + name);
-  //   }
-  // }
+    try {
+      realm.write(() => {
+        this.todoList.groups.push(realm.create(GroupSchema.name, newGroup));
+      });
+    } catch (error) {
+      console.log(
+        kLogTag + ' error creating group => name: ' + name + ' error: ' + error,
+      );
+    }
+  }
 
-  // getGroup(id: number): Group | undefined {
-  //   return realm.objectForPrimaryKey<Group>(Group.schema.name, id);
-  // }
+  getGroup(id: number): IGroup | undefined {
+    return realm.objectForPrimaryKey<IGroup>(GroupSchema.name, id);
+  }
 
-  // deleteGroup(id: number) {
-  //   const selectedGroup: Group | undefined = this.getGroup(id);
-  //   if (selectedGroup) {
-  //     try {
-  //       realm.write(() => {
-  //         realm.delete(selectedGroup.items);
-  //         realm.delete(selectedGroup);
-  //       });
-  //     } catch (error) {
-  //       console.log(kLogTag + ' error deleting group => id: ' + id);
-  //     }
-  //     return;
-  //   }
+  deleteGroup(id: number) {
+    const selectedGroup = this.getGroup(id);
 
-  //   console.log(
-  //     kLogTag + ' could not find group with id: ' + id + ' to delete',
-  //   );
-  // }
+    if (selectedGroup) {
+      try {
+        realm.write(() => {
+          realm.delete(selectedGroup.items);
+          realm.delete(selectedGroup);
+        });
+      } catch (error) {
+        console.log(kLogTag + ' error deleting group => id: ' + id);
+      }
+      return;
+    }
 
-  // createGroupTodo(name: string, points: number, group: Group) {
-  //   const selectedGroup: Group | undefined = this.getGroup(group.id);
+    console.log(
+      kLogTag + ' could not find group with id: ' + id + ' to delete',
+    );
+  }
 
-  //   if (selectedGroup) {
-  //     const orderedGroupTodos:
-  //       | Realm.Results<GroupTodo & Realm.Object>
-  //       | undefined = group.items?.sorted('id', true);
+  createGroupTodo(name: string, points: number, group: IGroup) {
+    const selectedGroup = this.getGroup(group.id);
 
-  //     let id: number = 1;
+    if (selectedGroup) {
+      let id = 1;
 
-  //     if (orderedGroupTodos) {
-  //       id = orderedGroupTodos[0] ? orderedGroupTodos[0].id + 1 : 1;
-  //     }
+      const currentGroupTodos = selectedGroup.items.sorted('id', true);
 
-  //     const newGroupTodo = new GroupTodo(id, name, points, group);
-  //     try {
-  //       realm.write(() => {
-  //         selectedGroup.items?.push(
-  //           realm.create(GroupTodo.schema.name, newGroupTodo),
-  //         );
-  //         selectedGroup.pointTotal += points;
-  //       });
-  //     } catch (error) {
-  //       console.log(
-  //         kLogTag +
-  //           ' error creating group todo name: ' +
-  //           name +
-  //           ' group name: ' +
-  //           group.name +
-  //           ' error: ' +
-  //           error,
-  //       );
-  //     }
-  //     return;
-  //   }
-  //   console.log(
-  //     kLogTag +
-  //       ' error couldnt find selected group to create groupTodo name: ' +
-  //       name,
-  //   );
-  // }
+      if (currentGroupTodos.length > 0) {
+        id = currentGroupTodos[0].id + 1;
+      }
 
-  // getGroupTodo(id: number): GroupTodo | undefined {
-  //   return realm.objectForPrimaryKey<GroupTodo>(GroupTodo.schema.name, id);
-  // }
+      const newGroupTodo = {
+        id: id,
+        name: name,
+        done: false,
+        points: points,
+        group: selectedGroup,
+      };
 
-  // toggleGroupTodoState(id: number) {
-  //   const selectedGroupTodo: GroupTodo | undefined = this.getGroupTodo(id);
+      try {
+        realm.write(() => {
+          selectedGroup.items.push(
+            realm.create(GroupTodoSchema.name, newGroupTodo),
+          );
+          selectedGroup.pointsTotal += points;
+        });
+      } catch (error) {
+        console.log(
+          kLogTag +
+            ' error creating group todo name: ' +
+            name +
+            ' group name: ' +
+            group.name +
+            ' error: ' +
+            error,
+        );
+      }
+      return;
+    }
+    console.log(
+      kLogTag +
+        ' error couldnt find selected group to create groupTodo name: ' +
+        name,
+    );
+  }
 
-  //   if (selectedGroupTodo) {
-  //     const parentGroup: Group | undefined = this.getGroup(
-  //       selectedGroupTodo.group.id,
-  //     );
+  getGroupTodo(id: number): IGroupTodo | undefined {
+    return realm.objectForPrimaryKey<IGroupTodo>(GroupTodoSchema.name, id);
+  }
 
-  //     if (!parentGroup) {
-  //       console.log(
-  //         kLogTag +
-  //           ' error parent group of groupTodo name: ' +
-  //           selectedGroupTodo.name +
-  //           ' could not be found during toggle',
-  //       );
-  //       return;
-  //     }
+  toggleGroupTodoState(id: number) {
+    const selectedGroupTodo = this.getGroupTodo(id);
 
-  //     try {
-  //       realm.write(() => {
-  //         selectedGroupTodo.done = !selectedGroupTodo.done;
+    if (selectedGroupTodo) {
+      const parentGroup = this.getGroup(selectedGroupTodo.group.id);
 
-  //         if (selectedGroupTodo.done) {
-  //           parentGroup.pointsCompleted += selectedGroupTodo.points;
-  //           console.log('incrementing group points on toggle');
-  //         } else {
-  //           parentGroup.pointsCompleted -= selectedGroupTodo.points;
-  //           console.log('decrementing group points on toggle');
-  //         }
-  //       });
-  //     } catch (error) {
-  //       console.log(
-  //         kLogTag +
-  //           ' error could not toggle GroupTodo with name: ' +
-  //           selectedGroupTodo.name +
-  //           ' id: ' +
-  //           id,
-  //       );
-  //     }
-  //     return;
-  //   }
-  //   console.log(
-  //     kLogTag + ' error, could not find GroupTodo => id: ' + id + ' to toggle',
-  //   );
-  // }
+      if (!parentGroup) {
+        console.log(
+          kLogTag +
+            ' error parent group of groupTodo name: ' +
+            selectedGroupTodo.name +
+            ' could not be found during toggle',
+        );
+        return;
+      }
 
-  // deleteGroupTodo(id: number) {
-  //   const selectedGroupTodo: GroupTodo | undefined = this.getGroupTodo(id);
+      try {
+        realm.write(() => {
+          selectedGroupTodo.done = !selectedGroupTodo.done;
 
-  //   if (selectedGroupTodo) {
-  //     try {
-  //       realm.write(() => {
-  //         selectedGroupTodo.group.pointTotal -= selectedGroupTodo.points;
-  //         if (selectedGroupTodo.done) {
-  //           selectedGroupTodo.group.pointsCompleted -= selectedGroupTodo.points;
-  //         }
-  //         realm.delete(selectedGroupTodo);
-  //       });
-  //     } catch (error) {
-  //       console.log(
-  //         kLogTag +
-  //           ' error could not delete GroupTodo with name: ' +
-  //           selectedGroupTodo.name +
-  //           ' id: ' +
-  //           id,
-  //       );
-  //     }
-  //     return;
-  //   }
-  //   console.log(
-  //     kLogTag + ' error, could not find GroupTodo => id: ' + id + ' to delete',
-  //   );
-  // }
+          if (selectedGroupTodo.done) {
+            parentGroup.pointsCompleted += selectedGroupTodo.points;
+            console.log('incrementing group points on toggle');
+          } else {
+            parentGroup.pointsCompleted -= selectedGroupTodo.points;
+            console.log('decrementing group points on toggle');
+          }
+        });
+      } catch (error) {
+        console.log(
+          kLogTag +
+            ' error could not toggle GroupTodo with name: ' +
+            selectedGroupTodo.name +
+            ' error: ' +
+            error,
+        );
+      }
+      return;
+    }
+    console.log(
+      kLogTag + ' error, could not find GroupTodo => id: ' + id + ' to toggle',
+    );
+  }
+
+  deleteGroupTodo(id: number) {
+    const selectedGroupTodo = this.getGroupTodo(id);
+
+    if (selectedGroupTodo) {
+      try {
+        realm.write(() => {
+          const parentGroup = realm.objectForPrimaryKey<IGroup>(
+            GroupSchema.name,
+            selectedGroupTodo.group.id,
+          );
+          parentGroup!.pointsTotal -= selectedGroupTodo.points;
+          if (selectedGroupTodo.done) {
+            parentGroup!.pointsCompleted -= selectedGroupTodo.points;
+          }
+          realm.delete(selectedGroupTodo);
+        });
+      } catch (error) {
+        console.log(
+          kLogTag +
+            ' error could not delete GroupTodo with name: ' +
+            selectedGroupTodo.name +
+            ' error: ' +
+            error,
+        );
+      }
+      return;
+    }
+    console.log(
+      kLogTag + ' error, could not find GroupTodo => id: ' + id + ' to delete',
+    );
+  }
 
   // createReading(name: string, pagesTotal: number, pagesComplete?: number) {
   //   const orderedReadings:

@@ -20,12 +20,7 @@ export const GroupTodoSchema: ObjectSchema = {
     name: 'string',
     done: {type: 'bool', default: false},
     points: 'int',
-    group: {
-      // points to an object (reverse one to many)
-      type: 'linkingObjects',
-      objectType: SchemaNames.GROUP_SCHEMA,
-      property: 'items',
-    },
+    group: SchemaNames.GROUP_SCHEMA.toString(),
   },
 };
 
@@ -79,7 +74,7 @@ export const GroupSchema: ObjectSchema = {
     creationDate: 'date',
     description: 'string?',
     pointsCompleted: 'int',
-    pointTotal: 'int',
+    pointsTotal: 'int',
     items: {type: 'list', objectType: SchemaNames.GROUP_TODO_SCHEMA}, // to many relationship
   },
 };
@@ -104,5 +99,5 @@ export default new Realm({
     TodoListSchema,
   ],
   deleteRealmIfMigrationNeeded: true,
-  schemaVersion: 3,
+  schemaVersion: 4,
 });

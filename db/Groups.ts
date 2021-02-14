@@ -1,3 +1,5 @@
+import Realm from 'realm';
+
 export interface IGroup {
   id: number;
   name: string;
@@ -5,7 +7,7 @@ export interface IGroup {
   description?: string;
   pointsCompleted: number;
   pointsTotal: number;
-  items: IGroupTodo[];
+  items: Realm.List<IGroupTodo>;
 }
 
 export interface IGroupTodo {
