@@ -323,7 +323,7 @@ export class TodoListStore implements ITodoListStore {
   createReading(name: string, pagesTotal: number, pagesComplete?: number) {
     let id = 1;
 
-    const currentReadings = this.todoList.readings;
+    const currentReadings = this.todoList.readings.sorted('id', true);
 
     if (currentReadings.length > 0) {
       id = currentReadings[0].id + 1;
@@ -344,7 +344,13 @@ export class TodoListStore implements ITodoListStore {
         );
       });
     } catch (error) {
-      console.log(kLogTag + ' error creating reading => name: ' + name);
+      console.log(
+        kLogTag +
+          ' error creating reading => name: ' +
+          name +
+          ' error: ' +
+          error,
+      );
     }
   }
 

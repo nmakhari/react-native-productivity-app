@@ -77,6 +77,51 @@ export default class App extends React.Component {
       }
     };
 
+    const onAddReadingPressed = () => {
+      store.createReading('test' + store.readings.length, 55);
+    };
+
+    const onDeleteReadingPressed = () => {
+      while (store.readings.length > 0) {
+        store.readings.forEach((reading) => {
+          if (reading) {
+            store.deleteReading(reading.id);
+          }
+        });
+      }
+    };
+
+    const onAddReadingTodoPressed = () => {
+      if (store.readings.length > 0) {
+        const parentReading = store.readings[0];
+        store.createReadingTodo(
+          'test' + parentReading.readings.length,
+          1,
+          20,
+          parentReading,
+        );
+      }
+    };
+
+    const onDeleteReadingTodoPressed = () => {
+      if (store.readings.length > 0) {
+        const parentReading = store.readings[0];
+        while (parentReading.readings.length > 0) {
+          parentReading.readings.forEach((reading) => {
+            if (reading) {
+              store.deleteReadingTodo(reading.id);
+            }
+          });
+        }
+      }
+    };
+
+    const onToggleReadingTodoPressed = () => {
+      if (store.readings.length > 0 && store.readings[0].readings.length > 0) {
+        store.toggleReadingTodoState(store.readings[0].readings[0].id);
+      }
+    };
+
     return (
       <View>
         <Text>TODOS:</Text>
@@ -113,6 +158,34 @@ export default class App extends React.Component {
         <Button
           title={'Toggle group todo'}
           onPress={onToggleGroupTodoPressed}
+        />
+        <Text>Reading:</Text>
+        <Text>
+          {store.readings.map(
+            (reading) =>
+              reading.name +
+              ' ' +
+              reading.pagesTotal +
+              ' ' +
+              reading.pagesComplete,
+          )}
+        </Text>
+        <Button title={'Add reading'} onPress={onAddReadingPressed} />
+        <Button title={'Delete reading'} onPress={onDeleteReadingPressed} />
+        <Text>ReadingTodo:</Text>
+        <Text>
+          {store.readings.length > 0
+            ? store.readings[0].readings.map((reading) => reading.name)
+            : ''}
+        </Text>
+        <Button title={'Add reading todo'} onPress={onAddReadingTodoPressed} />
+        <Button
+          title={'Delete reading todo'}
+          onPress={onDeleteReadingTodoPressed}
+        />
+        <Button
+          title={'Toggle reading todo'}
+          onPress={onToggleReadingTodoPressed}
         />
       </View>
     );
