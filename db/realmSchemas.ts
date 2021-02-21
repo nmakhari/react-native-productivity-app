@@ -1,4 +1,4 @@
-import Realm, {ObjectSchema} from 'realm';
+import Realm, { ObjectSchema } from 'realm';
 
 // schema name constants
 export enum SchemaNames {
@@ -18,7 +18,7 @@ export const GroupTodoSchema: ObjectSchema = {
   properties: {
     id: 'int', // primary key
     name: 'string',
-    done: {type: 'bool', default: false},
+    done: { type: 'bool', default: false },
     points: 'int',
     group: SchemaNames.GROUP_SCHEMA.toString(),
   },
@@ -32,7 +32,7 @@ export const ReadingTodoSchema: ObjectSchema = {
     name: 'string',
     pageStart: 'int',
     pageEnd: 'int',
-    done: {type: 'bool', default: false},
+    done: { type: 'bool', default: false },
     reading: SchemaNames.READING_SCHEMA.toString(),
   },
 };
@@ -43,7 +43,7 @@ export const TodoSchema: ObjectSchema = {
   properties: {
     id: 'int', // primary key
     name: 'string',
-    done: {type: 'bool', default: false},
+    done: { type: 'bool', default: false },
   },
 };
 
@@ -54,9 +54,9 @@ export const ReadingSchema: ObjectSchema = {
     id: 'int', // primary key
     name: 'string',
     creationDate: 'date',
-    pagesComplete: {type: 'int', default: 0},
+    pagesComplete: { type: 'int', default: 0 },
     pagesTotal: 'int',
-    readings: {type: 'list', objectType: SchemaNames.READING_TODO_SCHEMA}, // to many relationship
+    readings: { type: 'list', objectType: SchemaNames.READING_TODO_SCHEMA }, // to many relationship
   },
 };
 
@@ -70,7 +70,7 @@ export const GroupSchema: ObjectSchema = {
     description: 'string?',
     pointsCompleted: 'int',
     pointsTotal: 'int',
-    items: {type: 'list', objectType: SchemaNames.GROUP_TODO_SCHEMA}, // to many relationship
+    items: { type: 'list', objectType: SchemaNames.GROUP_TODO_SCHEMA }, // to many relationship
   },
 };
 
@@ -78,9 +78,9 @@ export const TodoListSchema: ObjectSchema = {
   name: SchemaNames.TODO_LIST_SCHEMA,
   properties: {
     creationDate: 'date',
-    groups: {type: 'list', objectType: SchemaNames.GROUP_SCHEMA},
-    readings: {type: 'list', objectType: SchemaNames.READING_SCHEMA},
-    items: {type: 'list', objectType: SchemaNames.TODO_SCHEMA},
+    groups: { type: 'list', objectType: SchemaNames.GROUP_SCHEMA },
+    readings: { type: 'list', objectType: SchemaNames.READING_SCHEMA },
+    items: { type: 'list', objectType: SchemaNames.TODO_SCHEMA },
   },
 };
 

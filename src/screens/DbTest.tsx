@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View, Button} from 'react-native';
-import {TodoListStore} from '../stores/TodoListStore';
-import {observer} from 'mobx-react';
+import { Text, View, Button } from 'react-native';
+import { TodoListStore } from '../../stores/TodoListStore';
+import { observer } from 'mobx-react';
 
 @observer
 export default class DbTest extends React.Component {

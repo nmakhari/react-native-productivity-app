@@ -6,11 +6,11 @@ import realm, {
   TodoSchema,
   TodoListSchema,
 } from '../db/realmSchemas';
-import {IGroup, IGroupTodo} from '../db/Groups';
-import {IReading, IReadingTodo} from '../db/Readings';
-import {ITodo} from '../db/Todo';
-import {ITodoList} from '../db/TodoList';
-import {observable, action, computed, runInAction} from 'mobx';
+import { IGroup, IGroupTodo } from '../db/Groups';
+import { IReading, IReadingTodo } from '../db/Readings';
+import { ITodo } from '../db/Todo';
+import { ITodoList } from '../db/TodoList';
+import { observable, action, computed, runInAction } from 'mobx';
 
 const kLogTag = 'TodoListStore';
 
