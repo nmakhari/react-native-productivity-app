@@ -35,7 +35,7 @@ export default class TabNatigator extends React.Component {
           name="InProgress"
           component={InProgressStackNavigator}
           options={{
-            tabBarLabel: 'Progress',
+            tabBarLabel: 'In Progress',
             tabBarIcon: ({ color }: { color: string }) => (
               <MaterialCommunityIcons
                 name="progress-check"

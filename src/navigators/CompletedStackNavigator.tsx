@@ -1,8 +1,26 @@
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { Text } from 'react-native';
+import { ViewItem } from '../screens/ViewItem';
+import { CompletedList } from '../screens/CompletedStackNavigatorScreens/CompletedList';
 
-export default class CompletedStackNavigator extends React.Component {
+export interface ICompletedStackNavigatorProps {}
+
+type CompletedStackNavigatorParamsList = {};
+
+export default class CompletedStackNavigator extends React.Component<ICompletedStackNavigatorProps> {
+  stack: any;
+
+  constructor(props: ICompletedStackNavigatorProps) {
+    super(props);
+    this.stack = createStackNavigator<CompletedStackNavigatorParamsList>();
+  }
+
   render() {
-    return <Text>CompletedStackNavigator</Text>;
+    return (
+      <this.stack.Navigator initialRouteName="CompletedList">
+        <this.stack.Screen name="CompletedList" component={CompletedList} />
+        <this.stack.Screen name="ViewItem" component={ViewItem} />
+      </this.stack.Navigator>
+    );
   }
 }
