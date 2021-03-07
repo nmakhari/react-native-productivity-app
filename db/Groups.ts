@@ -14,6 +14,7 @@ export interface IGroupTodo {
   id: number;
   name: string;
   done: boolean;
+  in_progress: boolean;
   points: number;
   group: IGroup;
 }

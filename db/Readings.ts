@@ -15,5 +15,6 @@ export interface IReadingTodo {
   pageStart: number;
   pageEnd: number;
   done: boolean;
+  in_progress: boolean;
   reading: IReading;
 }

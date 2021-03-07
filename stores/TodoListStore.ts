@@ -22,7 +22,8 @@ export interface ITodoListStore {
 
   createTodo(name: string): void;
   getTodo(id: number): ITodo | undefined;
-  toggleTodoState(id: number): void;
+  toggleTodoDoneState(id: number): void;
+  toggleTodoProgressState(id: number): void;
   deleteTodo(id: number): void;
 
   createGroup(name: string, description?: string): void;
@@ -31,7 +32,8 @@ export interface ITodoListStore {
 
   createGroupTodo(name: string, points: number, group: IGroup): void;
   getGroupTodo(id: number): IGroupTodo | undefined;
-  toggleGroupTodoState(id: number): void;
+  toggleGroupTodoDoneState(id: number): void;
+  toggleGroupTodoProgressState(id: number): void;
   deleteGroupTodo(id: number): void;
 
   createReading(name: string, pagesTotal: number, pagesComplete?: number): void;
@@ -45,7 +47,8 @@ export interface ITodoListStore {
     reading: IReading,
   ): void;
   getReadingTodo(id: number): IReadingTodo | undefined;
-  toggleReadingTodoState(id: number): void;
+  toggleReadingTodoDoneState(id: number): void;
+  toggleReadingTodoProgressState(id: number): void;
   deleteReadingTodo(id: number): void;
 }
 
@@ -78,6 +81,7 @@ export class TodoListStore implements ITodoListStore {
       id: id,
       name: name,
       done: false,
+      in_progress: false,
     };
 
     try {
@@ -94,18 +98,21 @@ export class TodoListStore implements ITodoListStore {
   }
 
   @action
-  toggleTodoState(id: number) {
+  toggleTodoDoneState(id: number) {
     const selectedTodo = this.getTodo(id);
 
     if (selectedTodo) {
       try {
         realm.write(() => {
           selectedTodo.done = !selectedTodo.done;
+          if (selectedTodo.done) {
+            selectedTodo.in_progress = false;
+          }
         });
       } catch (error) {
         console.log(
           kLogTag +
-            ' error toggling todo with name: ' +
+            ' error toggling todo done with name: ' +
             selectedTodo.name +
             ' id: ' +
             selectedTodo.id,
@@ -114,7 +121,38 @@ export class TodoListStore implements ITodoListStore {
       return;
     }
 
-    console.log(kLogTag + ' error toggling todo, id: ' + id + ' not found');
+    console.log(
+      kLogTag + ' error toggling todo done, id: ' + id + ' not found',
+    );
+  }
+
+  @action
+  toggleTodoProgressState(id: number) {
+    const selectedTodo = this.getTodo(id);
+
+    if (selectedTodo) {
+      try {
+        realm.write(() => {
+          selectedTodo.in_progress = !selectedTodo.in_progress;
+          if (selectedTodo.in_progress) {
+            selectedTodo.done = false;
+          }
+        });
+      } catch (error) {
+        console.log(
+          kLogTag +
+            ' error toggling todo progress with name: ' +
+            selectedTodo.name +
+            ' id ' +
+            selectedTodo,
+        );
+      }
+      return;
+    }
+
+    console.log(
+      kLogTag + ' error toggling todo progress, id: ' + id + ' not found',
+    );
   }
 
   @action
@@ -212,6 +250,7 @@ export class TodoListStore implements ITodoListStore {
         id: id,
         name: name,
         done: false,
+        in_progress: false,
         points: points,
         group: selectedGroup,
       };
@@ -247,7 +286,7 @@ export class TodoListStore implements ITodoListStore {
     return realm.objectForPrimaryKey<IGroupTodo>(GroupTodoSchema.name, id);
   }
 
-  toggleGroupTodoState(id: number) {
+  toggleGroupTodoDoneState(id: number) {
     const selectedGroupTodo = this.getGroupTodo(id);
 
     if (selectedGroupTodo) {
@@ -258,7 +297,7 @@ export class TodoListStore implements ITodoListStore {
           kLogTag +
             ' error parent group of groupTodo name: ' +
             selectedGroupTodo.name +
-            ' could not be found during toggle',
+            ' could not be found during toggle done',
         );
         return;
       }
@@ -269,16 +308,17 @@ export class TodoListStore implements ITodoListStore {
 
           if (selectedGroupTodo.done) {
             parentGroup.pointsCompleted += selectedGroupTodo.points;
-            console.log('incrementing group points on toggle');
+            console.log('incrementing group points on toggle done');
+            selectedGroupTodo.in_progress = false;
           } else {
             parentGroup.pointsCompleted -= selectedGroupTodo.points;
-            console.log('decrementing group points on toggle');
+            console.log('decrementing group points on toggle done');
           }
         });
       } catch (error) {
         console.log(
           kLogTag +
-            ' error could not toggle GroupTodo with name: ' +
+            ' error could not toggle GroupTodo done with name: ' +
             selectedGroupTodo.name +
             ' error: ' +
             error,
@@ -287,7 +327,53 @@ export class TodoListStore implements ITodoListStore {
       return;
     }
     console.log(
-      kLogTag + ' error, could not find GroupTodo => id: ' + id + ' to toggle',
+      kLogTag +
+        ' error, could not find GroupTodo => id: ' +
+        id +
+        ' to toggle done',
+    );
+  }
+
+  toggleGroupTodoProgressState(id: number) {
+    const selectedGroupTodo = this.getGroupTodo(id);
+
+    if (selectedGroupTodo) {
+      const parentGroup = this.getGroup(selectedGroupTodo.group.id);
+
+      if (!parentGroup) {
+        console.log(
+          kLogTag +
+            ' error parent group of groupTodo name: ' +
+            selectedGroupTodo.name +
+            ' could not be found during toggle progress',
+        );
+        return;
+      }
+
+      try {
+        realm.write(() => {
+          selectedGroupTodo.in_progress = !selectedGroupTodo.in_progress;
+
+          if (selectedGroupTodo.in_progress) {
+            selectedGroupTodo.done = false;
+          }
+        });
+      } catch (error) {
+        console.log(
+          kLogTag +
+            ' error could not toggle GroupTodo progress with name: ' +
+            selectedGroupTodo.name +
+            ' error: ' +
+            error,
+        );
+      }
+      return;
+    }
+    console.log(
+      kLogTag +
+        ' error, could not find GroupTodo => id: ' +
+        id +
+        ' to toggle progress',
     );
   }
 
@@ -401,6 +487,7 @@ export class TodoListStore implements ITodoListStore {
         pageStart: pageStart,
         pageEnd: pageEnd,
         done: false,
+        in_progress: false,
         reading: selectedReading,
       };
 
@@ -434,7 +521,7 @@ export class TodoListStore implements ITodoListStore {
     return realm.objectForPrimaryKey<IReadingTodo>(ReadingTodoSchema.name, id);
   }
 
-  toggleReadingTodoState(id: number) {
+  toggleReadingTodoDoneState(id: number) {
     const selectedReadingTodo = this.getReadingTodo(id);
 
     if (selectedReadingTodo) {
@@ -443,7 +530,7 @@ export class TodoListStore implements ITodoListStore {
       if (!parentReading) {
         console.log(
           kLogTag +
-            ' error, could not find parent reading to toggle ReadingTodo name: ' +
+            ' error, could not find parent reading to toggle ReadingTodo done name: ' +
             selectedReadingTodo.name +
             ' id: ' +
             id +
@@ -459,6 +546,7 @@ export class TodoListStore implements ITodoListStore {
           if (selectedReadingTodo.done) {
             parentReading.pagesComplete +=
               selectedReadingTodo.pageEnd - selectedReadingTodo.pageStart;
+            selectedReadingTodo.in_progress = false;
           } else {
             parentReading.pagesComplete -=
               selectedReadingTodo.pageEnd - selectedReadingTodo.pageStart;
@@ -467,7 +555,7 @@ export class TodoListStore implements ITodoListStore {
       } catch (error) {
         console.log(
           kLogTag +
-            ' error, could not toggle ReadingTodo name: ' +
+            ' error, could not toggle ReadingTodo done, name: ' +
             selectedReadingTodo.name +
             ' id: ' +
             id +
@@ -481,9 +569,57 @@ export class TodoListStore implements ITodoListStore {
       kLogTag +
         ' error, could not find ReadingTodo with id: ' +
         id +
-        ' to toggle',
+        ' to toggle done',
     );
   }
+
+  toggleReadingTodoProgressState(id: number) {
+    const selectedReadingTodo = this.getReadingTodo(id);
+
+    if (selectedReadingTodo) {
+      const parentReading = this.getReading(selectedReadingTodo.reading.id);
+
+      if (!parentReading) {
+        console.log(
+          kLogTag +
+            ' error, could not find parent reading to toggle ReadingTodo progress name: ' +
+            selectedReadingTodo.name +
+            ' id: ' +
+            id +
+            ' parent reading id: ' +
+            id,
+        );
+        return;
+      }
+
+      try {
+        realm.write(() => {
+          selectedReadingTodo.in_progress = !selectedReadingTodo.in_progress;
+          if (selectedReadingTodo.in_progress) {
+            selectedReadingTodo.done = false;
+          }
+        });
+      } catch (error) {
+        console.log(
+          kLogTag +
+            ' error, could not toggle ReadingTodo progress, name: ' +
+            selectedReadingTodo.name +
+            ' id: ' +
+            id +
+            ' error: ' +
+            error,
+        );
+      }
+      return;
+    }
+    console.log(
+      kLogTag +
+        ' error, could not find ReadingTodo with id: ' +
+        id +
+        ' to toggle progress',
+    );
+  }
+
   deleteReadingTodo(id: number) {
     const selectedReadingTodo = this.getReadingTodo(id);
 

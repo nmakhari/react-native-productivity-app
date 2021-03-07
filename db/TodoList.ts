@@ -1,6 +1,6 @@
-import {IGroup} from './Groups';
-import {IReading} from './Readings';
-import {ITodo} from './Todo';
+import { IGroup } from './Groups';
+import { IReading } from './Readings';
+import { ITodo } from './Todo';
 import Realm from 'realm';
 
 export interface ITodoList {

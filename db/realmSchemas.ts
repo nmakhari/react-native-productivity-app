@@ -19,6 +19,7 @@ export const GroupTodoSchema: ObjectSchema = {
     id: 'int', // primary key
     name: 'string',
     done: { type: 'bool', default: false },
+    in_progress: { type: 'bool', default: false },
     points: 'int',
     group: SchemaNames.GROUP_SCHEMA.toString(),
   },
@@ -33,6 +34,7 @@ export const ReadingTodoSchema: ObjectSchema = {
     pageStart: 'int',
     pageEnd: 'int',
     done: { type: 'bool', default: false },
+    in_progress: { type: 'bool', default: false },
     reading: SchemaNames.READING_SCHEMA.toString(),
   },
 };
@@ -44,6 +46,7 @@ export const TodoSchema: ObjectSchema = {
     id: 'int', // primary key
     name: 'string',
     done: { type: 'bool', default: false },
+    in_progress: { type: 'bool', default: false },
   },
 };
 
