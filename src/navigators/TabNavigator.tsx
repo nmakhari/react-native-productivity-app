@@ -5,6 +5,7 @@ import InProgressStackNavigator from './InProgressStackNavigator';
 import CompletedStackNavigator from './CompletedStackNavigator';
 import { StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Colors } from '../shared/Colors';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -14,8 +15,8 @@ export default class TabNatigator extends React.Component {
       <Tab.Navigator
         initialRouteName="Todo"
         shifting={true}
-        activeColor="#00e676"
-        inactiveColor="#66ffa6"
+        activeColor={Colors.secondaryGreen}
+        inactiveColor={Colors.secondaryGreenLight}
         barStyle={Styles.NavigationBar}>
         <Tab.Screen
           name="Todo"
@@ -66,6 +67,6 @@ export default class TabNatigator extends React.Component {
 
 const Styles = StyleSheet.create({
   NavigationBar: {
-    backgroundColor: '#424242',
+    backgroundColor: Colors.primaryGrey,
   },
 });
