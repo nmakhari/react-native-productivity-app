@@ -20,6 +20,18 @@ export interface ITodoListStore {
   readonly readings: Realm.List<IReading>;
   readonly todos: Realm.List<ITodo>;
 
+  readonly pendingTodos: Realm.Results<ITodo>;
+  readonly pendingGroups: Realm.Results<IGroup>;
+  readonly pendingReadings: Realm.Results<IReading>;
+
+  readonly inProgressTodos: Realm.Results<ITodo>;
+  readonly inProgressGroups: Realm.Results<IGroup>;
+  readonly inProgressReadings: Realm.Results<IReading>;
+
+  readonly completedTodos: Realm.Results<ITodo>;
+  readonly completedGroups: Realm.Results<IGroup>;
+  readonly completedReadings: Realm.Results<IReading>;
+
   createTodo(name: string): void;
   getTodo(id: number): ITodo | undefined;
   toggleTodoDoneState(id: number): void;
@@ -668,6 +680,70 @@ export class TodoListStore implements ITodoListStore {
   get todos(): Realm.List<ITodo> {
     console.log(kLogTag + ' get Todos');
     return this.todoList.items;
+  }
+
+  @computed
+  get pendingTodos(): Realm.Results<ITodo> {
+    return this.todos.filtered(
+      'done = false AND in_progress = false SORT(id DESC)',
+    );
+  }
+  // SUBQUERY on Collection:
+  // https://docs.mongodb.com/realm-legacy/docs/javascript/latest/api/tutorial-query-language.html
+  @computed
+  get pendingGroups(): Realm.Results<IGroup> {
+    return this.groups.filtered(
+      'SUBQUERY(items, $item, $item.done = false AND $item.in_progress = false).@count > 0 SORT(id DESC)',
+    );
+  }
+
+  @computed
+  get pendingReadings(): Realm.Results<IReading> {
+    return this.readings.filtered(
+      'SUBQUERY(readings, $reading, $reading.done = false AND $reading.in_progress = false).@count > 0 SORT(id DESC)',
+    );
+  }
+
+  @computed
+  get inProgressTodos(): Realm.Results<ITodo> {
+    return this.todos.filtered(
+      'done = false AND in_progress = true SORT(id DESC)',
+    );
+  }
+
+  @computed
+  get inProgressGroups(): Realm.Results<IGroup> {
+    return this.groups.filtered(
+      'SUBQUERY(items, $item, $item.done = false AND $item.in_progress = true).@count > 0 SORT(id DESC)',
+    );
+  }
+
+  @computed
+  get inProgressReadings(): Realm.Results<IReading> {
+    return this.readings.filtered(
+      'SUBQUERY(readings, $reading, $reading.done = false AND $reading.in_progress = true).@count > 0 SORT(id DESC)',
+    );
+  }
+
+  @computed
+  get completedTodos(): Realm.Results<ITodo> {
+    return this.todos.filtered(
+      'done = true AND in_progress = false SORT(id DESC)',
+    );
+  }
+
+  @computed
+  get completedGroups(): Realm.Results<IGroup> {
+    return this.groups.filtered(
+      'SUBQUERY(items, $item, $item.done = true AND $item.in_progress = false).@count > 0 SORT(id DESC)',
+    );
+  }
+
+  @computed
+  get completedReadings(): Realm.Results<IReading> {
+    return this.readings.filtered(
+      'SUBQUERY(readings, $reading, $reading.done = true AND $reading.in_progress = false).@count > 0 SORT(id DESC)',
+    );
   }
 
   private _initTodoList() {
