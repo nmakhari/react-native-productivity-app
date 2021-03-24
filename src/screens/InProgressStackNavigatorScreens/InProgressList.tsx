@@ -7,7 +7,7 @@ export class InProgressList extends React.Component {
   render() {
     return (
       <>
-        <Text>InProgressList SCREEN</Text>
+        <Text>InProgressList screen</Text>
         <Card
           title={'InProgressList'}
           description={'InProgressList description'}

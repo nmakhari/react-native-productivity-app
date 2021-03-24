@@ -4,10 +4,30 @@ import { TodoList } from '../screens/TodoStackNavigatorScreens/TodoList';
 import { ViewItem } from '../screens/ViewItem';
 import { AddItem } from '../screens/TodoStackNavigatorScreens/AddItem';
 import { EditItem } from '../screens/TodoStackNavigatorScreens/EditItem';
+import { ITodoListStore } from '../../stores/TodoListStore';
+import { DisplayItem } from '../components/DisplayList';
+import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
+import { TabNavigatorParamList } from './TabNavigator';
+import { RouteProp } from '@react-navigation/native';
 
-export interface ITodoStackNavigatorProps {}
+type TodoStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
+  TabNavigatorParamList,
+  'Todo'
+>;
 
-type TodoStackNavigatorParamList = {};
+type TodoStackNavigatorRouteProp = RouteProp<TabNavigatorParamList, 'Todo'>;
+
+export interface ITodoStackNavigatorProps {
+  navigation: TodoStackNavigatorNavigationProp;
+  route: TodoStackNavigatorRouteProp;
+}
+
+export type TodoStackNavigatorParamList = {
+  TodoList: { todoListStore: ITodoListStore };
+  ViewItem: { item: DisplayItem };
+  AddItem: { todoListStore: ITodoListStore };
+  EditItem: { todoListStore: ITodoListStore; item: DisplayItem };
+};
 
 export default class TodoStackNavigator extends React.Component<ITodoStackNavigatorProps> {
   stack: any;
@@ -18,12 +38,25 @@ export default class TodoStackNavigator extends React.Component<ITodoStackNaviga
   }
 
   render() {
+    const todoListStore = this.props.route.params.todoListStore;
     return (
       <this.stack.Navigator initialRouteName="TodoList">
-        <this.stack.Screen name="TodoList" component={TodoList} />
+        <this.stack.Screen
+          name="TodoList"
+          component={TodoList}
+          initialParams={{ todoListStore: todoListStore }}
+        />
         <this.stack.Screen name="ViewItem" component={ViewItem} />
-        <this.stack.Screen name="AddItem" component={AddItem} />
-        <this.stack.Screen name="EditItem" component={EditItem} />
+        <this.stack.Screen
+          name="AddItem"
+          component={AddItem}
+          initialParams={{ todoListStore: todoListStore }}
+        />
+        <this.stack.Screen
+          name="EditItem"
+          component={EditItem}
+          initialParams={{ todoListStore: todoListStore }}
+        />
       </this.stack.Navigator>
     );
   }

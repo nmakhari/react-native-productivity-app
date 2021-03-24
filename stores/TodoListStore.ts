@@ -62,6 +62,8 @@ export interface ITodoListStore {
   toggleReadingTodoDoneState(id: number): void;
   toggleReadingTodoProgressState(id: number): void;
   deleteReadingTodo(id: number): void;
+
+  wipeTodoList(): void;
 }
 
 export class TodoListStore implements ITodoListStore {
@@ -76,6 +78,17 @@ export class TodoListStore implements ITodoListStore {
       }
 
       console.log(kLogTag + ' todo list initialized');
+    });
+  }
+
+  // Completely clear out the current todolist of all child elements
+  wipeTodoList() {
+    realm.write(() => {
+      realm.delete(realm.objects<ITodo>(TodoSchema.name));
+      realm.delete(realm.objects<IReadingTodo>(ReadingTodoSchema.name));
+      realm.delete(realm.objects<IReading>(ReadingSchema.name));
+      realm.delete(realm.objects<IGroupTodo>(GroupTodoSchema.name));
+      realm.delete(realm.objects<IGroup>(GroupSchema.name));
     });
   }
 
