@@ -2,8 +2,29 @@ import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { Colors } from '../../shared/Colors';
 import Card from '../../components/Card';
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
+import { TabNavigatorParamList } from '../../navigators/TabNavigator';
+import { RouteProp } from '@react-navigation/native';
+import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
 
-export class InProgressList extends React.Component {
+type InProgressScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<InProgressStackNavigatorParamsList, 'InProgressList'>,
+  MaterialBottomTabNavigationProp<TabNavigatorParamList>
+>;
+
+type InProgressListScreenRouteProp = RouteProp<
+  InProgressStackNavigatorParamsList,
+  'InProgressList'
+>;
+
+export interface IInProgressListProps {
+  navigation: InProgressScreenNavigationProp;
+  route: InProgressListScreenRouteProp;
+}
+
+export class InProgressList extends React.Component<IInProgressListProps> {
   render() {
     return (
       <>

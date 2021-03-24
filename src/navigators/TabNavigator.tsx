@@ -2,7 +2,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import React, { FunctionComponent } from 'react';
 import TodoStackNavigator from './TodoStackNavigator';
 import InProgressStackNavigator from './InProgressStackNavigator';
-import CompletedStackNavigator from './CompletedStackNavigator';
+import { CompletedStackNavigator } from './CompletedStackNavigator';
 import { StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../shared/Colors';
