@@ -3,6 +3,12 @@ import { IReading } from '../../db/Readings';
 import { ITodo } from '../../db/Todo';
 import { IDisplayItemSection } from '../components/DisplayList';
 
+export enum SectionTitles {
+  Groups = 'Groups',
+  Todos = 'Todos',
+  Readings = 'Readings',
+}
+
 // Section Ordering default = Groups => Todo => Readings
 export default function formatSections(
   todos?: Realm.Results<ITodo>,
@@ -13,7 +19,7 @@ export default function formatSections(
 
   if (groups && groups.length > 0) {
     let section: IDisplayItemSection = {
-      title: 'Groups',
+      title: SectionTitles.Groups.toString(),
       data: [],
     };
     groups.forEach((group) => {
@@ -25,7 +31,7 @@ export default function formatSections(
 
   if (todos && todos.length > 0) {
     let section: IDisplayItemSection = {
-      title: 'Todos',
+      title: SectionTitles.Todos.toString(),
       data: [],
     };
     todos.forEach((todo) => {
@@ -37,7 +43,7 @@ export default function formatSections(
 
   if (readings && readings.length > 0) {
     let section: IDisplayItemSection = {
-      title: 'Readings',
+      title: SectionTitles.Readings.toString(),
       data: [],
     };
     readings.forEach((reading) => {

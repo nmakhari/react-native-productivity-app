@@ -4,6 +4,10 @@ import { Colors } from '../shared/Colors';
 import { IGroup } from '../../db/Groups';
 import { IReading } from '../../db/Readings';
 import { ITodo } from '../../db/Todo';
+import { SectionTitles } from '../shared/FormatSections';
+import TodoCard from '../components/TodoCard';
+import GroupCard from '../components/GroupCard';
+import ReadingCard from '../components/ReadingCard';
 
 export type DisplayItem = IGroup | IReading | ITodo;
 
@@ -28,26 +32,40 @@ export default class DisplayList extends React.Component<IDisplayListProps> {
     );
   }
 
+  // The default case is a reading, it was written as default in order to keep the
+  // function type as JSX.Element instead of JSX.Element | undefined
   private renderItem = ({
     item,
     section,
   }: {
     item: DisplayItem;
     section: SectionListData<DisplayItem, IDisplayItemSection>;
-  }) => <Text>ITEM</Text>;
+  }) => {
+    switch (section.title) {
+      case SectionTitles.Groups.toString():
+        return <GroupCard group={item as IGroup} />;
+      case SectionTitles.Todos.toString():
+        return <TodoCard todo={item as ITodo} />;
+      default:
+        return <ReadingCard reading={item as IReading} />;
+    }
+  };
 
   private renderSectionHeader = ({
     section,
   }: {
     section: IDisplayItemSection;
-  }) => <Text>{section.title}</Text>;
+  }) => <Text style={Styles.sectionHeaderText}>{section.title}</Text>;
 }
 
 const Styles = StyleSheet.create({
-  rightContent: {
-    color: Colors.secondaryGreen,
-  },
   list: {
     backgroundColor: Colors.primaryGreyLight,
+  },
+  sectionHeaderText: {
+    fontSize: 35,
+    color: 'white',
+    marginLeft: 20,
+    fontWeight: 'bold',
   },
 });
