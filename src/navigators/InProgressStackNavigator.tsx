@@ -44,6 +44,7 @@ export default class InProgressStackNavigator extends React.Component<IInProgres
           name="InProgressList"
           component={InProgressList}
           initialParams={{ todoListStore: todoListStore }}
+          options={{ headerShown: false }}
         />
         <this.stack.Screen name="ViewItem" component={ViewItem} />
       </this.stack.Navigator>

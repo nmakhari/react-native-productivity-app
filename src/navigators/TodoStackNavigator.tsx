@@ -45,6 +45,7 @@ export default class TodoStackNavigator extends React.Component<ITodoStackNaviga
           name="TodoList"
           component={TodoList}
           initialParams={{ todoListStore: todoListStore }}
+          options={{ headerShown: false }}
         />
         <this.stack.Screen name="ViewItem" component={ViewItem} />
         <this.stack.Screen

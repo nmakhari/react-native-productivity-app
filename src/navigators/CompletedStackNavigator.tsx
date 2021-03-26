@@ -44,6 +44,7 @@ export class CompletedStackNavigator extends React.Component<ICompletedStackNavi
           name="CompletedList"
           component={CompletedList}
           initialParams={{ todoListStore: todoListStore }}
+          options={{ headerShown: false }}
         />
         <this.stack.Screen name="ViewItem" component={ViewItem} />
       </this.stack.Navigator>

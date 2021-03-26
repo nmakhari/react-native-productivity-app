@@ -63,7 +63,7 @@ const Styles = StyleSheet.create({
     backgroundColor: Colors.primaryGrey,
   },
   sectionHeaderText: {
-    fontSize: 35,
+    fontSize: 32,
     color: 'white',
     marginLeft: 20,
     fontWeight: 'bold',
