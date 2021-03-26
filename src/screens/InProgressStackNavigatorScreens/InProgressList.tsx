@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { Colors } from '../../shared/Colors';
-import Card from '../../components/Card';
+import { StyleSheet, View } from 'react-native';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { TabNavigatorParamList } from '../../navigators/TabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
+import { computed } from 'mobx';
+import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
+import formatSections from '../../shared/FormatSections';
+import { Colors } from '../../shared/Colors';
 
 type InProgressScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<InProgressStackNavigatorParamsList, 'InProgressList'>,
@@ -27,22 +29,27 @@ export interface IInProgressListProps {
 export class InProgressList extends React.Component<IInProgressListProps> {
   render() {
     return (
-      <>
-        <Text>InProgressList screen</Text>
-        <Card
-          title={'InProgressList'}
-          description={'InProgressList description'}
-          rightContent={
-            <Text style={Styles.rightContent}>InProgress RIGHT</Text>
-          }
-        />
-      </>
+      <View style={Styles.root}>
+        <DisplayList data={this.inProgressListData} />
+      </View>
     );
+  }
+
+  @computed
+  private get inProgressListData(): IDisplayItemSection[] {
+    const todoListStore = this.props.route.params.todoListStore;
+    const todos = todoListStore.inProgressTodos;
+    const groups = todoListStore.inProgressGroups;
+    const readings = todoListStore.inProgressReadings;
+
+    return formatSections(todos, groups, readings);
   }
 }
 
 const Styles = StyleSheet.create({
-  rightContent: {
-    color: Colors.secondaryGreen,
+  root: {
+    flex: 1,
+    paddingBottom: 15,
+    backgroundColor: Colors.primaryGrey,
   },
 });

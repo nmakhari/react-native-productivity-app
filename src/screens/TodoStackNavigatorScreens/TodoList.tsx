@@ -9,6 +9,8 @@ import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { TabNavigatorParamList } from '../../navigators/TabNavigator';
 import { RouteProp } from '@react-navigation/native';
+import { StyleSheet, View } from 'react-native';
+import { Colors } from '../../shared/Colors';
 
 type TodoListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<TodoStackNavigatorParamList, 'TodoList'>,
@@ -29,9 +31,9 @@ export interface ITodoListProps {
 export class TodoList extends React.Component<ITodoListProps> {
   render() {
     return (
-      <>
+      <View style={Styles.root}>
         <DisplayList data={this.todoListData} />
-      </>
+      </View>
     );
   }
 
@@ -45,3 +47,11 @@ export class TodoList extends React.Component<ITodoListProps> {
     return formatSections(todos, groups, readings);
   }
 }
+
+const Styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    paddingBottom: 15,
+    backgroundColor: Colors.primaryGrey,
+  },
+});

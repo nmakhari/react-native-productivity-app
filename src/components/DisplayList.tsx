@@ -60,7 +60,7 @@ export default class DisplayList extends React.Component<IDisplayListProps> {
 
 const Styles = StyleSheet.create({
   list: {
-    backgroundColor: Colors.primaryGreyLight,
+    backgroundColor: Colors.primaryGrey,
   },
   sectionHeaderText: {
     fontSize: 35,
