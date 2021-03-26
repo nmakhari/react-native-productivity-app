@@ -4,7 +4,8 @@ import { IGroup } from '../../db/Groups';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../shared/Colors';
-import { Text, StyleSheet } from 'react-native';
+import { Text } from 'react-native';
+import SharedStyles from '../shared/SharedStyles';
 
 export interface IGroupCardProps {
   group: IGroup;
@@ -36,7 +37,7 @@ const getRightContent = (group: IGroup) => {
       rotation={0}
       children={(fill) => {
         return (
-          <Text style={Style.childText}>
+          <Text style={SharedStyles.circularProgressChildText}>
             {group.pointsCompleted}/{group.pointsTotal}
           </Text>
         );
@@ -56,10 +57,3 @@ const getLogo = () => {
 };
 
 export default GroupCard;
-
-const Style = StyleSheet.create({
-  childText: {
-    color: Colors.secondaryGreen,
-    fontSize: 14,
-  },
-});

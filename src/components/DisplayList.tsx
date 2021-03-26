@@ -4,7 +4,7 @@ import { Colors } from '../shared/Colors';
 import { IGroup } from '../../db/Groups';
 import { IReading } from '../../db/Readings';
 import { ITodo } from '../../db/Todo';
-import { SectionTitles } from '../shared/FormatSections';
+import { SectionTitles } from '../shared/Utils';
 import TodoCard from '../components/TodoCard';
 import GroupCard from '../components/GroupCard';
 import ReadingCard from '../components/ReadingCard';

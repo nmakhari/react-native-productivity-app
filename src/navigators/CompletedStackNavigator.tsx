@@ -18,7 +18,7 @@ type CompletedStackNavigatorRouteProp = RouteProp<
   'Completed'
 >;
 
-export interface ICompletedStackNavigatorProps {
+interface IProps {
   navigation: CompletedStackNavigatorNavigationProp;
   route: CompletedStackNavigatorRouteProp;
 }
@@ -28,10 +28,10 @@ export type CompletedStackNavigatorParamsList = {
   ViewItem: { item: DisplayItem };
 };
 
-export class CompletedStackNavigator extends React.Component<ICompletedStackNavigatorProps> {
+export class CompletedStackNavigator extends React.Component<IProps> {
   stack: any;
 
-  constructor(props: ICompletedStackNavigatorProps) {
+  constructor(props: IProps) {
     super(props);
     this.stack = createStackNavigator<CompletedStackNavigatorParamsList>();
   }

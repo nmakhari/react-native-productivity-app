@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import Card from './Card';
 import { ITodo } from '../../db/Todo';
-import { TodoState, getTodoState } from '../shared/GetTodoState';
+import { TodoState, getTodoState } from '../shared/Utils';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../shared/Colors';
 import { StyleSheet } from 'react-native';

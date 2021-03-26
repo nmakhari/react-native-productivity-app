@@ -17,7 +17,7 @@ type TodoStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
 
 type TodoStackNavigatorRouteProp = RouteProp<TabNavigatorParamList, 'Todo'>;
 
-export interface ITodoStackNavigatorProps {
+interface IProps {
   navigation: TodoStackNavigatorNavigationProp;
   route: TodoStackNavigatorRouteProp;
 }
@@ -29,10 +29,10 @@ export type TodoStackNavigatorParamList = {
   EditItem: { todoListStore: ITodoListStore; item: DisplayItem };
 };
 
-export default class TodoStackNavigator extends React.Component<ITodoStackNavigatorProps> {
+export default class TodoStackNavigator extends React.Component<IProps> {
   stack: any;
 
-  constructor(props: ITodoStackNavigatorProps) {
+  constructor(props: IProps) {
     super(props);
     this.stack = createStackNavigator<TodoStackNavigatorParamList>();
   }

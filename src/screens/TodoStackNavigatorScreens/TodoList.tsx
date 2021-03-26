@@ -2,15 +2,15 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
-import formatSections from '../../shared/FormatSections';
+import { formatSections } from '../../shared/Utils';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { TabNavigatorParamList } from '../../navigators/TabNavigator';
 import { RouteProp } from '@react-navigation/native';
-import { StyleSheet, View } from 'react-native';
-import { Colors } from '../../shared/Colors';
+import SharedStyles from '../../shared/SharedStyles';
+import { View } from 'react-native';
 
 type TodoListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<TodoStackNavigatorParamList, 'TodoList'>,
@@ -22,16 +22,16 @@ type TodoListScreenRouteProp = RouteProp<
   'TodoList'
 >;
 
-export interface ITodoListProps {
+interface IProps {
   navigation: TodoListScreenNavigationProp;
   route: TodoListScreenRouteProp;
 }
 
 @observer
-export class TodoList extends React.Component<ITodoListProps> {
+export class TodoList extends React.Component<IProps> {
   render() {
     return (
-      <View style={Styles.root}>
+      <View style={SharedStyles.listRoot}>
         <DisplayList data={this.todoListData} />
       </View>
     );
@@ -47,11 +47,3 @@ export class TodoList extends React.Component<ITodoListProps> {
     return formatSections(todos, groups, readings);
   }
 }
-
-const Styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    paddingBottom: 15,
-    backgroundColor: Colors.primaryGrey,
-  },
-});

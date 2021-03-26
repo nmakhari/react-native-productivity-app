@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
@@ -8,8 +8,8 @@ import { RouteProp } from '@react-navigation/native';
 import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
 import { computed } from 'mobx';
 import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
-import formatSections from '../../shared/FormatSections';
-import { Colors } from '../../shared/Colors';
+import { formatSections } from '../../shared/Utils';
+import SharedStyles from '../../shared/SharedStyles';
 
 type InProgressScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<InProgressStackNavigatorParamsList, 'InProgressList'>,
@@ -21,15 +21,15 @@ type InProgressListScreenRouteProp = RouteProp<
   'InProgressList'
 >;
 
-export interface IInProgressListProps {
+interface IProps {
   navigation: InProgressScreenNavigationProp;
   route: InProgressListScreenRouteProp;
 }
 
-export class InProgressList extends React.Component<IInProgressListProps> {
+export class InProgressList extends React.Component<IProps> {
   render() {
     return (
-      <View style={Styles.root}>
+      <View style={SharedStyles.listRoot}>
         <DisplayList data={this.inProgressListData} />
       </View>
     );
@@ -45,11 +45,3 @@ export class InProgressList extends React.Component<IInProgressListProps> {
     return formatSections(todos, groups, readings);
   }
 }
-
-const Styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    paddingBottom: 15,
-    backgroundColor: Colors.primaryGrey,
-  },
-});

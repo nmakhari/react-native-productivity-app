@@ -4,7 +4,8 @@ import { IReading } from '../../db/Readings';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../shared/Colors';
-import { Text, StyleSheet } from 'react-native';
+import SharedStyles from '../shared/SharedStyles';
+import { Text } from 'react-native';
 
 export interface IReadingCardProps {
   reading: IReading;
@@ -35,7 +36,7 @@ const getRightContent = (reading: IReading) => {
       rotation={0}
       children={(fill) => {
         return (
-          <Text style={Style.childText}>
+          <Text style={SharedStyles.circularProgressChildText}>
             {reading.pagesComplete}/{reading.pagesTotal}
           </Text>
         );
@@ -55,10 +56,3 @@ const getLogo = () => {
 };
 
 export default ReadingCard;
-
-const Style = StyleSheet.create({
-  childText: {
-    color: Colors.secondaryGreen,
-    fontSize: 14,
-  },
-});

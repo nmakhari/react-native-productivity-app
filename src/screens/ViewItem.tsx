@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-export interface IViewItemProps {
+interface IProps {
   readonly canEdit: boolean;
   readonly groupId?: number;
   readonly groupTodoId?: number;
@@ -10,7 +10,7 @@ export interface IViewItemProps {
   readonly todoId?: number;
 }
 
-export class ViewItem extends React.Component<IViewItemProps> {
+export class ViewItem extends React.Component<IProps> {
   render() {
     return <Text>VIEW ITEM SCREEN</Text>;
   }

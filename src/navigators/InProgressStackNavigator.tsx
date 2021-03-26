@@ -18,7 +18,7 @@ type InProgressStackNavigatorRouteProp = RouteProp<
   'InProgress'
 >;
 
-export interface IInProgressStackNavigatorProps {
+interface IProps {
   navigation: InProgressStackNavigatorNavigationProp;
   route: InProgressStackNavigatorRouteProp;
 }
@@ -28,10 +28,10 @@ export type InProgressStackNavigatorParamsList = {
   ViewItem: { item: DisplayItem };
 };
 
-export default class InProgressStackNavigator extends React.Component<IInProgressStackNavigatorProps> {
+export default class InProgressStackNavigator extends React.Component<IProps> {
   stack: any;
 
-  constructor(props: IInProgressStackNavigatorProps) {
+  constructor(props: IProps) {
     super(props);
     this.stack = createStackNavigator<InProgressStackNavigatorParamsList>();
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
@@ -8,8 +8,8 @@ import { RouteProp } from '@react-navigation/native';
 import { CompletedStackNavigatorParamsList } from '../../navigators/CompletedStackNavigator';
 import { computed } from 'mobx';
 import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
-import formatSections from '../../shared/FormatSections';
-import { Colors } from '../../shared/Colors';
+import { formatSections } from '../../shared/Utils';
+import SharedStyles from '../../shared/SharedStyles';
 
 type CompletedListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<CompletedStackNavigatorParamsList, 'CompletedList'>,
@@ -21,15 +21,15 @@ type CompletedListScreenRouteProp = RouteProp<
   'CompletedList'
 >;
 
-export interface ICompletedListProps {
+interface IProps {
   navigation: CompletedListScreenNavigationProp;
   route: CompletedListScreenRouteProp;
 }
 
-export class CompletedList extends React.Component<ICompletedListProps> {
+export class CompletedList extends React.Component<IProps> {
   render() {
     return (
-      <View style={Styles.root}>
+      <View style={SharedStyles.listRoot}>
         <DisplayList data={this.completedListData} />
       </View>
     );
@@ -45,11 +45,3 @@ export class CompletedList extends React.Component<ICompletedListProps> {
     return formatSections(todos, groups, readings);
   }
 }
-
-const Styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    paddingBottom: 15,
-    backgroundColor: Colors.primaryGrey,
-  },
-});

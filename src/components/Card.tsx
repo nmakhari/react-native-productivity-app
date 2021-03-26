@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableHighlight, StyleSheet } from 'react-native';
 import { Colors } from '../shared/Colors';
 
-export interface ICardProps {
+interface IProps {
   title: string;
   description?: string;
   logo?: React.ReactNode;
@@ -12,7 +12,7 @@ export interface ICardProps {
   descriptionStyle?: any;
 }
 
-export default class Card extends React.Component<ICardProps> {
+export default class Card extends React.Component<IProps> {
   render() {
     return (
       <TouchableHighlight onPress={this.props.onPress} style={Styles.root}>
