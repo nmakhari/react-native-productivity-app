@@ -7,12 +7,12 @@ import { Colors } from '../shared/Colors';
 import { Text } from 'react-native';
 import SharedStyles from '../shared/SharedStyles';
 
-export interface IGroupCardProps {
+interface IProps {
   group: IGroup;
   // TODO: Add additional functionality for onPress and sliding
 }
 
-const GroupCard: FunctionComponent<IGroupCardProps> = ({ group }) => {
+const GroupCard: FunctionComponent<IProps> = ({ group }) => {
   return (
     <Card
       title={group.name}

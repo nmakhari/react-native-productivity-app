@@ -7,12 +7,12 @@ import { Colors } from '../shared/Colors';
 import SharedStyles from '../shared/SharedStyles';
 import { Text } from 'react-native';
 
-export interface IReadingCardProps {
+interface IProps {
   reading: IReading;
   // TODO: Add additional functionality for onPress and sliding
 }
 
-const ReadingCard: FunctionComponent<IReadingCardProps> = ({ reading }) => {
+const ReadingCard: FunctionComponent<IProps> = ({ reading }) => {
   return (
     <Card
       title={reading.name}

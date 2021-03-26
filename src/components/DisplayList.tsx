@@ -1,5 +1,11 @@
 import React from 'react';
-import { SectionList, StyleSheet, SectionListData, Text } from 'react-native';
+import {
+  SectionList,
+  StyleSheet,
+  SectionListData,
+  Text,
+  View,
+} from 'react-native';
 import { Colors } from '../shared/Colors';
 import { IGroup } from '../../db/Groups';
 import { IReading } from '../../db/Readings';
@@ -8,6 +14,7 @@ import { SectionTitles } from '../shared/Utils';
 import TodoCard from '../components/TodoCard';
 import GroupCard from '../components/GroupCard';
 import ReadingCard from '../components/ReadingCard';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export type DisplayItem = IGroup | IReading | ITodo;
 
@@ -16,11 +23,13 @@ export interface IDisplayItemSection {
   data: DisplayItem[];
 }
 
-export interface IDisplayListProps {
+interface IProps {
   data: IDisplayItemSection[];
 }
 
-export default class DisplayList extends React.Component<IDisplayListProps> {
+// contentContainerStyle on SectionList needs to be set to flexGrow 1 in order
+// to center the resulting view on the screen
+export default class DisplayList extends React.Component<IProps> {
   render() {
     return (
       <SectionList
@@ -28,6 +37,19 @@ export default class DisplayList extends React.Component<IDisplayListProps> {
         sections={this.props.data}
         renderItem={this.renderItem}
         renderSectionHeader={this.renderSectionHeader}
+        ListEmptyComponent={
+          <View style={Styles.listEmptyRoot}>
+            <Text style={Styles.listEmptySubtitle}>Nothing here...</Text>
+            <Text style={Styles.listEmptyTitle}>Time to get started! </Text>
+            <MaterialCommunityIcons
+              name="notebook"
+              color={'white'}
+              size={40}
+              style={Styles.listEmptyIcon}
+            />
+          </View>
+        }
+        contentContainerStyle={{ flexGrow: 1 }}
       />
     );
   }
@@ -58,6 +80,8 @@ export default class DisplayList extends React.Component<IDisplayListProps> {
   }) => <Text style={Styles.sectionHeaderText}>{section.title}</Text>;
 }
 
+// Known issues with bold font on certain devices, changed font family
+// to fix the problem
 const Styles = StyleSheet.create({
   list: {
     backgroundColor: Colors.primaryGrey,
@@ -67,5 +91,23 @@ const Styles = StyleSheet.create({
     color: 'white',
     marginLeft: 20,
     fontWeight: 'bold',
+  },
+  listEmptySubtitle: {
+    fontSize: 18,
+    color: 'white',
+  },
+  listEmptyTitle: {
+    fontSize: 28,
+    color: 'white',
+    fontFamily: 'sans-serif-bold',
+    fontWeight: 'bold',
+  },
+  listEmptyIcon: {
+    marginTop: 30,
+  },
+  listEmptyRoot: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

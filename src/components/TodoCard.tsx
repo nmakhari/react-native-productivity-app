@@ -6,12 +6,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Colors } from '../shared/Colors';
 import { StyleSheet } from 'react-native';
 
-export interface ITodoCardProps {
+interface IProps {
   todo: ITodo;
   // TODO: Add additional functionality for onPress and sliding
 }
 
-const TodoCard: FunctionComponent<ITodoCardProps> = ({ todo }) => {
+const TodoCard: FunctionComponent<IProps> = ({ todo }) => {
   const state = getTodoState(todo);
   return <Card title={todo.name} rightContent={getRightContent(state)} />;
 };
