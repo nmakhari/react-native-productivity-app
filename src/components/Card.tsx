@@ -8,6 +8,7 @@ interface IProps {
   logo?: React.ReactNode;
   rightContent?: React.ReactNode;
   onPress?: () => void;
+  onLongPress?: () => void;
   titleStyle?: any;
   descriptionStyle?: any;
 }
@@ -15,7 +16,10 @@ interface IProps {
 export default class Card extends React.Component<IProps> {
   render() {
     return (
-      <TouchableHighlight onPress={this.props.onPress} style={Styles.root}>
+      <TouchableHighlight
+        onPress={this.props.onPress}
+        style={Styles.root}
+        onLongPress={this.props.onLongPress}>
         <View style={Styles.wrapper}>
           <View style={Styles.leftContent}>
             <Text

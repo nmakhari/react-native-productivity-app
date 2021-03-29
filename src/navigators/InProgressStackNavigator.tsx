@@ -1,12 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ITodoListStore } from '../../stores/TodoListStore';
-import { ViewItem } from '../screens/ViewItem';
 import { InProgressList } from '../screens/InProgressStackNavigatorScreens/InProgressList';
 import { TabNavigatorParamList } from './TabNavigator';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
-import { DisplayItemType } from '../components/DisplayList';
 
 type InProgressStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -25,7 +23,6 @@ interface IProps {
 
 export type InProgressStackNavigatorParamsList = {
   InProgressList: { todoListStore: ITodoListStore };
-  ViewItem: { item: DisplayItemType };
 };
 
 export default class InProgressStackNavigator extends React.Component<IProps> {
@@ -46,7 +43,6 @@ export default class InProgressStackNavigator extends React.Component<IProps> {
           initialParams={{ todoListStore: todoListStore }}
           options={{ headerShown: false }}
         />
-        <this.stack.Screen name="ViewItem" component={ViewItem} />
       </this.stack.Navigator>
     );
   }

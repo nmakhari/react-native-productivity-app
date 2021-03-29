@@ -35,7 +35,8 @@ export interface IProgressData {
 
 export interface IModalData {
   name: string;
-  upperContent?: JSX.Element;
+  description?: string;
+  progressString?: string;
   parentName?: string;
   progressValue?: IProgressData;
 }
@@ -77,7 +78,8 @@ export default class DisplayList extends React.Component<IProps> {
           <DisplayItem
             name={this.modalData.name}
             onClosePress={this.onModalClosePressed}
-            upperContent={this.modalData.upperContent}
+            description={this.modalData.description}
+            progressString={this.modalData.progressString}
             parentName={this.modalData.parentName}
             progressValue={this.modalData.progressValue}
           />
@@ -108,7 +110,7 @@ export default class DisplayList extends React.Component<IProps> {
           color={Colors.secondaryGreen}
           size={65}
           style={Styles.addIcon}
-          onPress={this.onAddIconPressed}
+          onPress={this.openModal}
         />
       </View>
     );
@@ -125,11 +127,35 @@ export default class DisplayList extends React.Component<IProps> {
   }) => {
     switch (section.title) {
       case SectionTitles.Groups.toString():
-        return <GroupCard group={item as IGroup} />;
+        return (
+          <GroupCard
+            group={item as IGroup}
+            onLongPress={(group: IGroup) => {
+              this.setModalDataGroup(group);
+              this.openModal();
+            }}
+          />
+        );
       case SectionTitles.Todos.toString():
-        return <TodoCard todo={item as ITodo} />;
+        return (
+          <TodoCard
+            todo={item as ITodo}
+            onPress={(todo: ITodo) => {
+              this.setModalDataTodo(todo);
+              this.openModal();
+            }}
+          />
+        );
       default:
-        return <ReadingCard reading={item as IReading} />;
+        return (
+          <ReadingCard
+            reading={item as IReading}
+            onLongPress={(reading: IReading) => {
+              this.setModalDataReading(reading);
+              this.openModal();
+            }}
+          />
+        );
     }
   };
 
@@ -140,7 +166,7 @@ export default class DisplayList extends React.Component<IProps> {
   }) => <Text style={Styles.sectionHeaderText}>{section.title}</Text>;
 
   @action
-  private onAddIconPressed = () => {
+  private openModal = () => {
     console.log('ICON PRESSED');
     this.isModalVisible = true;
     console.log('modalVisible: ' + this.isModalVisible);
@@ -157,9 +183,34 @@ export default class DisplayList extends React.Component<IProps> {
   private clearModalData() {
     this.modalData = {
       name: '',
-      upperContent: undefined,
+      description: undefined,
+      progressString: undefined,
       parentName: undefined,
       progressValue: undefined,
+    };
+  }
+
+  @action
+  private setModalDataGroup(group: IGroup) {
+    this.modalData.name = group.name;
+    this.modalData.description = group.description;
+    this.modalData.progressValue = {
+      completed: group.pointsCompleted,
+      total: group.pointsTotal,
+    };
+  }
+
+  @action
+  private setModalDataTodo(todo: ITodo) {
+    this.modalData.name = todo.name;
+  }
+
+  @action
+  private setModalDataReading(reading: IReading) {
+    this.modalData.name = reading.name;
+    this.modalData.progressValue = {
+      completed: reading.pagesComplete,
+      total: reading.pagesTotal,
     };
   }
 }

@@ -11,7 +11,8 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 interface IProps {
   name: string;
   onClosePress: () => void;
-  upperContent?: JSX.Element;
+  description?: string;
+  progressString?: string;
   parentName?: string;
   progressValue?: IProgressData;
 }
@@ -30,11 +31,26 @@ export default class DisplayItem extends React.Component<IProps> {
           />
           <Text style={Styles.nameText}>{this.props.name}</Text>
 
-          {this.props.upperContent}
+          {this.upperContent}
           {this.bottomContent}
         </View>
       </View>
     );
+  }
+
+  @computed
+  private get upperContent(): JSX.Element | undefined {
+    if (this.props.description) {
+      return (
+        <Text style={Styles.descriptionText}>{this.props.description}</Text>
+      );
+    }
+
+    if (this.props.progressString) {
+      return (
+        <Text style={Styles.progressText}>{this.props.progressString}</Text>
+      );
+    }
   }
 
   @computed
@@ -48,11 +64,14 @@ export default class DisplayItem extends React.Component<IProps> {
       const amountCompleted = (completed / total) * 100;
       return (
         <AnimatedCircularProgress
-          size={60}
-          width={7}
+          style={Styles.circularProgress}
+          size={100}
+          width={10}
           fill={amountCompleted}
           tintColor={Colors.secondaryGreen}
           rotation={0}
+          backgroundWidth={15}
+          backgroundColor={Colors.primaryGrey}
           children={(fill) => {
             return (
               <Text style={SharedStyles.circularProgressChildText}>
@@ -75,21 +94,41 @@ const Styles = StyleSheet.create({
   popup: {
     borderRadius: 10,
     backgroundColor: Colors.primaryGreyDark,
-    height: 500,
-    width: 350,
+    minWidth: 300,
+    maxWidth: 350,
     padding: 20,
+    paddingBottom: 30,
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   nameText: {
     marginTop: 8,
     color: Colors.secondaryGreen,
-    fontSize: 24,
+    fontSize: 30,
+    fontFamily: 'sans-serif-bold',
+    fontWeight: 'bold',
   },
   icon: {
-    alignSelf: 'flex-end',
+    position: 'absolute',
+    right: 15,
+    top: 15,
+  },
+  descriptionText: {
+    marginTop: 35,
+    color: 'white',
+    fontSize: 20,
+  },
+  progressText: {
+    marginTop: 35,
+    color: Colors.secondaryGreen,
+    fontSize: 16,
   },
   parentNameText: {
-    fontSize: 20,
+    marginTop: 50,
+    fontSize: 25,
     color: Colors.secondaryGreen,
+  },
+  circularProgress: {
+    marginTop: 50,
   },
 });

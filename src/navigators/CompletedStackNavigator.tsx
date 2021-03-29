@@ -1,12 +1,10 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { ViewItem } from '../screens/ViewItem';
 import { CompletedList } from '../screens/CompletedStackNavigatorScreens/CompletedList';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { TabNavigatorParamList } from './TabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { ITodoListStore } from '../../stores/TodoListStore';
-import { DisplayItemType } from '../components/DisplayList';
 
 type CompletedStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -25,7 +23,6 @@ interface IProps {
 
 export type CompletedStackNavigatorParamsList = {
   CompletedList: { todoListStore: ITodoListStore };
-  ViewItem: { item: DisplayItemType };
 };
 
 export class CompletedStackNavigator extends React.Component<IProps> {
@@ -46,7 +43,6 @@ export class CompletedStackNavigator extends React.Component<IProps> {
           initialParams={{ todoListStore: todoListStore }}
           options={{ headerShown: false }}
         />
-        <this.stack.Screen name="ViewItem" component={ViewItem} />
       </this.stack.Navigator>
     );
   }

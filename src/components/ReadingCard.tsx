@@ -9,15 +9,21 @@ import { Text } from 'react-native';
 
 interface IProps {
   reading: IReading;
-  // TODO: Add additional functionality for onPress and sliding
+  onLongPress: (reading: IReading) => void;
+  // TODO: add functionality for sliding
 }
 
-const ReadingCard: FunctionComponent<IProps> = ({ reading }) => {
+const ReadingCard: FunctionComponent<IProps> = ({ reading, onLongPress }) => {
+  const onLongPressTriggered = () => {
+    onLongPress(reading);
+  };
+
   return (
     <Card
       title={reading.name}
       logo={getLogo()}
       rightContent={getRightContent(reading)}
+      onLongPress={onLongPressTriggered}
     />
   );
 };
@@ -29,11 +35,13 @@ const getRightContent = (reading: IReading) => {
       : (reading.pagesComplete / reading.pagesTotal) * 100;
   return (
     <AnimatedCircularProgress
-      size={60}
+      size={80}
       width={7}
       fill={amountCompleted}
       tintColor={Colors.secondaryGreen}
       rotation={0}
+      backgroundWidth={10}
+      backgroundColor={Colors.primaryGrey}
       children={(fill) => {
         return (
           <Text style={SharedStyles.circularProgressChildText}>

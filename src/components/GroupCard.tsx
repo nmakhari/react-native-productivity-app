@@ -9,16 +9,22 @@ import SharedStyles from '../shared/SharedStyles';
 
 interface IProps {
   group: IGroup;
-  // TODO: Add additional functionality for onPress and sliding
+  onLongPress: (group: IGroup) => void;
+  // TODO: add functionality for sliding
 }
 
-const GroupCard: FunctionComponent<IProps> = ({ group }) => {
+const GroupCard: FunctionComponent<IProps> = ({ group, onLongPress }) => {
+  const onLongPressTriggered = () => {
+    onLongPress(group);
+  };
+
   return (
     <Card
       title={group.name}
       description={group.description}
       logo={getLogo()}
       rightContent={getRightContent(group)}
+      onLongPress={onLongPressTriggered}
     />
   );
 };
@@ -30,11 +36,13 @@ const getRightContent = (group: IGroup) => {
       : (group.pointsCompleted / group.pointsTotal) * 100;
   return (
     <AnimatedCircularProgress
-      size={60}
+      size={80}
       width={7}
       fill={amountCompleted}
       tintColor={Colors.secondaryGreen}
       rotation={0}
+      backgroundWidth={10}
+      backgroundColor={Colors.primaryGrey}
       children={(fill) => {
         return (
           <Text style={SharedStyles.circularProgressChildText}>

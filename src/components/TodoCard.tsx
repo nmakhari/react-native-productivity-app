@@ -8,12 +8,22 @@ import { StyleSheet } from 'react-native';
 
 interface IProps {
   todo: ITodo;
-  // TODO: Add additional functionality for onPress and sliding
+  onPress: (todo: ITodo) => void;
+  // TODO: add functionality for sliding
 }
+const TodoCard: FunctionComponent<IProps> = ({ todo, onPress }) => {
+  const onPressTriggered = () => {
+    onPress(todo);
+  };
 
-const TodoCard: FunctionComponent<IProps> = ({ todo }) => {
   const state = getTodoState(todo);
-  return <Card title={todo.name} rightContent={getRightContent(state)} />;
+  return (
+    <Card
+      title={todo.name}
+      rightContent={getRightContent(state)}
+      onPress={onPressTriggered}
+    />
+  );
 };
 
 function getRightContent(state: TodoState): JSX.Element {
