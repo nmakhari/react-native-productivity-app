@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '../shared/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { IProgressData } from './DisplayList';
 import SharedStyles from '../shared/SharedStyles';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
@@ -18,6 +18,11 @@ interface IProps {
 }
 
 export default class DisplayItem extends React.Component<IProps> {
+  constructor(props: IProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     return (
       <View style={Styles.root}>
