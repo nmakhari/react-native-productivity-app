@@ -6,7 +6,7 @@ import { InProgressList } from '../screens/InProgressStackNavigatorScreens/InPro
 import { TabNavigatorParamList } from './TabNavigator';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
-import { DisplayItem } from '../components/DisplayList';
+import { DisplayItemType } from '../components/DisplayList';
 
 type InProgressStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -25,7 +25,7 @@ interface IProps {
 
 export type InProgressStackNavigatorParamsList = {
   InProgressList: { todoListStore: ITodoListStore };
-  ViewItem: { item: DisplayItem };
+  ViewItem: { item: DisplayItemType };
 };
 
 export default class InProgressStackNavigator extends React.Component<IProps> {

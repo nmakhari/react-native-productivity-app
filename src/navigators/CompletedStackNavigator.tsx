@@ -6,7 +6,7 @@ import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bott
 import { TabNavigatorParamList } from './TabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { ITodoListStore } from '../../stores/TodoListStore';
-import { DisplayItem } from '../components/DisplayList';
+import { DisplayItemType } from '../components/DisplayList';
 
 type CompletedStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -25,7 +25,7 @@ interface IProps {
 
 export type CompletedStackNavigatorParamsList = {
   CompletedList: { todoListStore: ITodoListStore };
-  ViewItem: { item: DisplayItem };
+  ViewItem: { item: DisplayItemType };
 };
 
 export class CompletedStackNavigator extends React.Component<IProps> {

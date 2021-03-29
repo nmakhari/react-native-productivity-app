@@ -5,6 +5,8 @@ import {
   SectionListData,
   Text,
   View,
+  Modal,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Colors } from '../shared/Colors';
 import { IGroup } from '../../db/Groups';
@@ -15,12 +17,27 @@ import TodoCard from '../components/TodoCard';
 import GroupCard from '../components/GroupCard';
 import ReadingCard from '../components/ReadingCard';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import DisplayItem from './DisplayItem';
+import { action, makeObservable, observable, runInAction } from 'mobx';
+import { observer } from 'mobx-react';
 
-export type DisplayItem = IGroup | IReading | ITodo;
+export type DisplayItemType = IGroup | IReading | ITodo;
 
 export interface IDisplayItemSection {
   title: string;
-  data: DisplayItem[];
+  data: DisplayItemType[];
+}
+
+export interface IProgressData {
+  completed: number;
+  total: number;
+}
+
+export interface IModalData {
+  name: string;
+  upperContent?: JSX.Element;
+  parentName?: string;
+  progressValue?: IProgressData;
 }
 
 interface IProps {
@@ -29,28 +46,71 @@ interface IProps {
 
 // contentContainerStyle on SectionList needs to be set to flexGrow 1 in order
 // to center the resulting view on the screen
+@observer
 export default class DisplayList extends React.Component<IProps> {
+  @observable private isModalVisible: boolean;
+  @observable private modalData: IModalData;
+
+  constructor(props: IProps) {
+    super(props);
+    runInAction(() => {
+      this.isModalVisible = false;
+      this.modalData = {
+        name: '',
+      };
+      // https://mobx.js.org/migrating-from-4-or-5.html
+      makeObservable(this);
+    });
+  }
+
   render() {
     return (
-      <SectionList
-        style={Styles.list}
-        sections={this.props.data}
-        renderItem={this.renderItem}
-        renderSectionHeader={this.renderSectionHeader}
-        ListEmptyComponent={
-          <View style={Styles.listEmptyRoot}>
-            <Text style={Styles.listEmptySubtitle}>Nothing here...</Text>
-            <Text style={Styles.listEmptyTitle}>Time to get started! </Text>
-            <MaterialCommunityIcons
-              name="notebook"
-              color={'white'}
-              size={40}
-              style={Styles.listEmptyIcon}
-            />
-          </View>
-        }
-        contentContainerStyle={{ flexGrow: 1 }}
-      />
+      <View style={Styles.root}>
+        <Modal
+          animationType={'fade'}
+          onRequestClose={this.onModalClosePressed}
+          transparent={true}
+          visible={this.isModalVisible}>
+          <TouchableWithoutFeedback onPress={this.onModalClosePressed}>
+            <View style={Styles.modalOverlay} />
+          </TouchableWithoutFeedback>
+          <DisplayItem
+            name={this.modalData.name}
+            onClosePress={this.onModalClosePressed}
+            upperContent={this.modalData.upperContent}
+            parentName={this.modalData.parentName}
+            progressValue={this.modalData.progressValue}
+          />
+        </Modal>
+
+        <SectionList
+          style={Styles.list}
+          sections={this.props.data}
+          renderItem={this.renderItem}
+          renderSectionHeader={this.renderSectionHeader}
+          ListEmptyComponent={
+            <View style={Styles.listEmptyRoot}>
+              <Text style={Styles.listEmptySubtitle}>Nothing here...</Text>
+              <Text style={Styles.listEmptyTitle}>Time to get started! </Text>
+              <MaterialCommunityIcons
+                name="notebook"
+                color={'white'}
+                size={40}
+                style={Styles.listEmptyIcon}
+              />
+            </View>
+          }
+          contentContainerStyle={Styles.listEmptyContentContainer}
+        />
+
+        <MaterialCommunityIcons
+          name="plus-circle"
+          color={Colors.secondaryGreen}
+          size={65}
+          style={Styles.addIcon}
+          onPress={this.onAddIconPressed}
+        />
+      </View>
     );
   }
 
@@ -60,8 +120,8 @@ export default class DisplayList extends React.Component<IProps> {
     item,
     section,
   }: {
-    item: DisplayItem;
-    section: SectionListData<DisplayItem, IDisplayItemSection>;
+    item: DisplayItemType;
+    section: SectionListData<DisplayItemType, IDisplayItemSection>;
   }) => {
     switch (section.title) {
       case SectionTitles.Groups.toString():
@@ -78,11 +138,38 @@ export default class DisplayList extends React.Component<IProps> {
   }: {
     section: IDisplayItemSection;
   }) => <Text style={Styles.sectionHeaderText}>{section.title}</Text>;
+
+  @action
+  private onAddIconPressed = () => {
+    console.log('ICON PRESSED');
+    this.isModalVisible = true;
+    console.log('modalVisible: ' + this.isModalVisible);
+  };
+
+  @action
+  private onModalClosePressed = () => {
+    this.isModalVisible = false;
+    this.clearModalData();
+    console.log('modal close pressed');
+  };
+
+  @action
+  private clearModalData() {
+    this.modalData = {
+      name: '',
+      upperContent: undefined,
+      parentName: undefined,
+      progressValue: undefined,
+    };
+  }
 }
 
 // Known issues with bold font on certain devices, changed font family
 // to fix the problem
 const Styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   list: {
     backgroundColor: Colors.primaryGrey,
   },
@@ -109,5 +196,21 @@ const Styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  listEmptyContentContainer: {
+    flexGrow: 1,
+  },
+  addIcon: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+  },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 });

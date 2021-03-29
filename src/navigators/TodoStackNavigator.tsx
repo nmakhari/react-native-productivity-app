@@ -5,7 +5,7 @@ import { ViewItem } from '../screens/ViewItem';
 import { AddItem } from '../screens/TodoStackNavigatorScreens/AddItem';
 import { EditItem } from '../screens/TodoStackNavigatorScreens/EditItem';
 import { ITodoListStore } from '../../stores/TodoListStore';
-import { DisplayItem } from '../components/DisplayList';
+import { DisplayItemType } from '../components/DisplayList';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { TabNavigatorParamList } from './TabNavigator';
 import { RouteProp } from '@react-navigation/native';
@@ -24,9 +24,9 @@ interface IProps {
 
 export type TodoStackNavigatorParamList = {
   TodoList: { todoListStore: ITodoListStore };
-  ViewItem: { item: DisplayItem };
+  ViewItem: { item: DisplayItemType };
   AddItem: { todoListStore: ITodoListStore };
-  EditItem: { todoListStore: ITodoListStore; item: DisplayItem };
+  EditItem: { todoListStore: ITodoListStore; item: DisplayItemType };
 };
 
 export default class TodoStackNavigator extends React.Component<IProps> {
