@@ -20,6 +20,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import DisplayItem from './DisplayItem';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
+import AddItemFABGroup from './AddItemFABGroup';
 
 export type DisplayItemType = IGroup | IReading | ITodo;
 
@@ -51,6 +52,7 @@ interface IProps {
 export default class DisplayList extends React.Component<IProps> {
   @observable private isModalVisible: boolean;
   @observable private modalData: IModalData;
+  @observable private isFABOpen: boolean;
 
   constructor(props: IProps) {
     super(props);
@@ -59,6 +61,7 @@ export default class DisplayList extends React.Component<IProps> {
       this.modalData = {
         name: '',
       };
+      this.isFABOpen = false;
       // https://mobx.js.org/migrating-from-4-or-5.html
       makeObservable(this);
     });
@@ -105,12 +108,10 @@ export default class DisplayList extends React.Component<IProps> {
           contentContainerStyle={Styles.listEmptyContentContainer}
         />
 
-        <MaterialCommunityIcons
-          name="plus-circle"
-          color={Colors.secondaryGreen}
-          size={65}
-          style={Styles.addIcon}
-          onPress={this.openModal}
+        <AddItemFABGroup
+          open={this.isFABOpen}
+          onPress={this.openFAB}
+          onClosePressed={this.closeFAB}
         />
       </View>
     );
@@ -167,7 +168,6 @@ export default class DisplayList extends React.Component<IProps> {
 
   @action
   private openModal = () => {
-    console.log('ICON PRESSED');
     this.isModalVisible = true;
     console.log('modalVisible: ' + this.isModalVisible);
   };
@@ -213,6 +213,18 @@ export default class DisplayList extends React.Component<IProps> {
       total: reading.pagesTotal,
     };
   }
+
+  @action
+  private openFAB = () => {
+    console.log('Open FAB');
+    this.isFABOpen = true;
+  };
+
+  @action
+  private closeFAB = () => {
+    console.log('Close FAB');
+    this.isFABOpen = false;
+  };
 }
 
 // Known issues with bold font on certain devices, changed font family
@@ -250,11 +262,6 @@ const Styles = StyleSheet.create({
   },
   listEmptyContentContainer: {
     flexGrow: 1,
-  },
-  addIcon: {
-    position: 'absolute',
-    right: 10,
-    bottom: 10,
   },
   modalOverlay: {
     position: 'absolute',
