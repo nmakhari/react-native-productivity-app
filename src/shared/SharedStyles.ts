@@ -4,7 +4,6 @@ import { Colors } from './Colors';
 const SharedStyles = StyleSheet.create({
   listRoot: {
     flex: 1,
-    paddingBottom: 15,
     backgroundColor: Colors.primaryGrey,
   },
   circularProgressChildText: {

@@ -21,6 +21,7 @@ import DisplayItem from './DisplayItem';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import AddItemFABGroup from './AddItemFABGroup';
+import { Dimensions } from 'react-native';
 
 export type DisplayItemType = IGroup | IReading | ITodo;
 
@@ -68,6 +69,7 @@ export default class DisplayList extends React.Component<IProps> {
   }
 
   render() {
+    const screenHeight = Dimensions.get('window').height;
     return (
       <View style={Styles.root}>
         <Modal
@@ -105,7 +107,11 @@ export default class DisplayList extends React.Component<IProps> {
               />
             </View>
           }
-          contentContainerStyle={Styles.listEmptyContentContainer}
+          // minHeight was added to center the empty list content after FAB broke the flexGrow
+          contentContainerStyle={[
+            Styles.listEmptyContentContainer,
+            { minHeight: screenHeight - 60 },
+          ]}
         />
 
         <AddItemFABGroup
