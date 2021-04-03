@@ -38,23 +38,31 @@ export interface ITodoListStore {
   readonly completedGroups: Realm.Results<IGroup>;
   readonly completedReadings: Realm.Results<IReading>;
 
-  createTodo(name: string): void;
+  createTodo(name: string): ITodo | undefined;
   getTodo(id: number): ITodo | undefined;
   toggleTodoDoneState(id: number): void;
   toggleTodoProgressState(id: number): void;
   deleteTodo(id: number): void;
 
-  createGroup(name: string, description?: string): void;
+  createGroup(name: string, description?: string): IGroup | undefined;
   getGroup(id: number): IGroup | undefined;
   deleteGroup(id: number): void;
 
-  createGroupTodo(name: string, points: number, group: IGroup): void;
+  createGroupTodo(
+    name: string,
+    points: number,
+    group: IGroup,
+  ): IGroupTodo | undefined;
   getGroupTodo(id: number): IGroupTodo | undefined;
   toggleGroupTodoDoneState(id: number): void;
   toggleGroupTodoProgressState(id: number): void;
   deleteGroupTodo(id: number): void;
 
-  createReading(name: string, pagesTotal: number, pagesComplete?: number): void;
+  createReading(
+    name: string,
+    pagesTotal: number,
+    pagesComplete?: number,
+  ): IReading | undefined;
   getReading(id: number): IReading | undefined;
   deleteReading(id: number): void;
 
@@ -63,7 +71,7 @@ export interface ITodoListStore {
     pageStart: number,
     pageEnd: number,
     reading: IReading,
-  ): void;
+  ): IReadingTodo | undefined;
   getReadingTodo(id: number): IReadingTodo | undefined;
   toggleReadingTodoDoneState(id: number): void;
   toggleReadingTodoProgressState(id: number): void;
@@ -100,7 +108,7 @@ export class TodoListStore implements ITodoListStore {
   }
 
   @action
-  createTodo(name: string) {
+  createTodo(name: string): ITodo | undefined {
     let id = 1;
 
     const currentTodos = this.todos.sorted('id', true);
@@ -122,7 +130,9 @@ export class TodoListStore implements ITodoListStore {
       });
     } catch (error) {
       console.log(kLogTag + ' error adding Todo' + ' error: ' + error);
+      return;
     }
+    return this.getTodo(id);
   }
 
   getTodo(id: number): ITodo | undefined {
@@ -212,7 +222,7 @@ export class TodoListStore implements ITodoListStore {
   }
 
   @action
-  createGroup(name: string, description?: string) {
+  createGroup(name: string, description?: string): IGroup | undefined {
     let id = 1;
 
     const currentGroups = this.groups.sorted('id', true);
@@ -239,7 +249,9 @@ export class TodoListStore implements ITodoListStore {
       console.log(
         kLogTag + ' error creating group => name: ' + name + ' error: ' + error,
       );
+      return;
     }
+    return this.getGroup(id);
   }
 
   getGroup(id: number): IGroup | undefined {
@@ -266,7 +278,11 @@ export class TodoListStore implements ITodoListStore {
     );
   }
 
-  createGroupTodo(name: string, points: number, group: IGroup) {
+  createGroupTodo(
+    name: string,
+    points: number,
+    group: IGroup,
+  ): IGroupTodo | undefined {
     const selectedGroup = this.getGroup(group.id);
 
     if (selectedGroup) {
@@ -304,8 +320,9 @@ export class TodoListStore implements ITodoListStore {
             ' error: ' +
             error,
         );
+        return;
       }
-      return;
+      return this.getGroupTodo(id);
     }
     console.log(
       kLogTag +
@@ -438,7 +455,11 @@ export class TodoListStore implements ITodoListStore {
     );
   }
 
-  createReading(name: string, pagesTotal: number, pagesComplete?: number) {
+  createReading(
+    name: string,
+    pagesTotal: number,
+    pagesComplete?: number,
+  ): IReading | undefined {
     let id = 1;
 
     const currentReadings = this.todoList.readings.sorted('id', true);
@@ -469,7 +490,9 @@ export class TodoListStore implements ITodoListStore {
           ' error: ' +
           error,
       );
+      return;
     }
+    return this.getReading(id);
   }
 
   getReading(id: number): IReading | undefined {
@@ -501,7 +524,7 @@ export class TodoListStore implements ITodoListStore {
     pageStart: number,
     pageEnd: number,
     reading: IReading,
-  ) {
+  ): IReadingTodo | undefined {
     const selectedReading = this.getReading(reading.id);
 
     if (selectedReading) {
@@ -539,8 +562,9 @@ export class TodoListStore implements ITodoListStore {
             ' error: ' +
             error,
         );
+        return;
       }
-      return;
+      return this.getReadingTodo(id);
     }
     console.log(
       kLogTag +
