@@ -56,6 +56,7 @@ export class TodoList extends React.Component<IProps> {
           onPress={this.openFAB}
           onClosePressed={this.closeFAB}
           onTodoPressed={this.onCreateTodoPressed}
+          onGroupPressed={this.onCreateGroupPressed}
         />
       </View>
     );
@@ -74,6 +75,15 @@ export class TodoList extends React.Component<IProps> {
   private onCreateTodoPressed = () => {
     console.log('Todo pressed');
     this.props.navigation.navigate('AddTodo', {
+      todoListStore: this.props.route.params.todoListStore,
+      progressState: ProgressState.Pending,
+    });
+    this.closeFAB();
+  };
+
+  private onCreateGroupPressed = () => {
+    console.log('Group pressed');
+    this.props.navigation.navigate('AddGroup', {
       todoListStore: this.props.route.params.todoListStore,
       progressState: ProgressState.Pending,
     });

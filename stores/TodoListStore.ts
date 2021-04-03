@@ -734,17 +734,19 @@ export class TodoListStore implements ITodoListStore {
   }
   // SUBQUERY on Collection:
   // https://docs.mongodb.com/realm-legacy/docs/javascript/latest/api/tutorial-query-language.html
+
+  // For pending groups and readings, check if there is anything inProgress OR complete, if not, then it's pending
   @computed
   get pendingGroups(): Realm.Results<IGroup> {
     return this.groups.filtered(
-      'SUBQUERY(items, $item, $item.done = false AND $item.in_progress = false).@count > 0 SORT(id DESC)',
+      'SUBQUERY(items, $item, $item.done = true OR $item.in_progress = true).@count = 0 SORT(id DESC)',
     );
   }
 
   @computed
   get pendingReadings(): Realm.Results<IReading> {
     return this.readings.filtered(
-      'SUBQUERY(readings, $reading, $reading.done = false AND $reading.in_progress = false).@count > 0 SORT(id DESC)',
+      'SUBQUERY(readings, $reading, $reading.done = true OR $reading.in_progress = true).@count = 0 SORT(id DESC)',
     );
   }
 

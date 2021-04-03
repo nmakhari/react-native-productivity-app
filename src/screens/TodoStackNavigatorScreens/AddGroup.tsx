@@ -11,45 +11,35 @@ import { TextInput } from 'react-native-gesture-handler';
 import BasicButton from '../../components/BasicButton';
 import { Colors } from '../../shared/Colors';
 import * as yup from 'yup';
-import { ProgressState } from '../../shared/Utils';
 
-type AddTodoScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<TodoStackNavigatorParamList, 'AddTodo'>,
+type AddGroupScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<TodoStackNavigatorParamList, 'AddGroup'>,
   MaterialBottomTabNavigationProp<TabNavigatorParamList>
 >;
 
-type AddTodoScreenRouteProp = RouteProp<TodoStackNavigatorParamList, 'AddTodo'>;
+type AddGroupScreenRouteProp = RouteProp<
+  TodoStackNavigatorParamList,
+  'AddGroup'
+>;
 
 interface IProps {
-  navigation: AddTodoScreenNavigationProp;
-  route: AddTodoScreenRouteProp;
+  navigation: AddGroupScreenNavigationProp;
+  route: AddGroupScreenRouteProp;
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required('Task Name is Required'),
+  name: yup.string().required('Group Name is Required'),
   description: yup.string(),
 });
 
-const AddTodo: React.FunctionComponent<IProps> = ({ navigation, route }) => {
-  const { todoListStore, progressState } = route.params;
+const AddGroup: React.FunctionComponent<IProps> = ({ navigation, route }) => {
+  const { todoListStore } = route.params;
   return (
     <Formik
       validationSchema={schema}
       initialValues={{ name: '', description: '' }}
       onSubmit={(values) => {
-        const newTodo = todoListStore.createTodo(values.name);
-        if (newTodo) {
-          switch (progressState) {
-            case ProgressState.Complete:
-              todoListStore.toggleTodoDoneState(newTodo.id);
-              break;
-            case ProgressState.InProgress:
-              todoListStore.toggleTodoProgressState(newTodo.id);
-              break;
-            default:
-              break;
-          }
-        }
+        todoListStore.createGroup(values.name, values.description);
         navigation.pop();
       }}>
       {({
@@ -66,7 +56,7 @@ const AddTodo: React.FunctionComponent<IProps> = ({ navigation, route }) => {
               onChangeText={handleChange('name')}
               onBlur={handleBlur('name')}
               value={values.name}
-              placeholder="Task"
+              placeholder="Group Name"
               placeholderTextColor={Colors.textInputPlaceholder}
               style={Styles.titleText}
             />
@@ -104,7 +94,7 @@ const AddTodo: React.FunctionComponent<IProps> = ({ navigation, route }) => {
   );
 };
 
-export default AddTodo;
+export default AddGroup;
 
 const Styles = StyleSheet.create({
   titleText: {

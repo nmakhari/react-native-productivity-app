@@ -1,7 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TodoList } from '../screens/TodoStackNavigatorScreens/TodoList';
-import { AddTodo } from '../screens/TodoStackNavigatorScreens/AddTodo';
+import AddTodo from '../screens/TodoStackNavigatorScreens/AddTodo';
+import AddGroup from '../screens/TodoStackNavigatorScreens/AddGroup';
 import { EditItem } from '../screens/TodoStackNavigatorScreens/EditItem';
 import { ITodoListStore } from '../../stores/TodoListStore';
 import { DisplayItemType } from '../components/DisplayList';
@@ -27,6 +28,7 @@ interface IProps {
 export type TodoStackNavigatorParamList = {
   TodoList: { todoListStore: ITodoListStore };
   AddTodo: { todoListStore: ITodoListStore; progressState: ProgressState };
+  AddGroup: { todoListStore: ITodoListStore; progressState: ProgressState };
   EditItem: { todoListStore: ITodoListStore; item: DisplayItemType };
 };
 
@@ -57,6 +59,19 @@ export default class TodoStackNavigator extends React.Component<IProps> {
           }}
           options={{
             title: 'New Todo',
+            headerStyle: Styles.navHeader,
+            headerTintColor: 'white',
+          }}
+        />
+        <this.stack.Screen
+          name="AddGroup"
+          component={AddGroup}
+          initialParams={{
+            todoListStore: todoListStore,
+            progressState: ProgressState.Pending,
+          }}
+          options={{
+            title: 'New Group',
             headerStyle: Styles.navHeader,
             headerTintColor: 'white',
           }}

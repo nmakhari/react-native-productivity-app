@@ -7,7 +7,8 @@ interface IProps {
   onPress: () => void;
   onClosePressed: () => void;
   onTodoPressed: () => void;
-  // on close pressed, on todo pressed, on group pressed, on reading pressed
+  onGroupPressed: () => void;
+  // on reading pressed
 }
 
 const AddItemFABGroup: React.FunctionComponent<IProps> = ({
@@ -15,6 +16,7 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
   onPress,
   onClosePressed,
   onTodoPressed,
+  onGroupPressed,
 }) => {
   return (
     <Provider>
@@ -37,7 +39,7 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
               icon: 'lightbulb-group',
               label: 'Group',
               color: Colors.secondaryGreen,
-              onPress: () => console.log('Pressed group'),
+              onPress: onGroupPressed,
               small: false,
             },
             {
