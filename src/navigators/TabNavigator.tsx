@@ -79,6 +79,6 @@ export default TabNavigator;
 
 const Styles = StyleSheet.create({
   NavigationBar: {
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryGreyDark,
   },
 });

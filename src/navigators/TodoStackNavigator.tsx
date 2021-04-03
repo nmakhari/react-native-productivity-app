@@ -1,13 +1,15 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TodoList } from '../screens/TodoStackNavigatorScreens/TodoList';
-import { AddItem } from '../screens/TodoStackNavigatorScreens/AddItem';
+import { AddTodo } from '../screens/TodoStackNavigatorScreens/AddTodo';
 import { EditItem } from '../screens/TodoStackNavigatorScreens/EditItem';
 import { ITodoListStore } from '../../stores/TodoListStore';
 import { DisplayItemType } from '../components/DisplayList';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { TabNavigatorParamList } from './TabNavigator';
 import { RouteProp } from '@react-navigation/native';
+import { StyleSheet } from 'react-native';
+import { Colors } from '../shared/Colors';
 
 type TodoStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -23,7 +25,7 @@ interface IProps {
 
 export type TodoStackNavigatorParamList = {
   TodoList: { todoListStore: ITodoListStore };
-  AddItem: { todoListStore: ITodoListStore };
+  AddTodo: { todoListStore: ITodoListStore };
   EditItem: { todoListStore: ITodoListStore; item: DisplayItemType };
 };
 
@@ -46,9 +48,14 @@ export default class TodoStackNavigator extends React.Component<IProps> {
           options={{ headerShown: false }}
         />
         <this.stack.Screen
-          name="AddItem"
-          component={AddItem}
+          name="AddTodo"
+          component={AddTodo}
           initialParams={{ todoListStore: todoListStore }}
+          options={{
+            title: 'New Todo',
+            headerStyle: Styles.navHeader,
+            headerTintColor: 'white',
+          }}
         />
         <this.stack.Screen
           name="EditItem"
@@ -59,3 +66,9 @@ export default class TodoStackNavigator extends React.Component<IProps> {
     );
   }
 }
+
+const Styles = StyleSheet.create({
+  navHeader: {
+    backgroundColor: Colors.primaryGreyDark,
+  },
+});

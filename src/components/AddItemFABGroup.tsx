@@ -6,6 +6,7 @@ interface IProps {
   open: boolean;
   onPress: () => void;
   onClosePressed: () => void;
+  onTodoPressed: () => void;
   // on close pressed, on todo pressed, on group pressed, on reading pressed
 }
 
@@ -13,6 +14,7 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
   open,
   onPress,
   onClosePressed,
+  onTodoPressed,
 }) => {
   return (
     <Provider>
@@ -42,7 +44,7 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
               icon: 'format-list-checkbox',
               label: 'Todo',
               color: Colors.secondaryGreen,
-              onPress: () => console.log('Pressed todo'),
+              onPress: onTodoPressed,
               small: false,
             },
           ]}

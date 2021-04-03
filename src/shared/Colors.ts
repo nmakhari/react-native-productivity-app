@@ -5,4 +5,5 @@ export const Colors = {
   secondaryGreen: '#00e676',
   secondaryGreenLight: '#66ffa6',
   secondaryGreenDark: '#00b248',
+  textInputPlaceholder: '#cfcfcf',
 };

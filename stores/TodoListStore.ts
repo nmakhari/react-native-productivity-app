@@ -10,7 +10,13 @@ import { IGroup, IGroupTodo } from '../db/Groups';
 import { IReading, IReadingTodo } from '../db/Readings';
 import { ITodo } from '../db/Todo';
 import { ITodoList } from '../db/TodoList';
-import { observable, action, computed, runInAction } from 'mobx';
+import {
+  observable,
+  action,
+  computed,
+  runInAction,
+  makeObservable,
+} from 'mobx';
 
 const kLogTag = 'TodoListStore';
 
@@ -70,6 +76,7 @@ export class TodoListStore implements ITodoListStore {
   @observable todoList: ITodoList;
 
   constructor() {
+    makeObservable(this);
     runInAction(() => {
       this.todoList = realm.objects<ITodoList>(TodoListSchema.name)[0];
 

@@ -1,4 +1,10 @@
-import { computed } from 'mobx';
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+} from 'mobx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
@@ -11,6 +17,7 @@ import { TabNavigatorParamList } from '../../navigators/TabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import SharedStyles from '../../shared/SharedStyles';
 import { View } from 'react-native';
+import AddItemFABGroup from '../../components/AddItemFABGroup';
 
 type TodoListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<TodoStackNavigatorParamList, 'TodoList'>,
@@ -29,13 +36,48 @@ interface IProps {
 
 @observer
 export class TodoList extends React.Component<IProps> {
+  @observable private isFABOpen: boolean;
+
+  constructor(props: IProps) {
+    super(props);
+    makeObservable(this);
+    runInAction(() => {
+      this.isFABOpen = false;
+    });
+  }
+
   render() {
+    console.log('todolist render');
     return (
       <View style={SharedStyles.listRoot}>
         <DisplayList data={this.todoListData} />
+        <AddItemFABGroup
+          open={this.isFABOpen}
+          onPress={this.openFAB}
+          onClosePressed={this.closeFAB}
+          onTodoPressed={this.onCreateTodoPressed}
+        />
       </View>
     );
   }
+
+  @action
+  private openFAB = () => {
+    this.isFABOpen = true;
+  };
+
+  @action
+  private closeFAB = () => {
+    this.isFABOpen = false;
+  };
+
+  private onCreateTodoPressed = () => {
+    console.log('Todo pressed');
+    this.props.navigation.navigate('AddTodo', {
+      todoListStore: this.props.route.params.todoListStore,
+    });
+    this.closeFAB();
+  };
 
   @computed
   private get todoListData(): IDisplayItemSection[] {

@@ -7,6 +7,7 @@ import {
   View,
   Modal,
   TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
 import { Colors } from '../shared/Colors';
 import { IGroup } from '../../db/Groups';
@@ -20,8 +21,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import DisplayItem from './DisplayItem';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
-import AddItemFABGroup from './AddItemFABGroup';
-import { Dimensions } from 'react-native';
 
 export type DisplayItemType = IGroup | IReading | ITodo;
 
@@ -53,7 +52,6 @@ interface IProps {
 export default class DisplayList extends React.Component<IProps> {
   @observable private isModalVisible: boolean;
   @observable private modalData: IModalData;
-  @observable private isFABOpen: boolean;
 
   constructor(props: IProps) {
     super(props);
@@ -62,16 +60,16 @@ export default class DisplayList extends React.Component<IProps> {
       this.modalData = {
         name: '',
       };
-      this.isFABOpen = false;
       // https://mobx.js.org/migrating-from-4-or-5.html
       makeObservable(this);
     });
   }
 
   render() {
-    const screenHeight = Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').height;
     return (
-      <View style={Styles.root}>
+      // minHeight is needed because FAB breaks the flex on this parent view
+      <View style={[Styles.root, { minHeight: windowHeight - 60 }]}>
         <Modal
           animationType={'fade'}
           onRequestClose={this.onModalClosePressed}
@@ -107,17 +105,7 @@ export default class DisplayList extends React.Component<IProps> {
               />
             </View>
           }
-          // minHeight was added to center the empty list content after FAB broke the flexGrow
-          contentContainerStyle={[
-            Styles.listEmptyContentContainer,
-            { minHeight: screenHeight - 60 },
-          ]}
-        />
-
-        <AddItemFABGroup
-          open={this.isFABOpen}
-          onPress={this.openFAB}
-          onClosePressed={this.closeFAB}
+          contentContainerStyle={Styles.listEmptyContentContainer}
         />
       </View>
     );
@@ -175,14 +163,12 @@ export default class DisplayList extends React.Component<IProps> {
   @action
   private openModal = () => {
     this.isModalVisible = true;
-    console.log('modalVisible: ' + this.isModalVisible);
   };
 
   @action
   private onModalClosePressed = () => {
     this.isModalVisible = false;
     this.clearModalData();
-    console.log('modal close pressed');
   };
 
   @action
@@ -219,18 +205,6 @@ export default class DisplayList extends React.Component<IProps> {
       total: reading.pagesTotal,
     };
   }
-
-  @action
-  private openFAB = () => {
-    console.log('Open FAB');
-    this.isFABOpen = true;
-  };
-
-  @action
-  private closeFAB = () => {
-    console.log('Close FAB');
-    this.isFABOpen = false;
-  };
 }
 
 // Known issues with bold font on certain devices, changed font family
