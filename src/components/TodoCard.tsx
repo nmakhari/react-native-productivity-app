@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import Card from './Card';
 import { ITodo } from '../../db/Todo';
-import { TodoState, getTodoState } from '../shared/Utils';
+import { ProgressState, getTodoState } from '../shared/Utils';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../shared/Colors';
 import { StyleSheet } from 'react-native';
@@ -26,9 +26,9 @@ const TodoCard: FunctionComponent<IProps> = ({ todo, onPress }) => {
   );
 };
 
-function getRightContent(state: TodoState): JSX.Element {
+function getRightContent(state: ProgressState): JSX.Element {
   switch (state) {
-    case TodoState.Pending:
+    case ProgressState.Pending:
       return (
         <MaterialCommunityIcons
           name="format-list-checkbox"
@@ -37,7 +37,7 @@ function getRightContent(state: TodoState): JSX.Element {
           style={Styles.icon}
         />
       );
-    case TodoState.InProgress:
+    case ProgressState.InProgress:
       return (
         <MaterialCommunityIcons
           name="progress-check"
@@ -46,7 +46,7 @@ function getRightContent(state: TodoState): JSX.Element {
           style={Styles.icon}
         />
       );
-    case TodoState.Complete:
+    case ProgressState.Complete:
       return (
         <MaterialCommunityIcons
           name="check-circle-outline"

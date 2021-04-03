@@ -11,6 +11,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import BasicButton from '../../components/BasicButton';
 import { Colors } from '../../shared/Colors';
 import * as yup from 'yup';
+import { ProgressState } from '../../shared/Utils';
 
 type AddTodoScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<TodoStackNavigatorParamList, 'AddTodo'>,
@@ -31,13 +32,25 @@ const schema = yup.object().shape({
 
 export class AddTodo extends React.Component<IProps> {
   render() {
-    const todoListStore = this.props.route.params.todoListStore;
+    const { todoListStore, progressState } = this.props.route.params;
     return (
       <Formik
         validationSchema={schema}
         initialValues={{ name: '', description: '' }}
         onSubmit={(values) => {
-          todoListStore.createTodo(values.name);
+          const newTodo = todoListStore.createTodo(values.name);
+          if (newTodo) {
+            switch (progressState) {
+              case ProgressState.Complete:
+                todoListStore.toggleTodoDoneState(newTodo.id);
+                break;
+              case ProgressState.InProgress:
+                todoListStore.toggleTodoProgressState(newTodo.id);
+                break;
+              default:
+                break;
+            }
+          }
           this.props.navigation.pop();
         }}>
         {({

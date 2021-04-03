@@ -7,7 +7,7 @@ import { IDisplayItemSection } from '../components/DisplayList';
 
 export type GenericTodo = ITodo | IGroupTodo | IReadingTodo;
 
-export enum TodoState {
+export enum ProgressState {
   Pending,
   InProgress,
   Complete,
@@ -19,14 +19,14 @@ export enum SectionTitles {
   Readings = 'Readings',
 }
 
-export function getTodoState(genericTodo: GenericTodo): TodoState {
+export function getTodoState(genericTodo: GenericTodo): ProgressState {
   if (genericTodo.done) {
-    return TodoState.Complete;
+    return ProgressState.Complete;
   } else if (genericTodo.in_progress) {
-    return TodoState.InProgress;
+    return ProgressState.InProgress;
   }
 
-  return TodoState.Pending;
+  return ProgressState.Pending;
 }
 
 // Section Ordering default = Groups => Todo => Readings

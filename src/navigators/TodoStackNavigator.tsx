@@ -10,6 +10,7 @@ import { TabNavigatorParamList } from './TabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 import { Colors } from '../shared/Colors';
+import { ProgressState } from '../shared/Utils';
 
 type TodoStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -25,7 +26,7 @@ interface IProps {
 
 export type TodoStackNavigatorParamList = {
   TodoList: { todoListStore: ITodoListStore };
-  AddTodo: { todoListStore: ITodoListStore };
+  AddTodo: { todoListStore: ITodoListStore; progressState: ProgressState };
   EditItem: { todoListStore: ITodoListStore; item: DisplayItemType };
 };
 
@@ -50,7 +51,10 @@ export default class TodoStackNavigator extends React.Component<IProps> {
         <this.stack.Screen
           name="AddTodo"
           component={AddTodo}
-          initialParams={{ todoListStore: todoListStore }}
+          initialParams={{
+            todoListStore: todoListStore,
+            progressState: ProgressState.Pending,
+          }}
           options={{
             title: 'New Todo',
             headerStyle: Styles.navHeader,

@@ -8,7 +8,7 @@ import {
 import { observer } from 'mobx-react';
 import React from 'react';
 import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
-import { formatSections } from '../../shared/Utils';
+import { formatSections, ProgressState } from '../../shared/Utils';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
@@ -75,6 +75,7 @@ export class TodoList extends React.Component<IProps> {
     console.log('Todo pressed');
     this.props.navigation.navigate('AddTodo', {
       todoListStore: this.props.route.params.todoListStore,
+      progressState: ProgressState.Pending,
     });
     this.closeFAB();
   };
