@@ -47,7 +47,6 @@ export class TodoList extends React.Component<IProps> {
   }
 
   render() {
-    console.log('todolist render');
     return (
       <View style={SharedStyles.listRoot}>
         <DisplayList data={this.todoListData} />
@@ -57,6 +56,7 @@ export class TodoList extends React.Component<IProps> {
           onClosePressed={this.closeFAB}
           onTodoPressed={this.onCreateTodoPressed}
           onGroupPressed={this.onCreateGroupPressed}
+          onReadingPressed={this.onCreateReadingPressed}
         />
       </View>
     );
@@ -84,6 +84,15 @@ export class TodoList extends React.Component<IProps> {
   private onCreateGroupPressed = () => {
     console.log('Group pressed');
     this.props.navigation.navigate('AddGroup', {
+      todoListStore: this.props.route.params.todoListStore,
+      progressState: ProgressState.Pending,
+    });
+    this.closeFAB();
+  };
+
+  private onCreateReadingPressed = () => {
+    console.log('Reading pressed');
+    this.props.navigation.navigate('AddReading', {
       todoListStore: this.props.route.params.todoListStore,
       progressState: ProgressState.Pending,
     });

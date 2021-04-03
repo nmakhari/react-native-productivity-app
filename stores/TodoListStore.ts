@@ -746,7 +746,7 @@ export class TodoListStore implements ITodoListStore {
   @computed
   get pendingReadings(): Realm.Results<IReading> {
     return this.readings.filtered(
-      'SUBQUERY(readings, $reading, $reading.done = true OR $reading.in_progress = true).@count = 0 SORT(id DESC)',
+      'SUBQUERY(readings, $reading, $reading.done = true OR $reading.in_progress = true).@count = 0 AND pagesComplete = 0 SORT(id DESC)',
     );
   }
 
@@ -767,7 +767,7 @@ export class TodoListStore implements ITodoListStore {
   @computed
   get inProgressReadings(): Realm.Results<IReading> {
     return this.readings.filtered(
-      'SUBQUERY(readings, $reading, $reading.done = false AND $reading.in_progress = true).@count > 0 SORT(id DESC)',
+      'SUBQUERY(readings, $reading, $reading.done = false AND $reading.in_progress = true).@count > 0 OR pagesComplete > 0 AND pagesComplete < pagesTotal SORT(id DESC)',
     );
   }
 
@@ -788,7 +788,7 @@ export class TodoListStore implements ITodoListStore {
   @computed
   get completedReadings(): Realm.Results<IReading> {
     return this.readings.filtered(
-      'SUBQUERY(readings, $reading, $reading.done = true AND $reading.in_progress = false).@count > 0 SORT(id DESC)',
+      'SUBQUERY(readings, $reading, $reading.done = true AND $reading.in_progress = false).@count > 0 OR pagesComplete = pagesTotal SORT(id DESC)',
     );
   }
 

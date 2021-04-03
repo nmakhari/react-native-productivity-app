@@ -8,7 +8,7 @@ interface IProps {
   onClosePressed: () => void;
   onTodoPressed: () => void;
   onGroupPressed: () => void;
-  // on reading pressed
+  onReadingPressed: () => void;
 }
 
 const AddItemFABGroup: React.FunctionComponent<IProps> = ({
@@ -17,6 +17,7 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
   onClosePressed,
   onTodoPressed,
   onGroupPressed,
+  onReadingPressed,
 }) => {
   return (
     <Provider>
@@ -32,7 +33,7 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
               icon: 'book-open-page-variant',
               label: 'Reading',
               color: Colors.secondaryGreen,
-              onPress: () => console.log('Pressed reading'),
+              onPress: onReadingPressed,
               small: false,
             },
             {

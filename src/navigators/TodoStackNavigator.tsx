@@ -12,6 +12,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 import { Colors } from '../shared/Colors';
 import { ProgressState } from '../shared/Utils';
+import AddReading from '../screens/TodoStackNavigatorScreens/AddReading';
 
 type TodoStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -29,6 +30,7 @@ export type TodoStackNavigatorParamList = {
   TodoList: { todoListStore: ITodoListStore };
   AddTodo: { todoListStore: ITodoListStore; progressState: ProgressState };
   AddGroup: { todoListStore: ITodoListStore; progressState: ProgressState };
+  AddReading: { todoListStore: ITodoListStore; progressState: ProgressState };
   EditItem: { todoListStore: ITodoListStore; item: DisplayItemType };
 };
 
@@ -72,6 +74,19 @@ export default class TodoStackNavigator extends React.Component<IProps> {
           }}
           options={{
             title: 'New Group',
+            headerStyle: Styles.navHeader,
+            headerTintColor: 'white',
+          }}
+        />
+        <this.stack.Screen
+          name="AddReading"
+          component={AddReading}
+          initialParams={{
+            todoListStore: todoListStore,
+            progressState: ProgressState.Pending,
+          }}
+          options={{
+            title: 'New Reading',
             headerStyle: Styles.navHeader,
             headerTintColor: 'white',
           }}
