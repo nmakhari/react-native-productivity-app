@@ -4,18 +4,14 @@ import realm, {
   ReadingTodoSchema,
   ReadingSchema,
   TodoSchema,
-  TodoListSchema,
 } from '../db/realmSchemas';
 import { IGroup, IGroupTodo } from '../db/Groups';
 import { IReading, IReadingTodo } from '../db/Readings';
 import { ITodo } from '../db/Todo';
-import { ITodoList } from '../db/TodoList';
-import { observable, action, runInAction, makeObservable } from 'mobx';
 
 const kLogTag = 'TodoListStore';
 
 export interface ITodoListStore {
-  readonly todoList: ITodoList;
   readonly groups: Realm.Results<IGroup & Realm.Object>;
   readonly readings: Realm.Results<IReading & Realm.Object>;
   readonly todos: Realm.Results<ITodo & Realm.Object>;
@@ -75,29 +71,21 @@ export interface ITodoListStore {
 }
 
 export class TodoListStore implements ITodoListStore {
-  @observable todoList: ITodoList;
-
   groups: Realm.Results<IGroup & Realm.Object>;
   readings: Realm.Results<IReading & Realm.Object>;
   todos: Realm.Results<ITodo & Realm.Object>;
 
   // https://github.com/mobxjs/mobx/issues/1898
+  // this was previously used to solve reactions on mobx/realm interactions
+  // consider implementing with mobx-realm from the start in the future, for now
+  // built in realm reactions work fine
   constructor() {
-    makeObservable(this);
-    runInAction(() => {
-      this.todoList = realm.objects<ITodoList>(TodoListSchema.name)[0];
+    console.log('initializing items');
+    this.groups = realm.objects<IGroup>(GroupSchema.name);
+    this.readings = realm.objects<IReading>(ReadingSchema.name);
+    this.todos = realm.objects<ITodo>(TodoSchema.name);
 
-      if (!this.todoList) {
-        this._initTodoList();
-      }
-
-      console.log('initializing items');
-      this.groups = realm.objects<IGroup>(GroupSchema.name);
-      this.readings = realm.objects<IReading>(ReadingSchema.name);
-      this.todos = realm.objects<ITodo>(TodoSchema.name);
-
-      console.log(kLogTag + ' todo list initialized');
-    });
+    console.log(kLogTag + ' todo list initialized');
   }
 
   // Completely clear out the current todolist of all child elements
@@ -111,7 +99,6 @@ export class TodoListStore implements ITodoListStore {
     });
   }
 
-  @action
   createTodo(name: string): ITodo | undefined {
     let id = 1;
 
@@ -130,7 +117,7 @@ export class TodoListStore implements ITodoListStore {
 
     try {
       realm.write(() => {
-        this.todoList.items.push(realm.create(TodoSchema.name, newTodo));
+        realm.create(TodoSchema.name, newTodo);
       });
     } catch (error) {
       console.log(kLogTag + ' error adding Todo' + ' error: ' + error);
@@ -143,7 +130,6 @@ export class TodoListStore implements ITodoListStore {
     return realm.objectForPrimaryKey<ITodo>(TodoSchema.name, id);
   }
 
-  @action
   toggleTodoDoneState(id: number) {
     const selectedTodo = this.getTodo(id);
 
@@ -172,7 +158,6 @@ export class TodoListStore implements ITodoListStore {
     );
   }
 
-  @action
   toggleTodoProgressState(id: number) {
     const selectedTodo = this.getTodo(id);
 
@@ -201,7 +186,6 @@ export class TodoListStore implements ITodoListStore {
     );
   }
 
-  @action
   deleteTodo(id: number) {
     const selectedTodo = this.getTodo(id);
 
@@ -225,7 +209,6 @@ export class TodoListStore implements ITodoListStore {
     console.log(kLogTag + ' error deleting todo, id: ' + id + ' not found');
   }
 
-  @action
   createGroup(name: string, description?: string): IGroup | undefined {
     let id = 1;
 
@@ -247,7 +230,7 @@ export class TodoListStore implements ITodoListStore {
 
     try {
       realm.write(() => {
-        this.todoList.groups.push(realm.create(GroupSchema.name, newGroup));
+        realm.create(GroupSchema.name, newGroup);
       });
     } catch (error) {
       console.log(
@@ -466,7 +449,7 @@ export class TodoListStore implements ITodoListStore {
   ): IReading | undefined {
     let id = 1;
 
-    const currentReadings = this.todoList.readings.sorted('id', true);
+    const currentReadings = this.readings.sorted('id', true);
 
     if (currentReadings.length > 0) {
       id = currentReadings[0].id + 1;
@@ -482,9 +465,7 @@ export class TodoListStore implements ITodoListStore {
 
     try {
       realm.write(() => {
-        this.todoList.readings.push(
-          realm.create(ReadingSchema.name, newReading),
-        );
+        realm.create(ReadingSchema.name, newReading);
       });
     } catch (error) {
       console.log(
@@ -767,18 +748,5 @@ export class TodoListStore implements ITodoListStore {
     return this.readings.filtered(
       'SUBQUERY(readings, $reading, $reading.done = true AND $reading.in_progress = false).@count > 0 OR pagesComplete = pagesTotal SORT(id DESC)',
     );
-  }
-
-  private _initTodoList() {
-    try {
-      realm.write(() => {
-        let todoList = {
-          creationDate: new Date(),
-        };
-        realm.create(TodoListSchema.name, todoList);
-      });
-    } catch (error) {
-      console.log(kLogTag + ' error initializing todoList');
-    }
   }
 }
