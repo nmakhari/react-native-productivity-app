@@ -195,6 +195,7 @@ export default class DisplayList extends React.Component<IProps> {
   @action
   private setModalDataTodo(todo: ITodo) {
     this.modalData.name = todo.name;
+    this.modalData.description = todo.description;
   }
 
   @action

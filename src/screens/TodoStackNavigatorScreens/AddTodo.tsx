@@ -37,7 +37,10 @@ const AddTodo: React.FunctionComponent<IProps> = ({ navigation, route }) => {
       validationSchema={schema}
       initialValues={{ name: '', description: '' }}
       onSubmit={(values) => {
-        const newTodo = todoListStore.createTodo(values.name);
+        const newTodo = todoListStore.createTodo(
+          values.name,
+          values.description,
+        );
         if (newTodo) {
           switch (progressState) {
             case ProgressState.Complete:

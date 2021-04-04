@@ -13,6 +13,7 @@ import SharedStyles from '../../shared/SharedStyles';
 import { ITodo } from '../../../db/Todo';
 import { IGroup } from '../../../db/Groups';
 import { IReading } from '../../../db/Readings';
+import { observer } from 'mobx-react';
 
 type InProgressScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<InProgressStackNavigatorParamsList, 'InProgressList'>,
@@ -29,6 +30,7 @@ interface IProps {
   route: InProgressListScreenRouteProp;
 }
 
+@observer
 export class InProgressList extends React.Component<IProps> {
   @observable private inProgressListData: IDisplayItemSection[];
   private todos: Realm.Results<ITodo & Realm.Object>;

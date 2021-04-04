@@ -2,7 +2,6 @@ import Realm, { ObjectSchema } from 'realm';
 
 // schema name constants
 export enum SchemaNames {
-  TODO_LIST_SCHEMA = 'TodoList',
   GROUP_SCHEMA = 'Group',
   READING_SCHEMA = 'Reading',
   TODO_SCHEMA = 'Todo',
@@ -45,6 +44,7 @@ export const TodoSchema: ObjectSchema = {
   properties: {
     id: 'int', // primary key
     name: 'string',
+    description: 'string?',
     done: { type: 'bool', default: false },
     in_progress: { type: 'bool', default: false },
   },
@@ -77,16 +77,6 @@ export const GroupSchema: ObjectSchema = {
   },
 };
 
-export const TodoListSchema: ObjectSchema = {
-  name: SchemaNames.TODO_LIST_SCHEMA,
-  properties: {
-    creationDate: 'date',
-    groups: { type: 'list', objectType: SchemaNames.GROUP_SCHEMA },
-    readings: { type: 'list', objectType: SchemaNames.READING_SCHEMA },
-    items: { type: 'list', objectType: SchemaNames.TODO_SCHEMA },
-  },
-};
-
 export default new Realm({
   schema: [
     GroupTodoSchema,
@@ -94,8 +84,7 @@ export default new Realm({
     TodoSchema,
     GroupSchema,
     ReadingSchema,
-    TodoListSchema,
   ],
   deleteRealmIfMigrationNeeded: true,
-  schemaVersion: 4,
+  schemaVersion: 5,
 });

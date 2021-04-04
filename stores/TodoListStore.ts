@@ -28,7 +28,7 @@ export interface ITodoListStore {
   readonly completedGroups: Realm.Results<IGroup & Realm.Object>;
   readonly completedReadings: Realm.Results<IReading & Realm.Object>;
 
-  createTodo(name: string): ITodo | undefined;
+  createTodo(name: string, description?: string): ITodo | undefined;
   getTodo(id: number): ITodo | undefined;
   toggleTodoDoneState(id: number): void;
   toggleTodoProgressState(id: number): void;
@@ -99,7 +99,7 @@ export class TodoListStore implements ITodoListStore {
     });
   }
 
-  createTodo(name: string): ITodo | undefined {
+  createTodo(name: string, description?: string): ITodo | undefined {
     let id = 1;
 
     const currentTodos = this.todos.sorted('id', true);
@@ -111,6 +111,7 @@ export class TodoListStore implements ITodoListStore {
     const newTodo = {
       id: id,
       name: name,
+      description: description,
       done: false,
       in_progress: false,
     };

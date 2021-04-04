@@ -13,6 +13,7 @@ import SharedStyles from '../../shared/SharedStyles';
 import { ITodo } from '../../../db/Todo';
 import { IGroup } from '../../../db/Groups';
 import { IReading } from '../../../db/Readings';
+import { observer } from 'mobx-react';
 
 type CompletedListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<CompletedStackNavigatorParamsList, 'CompletedList'>,
@@ -29,6 +30,7 @@ interface IProps {
   route: CompletedListScreenRouteProp;
 }
 
+@observer
 export class CompletedList extends React.Component<IProps> {
   @observable private completedListData: IDisplayItemSection[];
   private todos: Realm.Results<ITodo & Realm.Object>;

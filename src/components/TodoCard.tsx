@@ -20,6 +20,7 @@ const TodoCard: FunctionComponent<IProps> = ({ todo, onPress }) => {
   return (
     <Card
       title={todo.name}
+      description={todo.description}
       rightContent={getRightContent(state)}
       onPress={onPressTriggered}
     />
