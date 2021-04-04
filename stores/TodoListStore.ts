@@ -10,33 +10,27 @@ import { IGroup, IGroupTodo } from '../db/Groups';
 import { IReading, IReadingTodo } from '../db/Readings';
 import { ITodo } from '../db/Todo';
 import { ITodoList } from '../db/TodoList';
-import {
-  observable,
-  action,
-  computed,
-  runInAction,
-  makeObservable,
-} from 'mobx';
+import { observable, action, runInAction, makeObservable } from 'mobx';
 
 const kLogTag = 'TodoListStore';
 
 export interface ITodoListStore {
   readonly todoList: ITodoList;
-  readonly groups: Realm.List<IGroup>;
-  readonly readings: Realm.List<IReading>;
-  readonly todos: Realm.List<ITodo>;
+  readonly groups: Realm.Results<IGroup & Realm.Object>;
+  readonly readings: Realm.Results<IReading & Realm.Object>;
+  readonly todos: Realm.Results<ITodo & Realm.Object>;
 
-  readonly pendingTodos: Realm.Results<ITodo>;
-  readonly pendingGroups: Realm.Results<IGroup>;
-  readonly pendingReadings: Realm.Results<IReading>;
+  readonly pendingTodos: Realm.Results<ITodo & Realm.Object>;
+  readonly pendingGroups: Realm.Results<IGroup & Realm.Object>;
+  readonly pendingReadings: Realm.Results<IReading & Realm.Object>;
 
-  readonly inProgressTodos: Realm.Results<ITodo>;
-  readonly inProgressGroups: Realm.Results<IGroup>;
-  readonly inProgressReadings: Realm.Results<IReading>;
+  readonly inProgressTodos: Realm.Results<ITodo & Realm.Object>;
+  readonly inProgressGroups: Realm.Results<IGroup & Realm.Object>;
+  readonly inProgressReadings: Realm.Results<IReading & Realm.Object>;
 
-  readonly completedTodos: Realm.Results<ITodo>;
-  readonly completedGroups: Realm.Results<IGroup>;
-  readonly completedReadings: Realm.Results<IReading>;
+  readonly completedTodos: Realm.Results<ITodo & Realm.Object>;
+  readonly completedGroups: Realm.Results<IGroup & Realm.Object>;
+  readonly completedReadings: Realm.Results<IReading & Realm.Object>;
 
   createTodo(name: string): ITodo | undefined;
   getTodo(id: number): ITodo | undefined;
@@ -83,6 +77,11 @@ export interface ITodoListStore {
 export class TodoListStore implements ITodoListStore {
   @observable todoList: ITodoList;
 
+  groups: Realm.Results<IGroup & Realm.Object>;
+  readings: Realm.Results<IReading & Realm.Object>;
+  todos: Realm.Results<ITodo & Realm.Object>;
+
+  // https://github.com/mobxjs/mobx/issues/1898
   constructor() {
     makeObservable(this);
     runInAction(() => {
@@ -91,6 +90,11 @@ export class TodoListStore implements ITodoListStore {
       if (!this.todoList) {
         this._initTodoList();
       }
+
+      console.log('initializing items');
+      this.groups = realm.objects<IGroup>(GroupSchema.name);
+      this.readings = realm.objects<IReading>(ReadingSchema.name);
+      this.todos = realm.objects<ITodo>(TodoSchema.name);
 
       console.log(kLogTag + ' todo list initialized');
     });
@@ -708,26 +712,7 @@ export class TodoListStore implements ITodoListStore {
     );
   }
 
-  @computed
-  get groups(): Realm.List<IGroup> {
-    console.log(kLogTag + ' get Groups');
-    return this.todoList.groups;
-  }
-
-  @computed
-  get readings(): Realm.List<IReading> {
-    console.log(kLogTag + ' get Readings');
-    return this.todoList.readings;
-  }
-
-  @computed
-  get todos(): Realm.List<ITodo> {
-    console.log(kLogTag + ' get Todos');
-    return this.todoList.items;
-  }
-
-  @computed
-  get pendingTodos(): Realm.Results<ITodo> {
+  get pendingTodos(): Realm.Results<ITodo & Realm.Object> {
     return this.todos.filtered(
       'done = false AND in_progress = false SORT(id DESC)',
     );
@@ -736,57 +721,49 @@ export class TodoListStore implements ITodoListStore {
   // https://docs.mongodb.com/realm-legacy/docs/javascript/latest/api/tutorial-query-language.html
 
   // For pending groups and readings, check if there is anything inProgress OR complete, if not, then it's pending
-  @computed
-  get pendingGroups(): Realm.Results<IGroup> {
+  get pendingGroups(): Realm.Results<IGroup & Realm.Object> {
     return this.groups.filtered(
       'SUBQUERY(items, $item, $item.done = true OR $item.in_progress = true).@count = 0 SORT(id DESC)',
     );
   }
 
-  @computed
-  get pendingReadings(): Realm.Results<IReading> {
+  get pendingReadings(): Realm.Results<IReading & Realm.Object> {
     return this.readings.filtered(
       'SUBQUERY(readings, $reading, $reading.done = true OR $reading.in_progress = true).@count = 0 AND pagesComplete = 0 SORT(id DESC)',
     );
   }
 
-  @computed
-  get inProgressTodos(): Realm.Results<ITodo> {
+  get inProgressTodos(): Realm.Results<ITodo & Realm.Object> {
     return this.todos.filtered(
       'done = false AND in_progress = true SORT(id DESC)',
     );
   }
 
-  @computed
-  get inProgressGroups(): Realm.Results<IGroup> {
+  get inProgressGroups(): Realm.Results<IGroup & Realm.Object> {
     return this.groups.filtered(
       'SUBQUERY(items, $item, $item.done = false AND $item.in_progress = true).@count > 0 SORT(id DESC)',
     );
   }
 
-  @computed
-  get inProgressReadings(): Realm.Results<IReading> {
+  get inProgressReadings(): Realm.Results<IReading & Realm.Object> {
     return this.readings.filtered(
       'SUBQUERY(readings, $reading, $reading.done = false AND $reading.in_progress = true).@count > 0 OR pagesComplete > 0 AND pagesComplete < pagesTotal SORT(id DESC)',
     );
   }
 
-  @computed
-  get completedTodos(): Realm.Results<ITodo> {
+  get completedTodos(): Realm.Results<ITodo & Realm.Object> {
     return this.todos.filtered(
       'done = true AND in_progress = false SORT(id DESC)',
     );
   }
 
-  @computed
-  get completedGroups(): Realm.Results<IGroup> {
+  get completedGroups(): Realm.Results<IGroup & Realm.Object> {
     return this.groups.filtered(
       'SUBQUERY(items, $item, $item.done = true AND $item.in_progress = false).@count > 0 SORT(id DESC)',
     );
   }
 
-  @computed
-  get completedReadings(): Realm.Results<IReading> {
+  get completedReadings(): Realm.Results<IReading & Realm.Object> {
     return this.readings.filtered(
       'SUBQUERY(readings, $reading, $reading.done = true AND $reading.in_progress = false).@count > 0 OR pagesComplete = pagesTotal SORT(id DESC)',
     );

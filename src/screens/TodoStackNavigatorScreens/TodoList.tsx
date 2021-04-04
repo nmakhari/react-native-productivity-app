@@ -1,10 +1,4 @@
-import {
-  action,
-  computed,
-  makeObservable,
-  observable,
-  runInAction,
-} from 'mobx';
+import { action, makeObservable, observable, runInAction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
@@ -18,6 +12,9 @@ import { RouteProp } from '@react-navigation/native';
 import SharedStyles from '../../shared/SharedStyles';
 import { View } from 'react-native';
 import AddItemFABGroup from '../../components/AddItemFABGroup';
+import { ITodo } from '../../../db/Todo';
+import { IGroup } from '../../../db/Groups';
+import { IReading } from '../../../db/Readings';
 
 type TodoListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<TodoStackNavigatorParamList, 'TodoList'>,
@@ -37,19 +34,46 @@ interface IProps {
 @observer
 export class TodoList extends React.Component<IProps> {
   @observable private isFABOpen: boolean;
+  @observable private todoListData: IDisplayItemSection[];
+
+  private todos: Realm.Results<ITodo & Realm.Object>;
+  private groups: Realm.Results<IGroup & Realm.Object>;
+  private readings: Realm.Results<IReading & Realm.Object>;
 
   constructor(props: IProps) {
     super(props);
     makeObservable(this);
+    const { todoListStore } = props.route.params;
+    this.todos = todoListStore.pendingTodos;
+    this.groups = todoListStore.pendingGroups;
+    this.readings = todoListStore.pendingReadings;
     runInAction(() => {
       this.isFABOpen = false;
+      this.todoListData = formatSections(
+        this.todos,
+        this.groups,
+        this.readings,
+      );
     });
   }
+  // Todo: Create data formatting for each section independently so that only the changed section is recalculated
+  componentDidMount() {
+    this.todos.addListener(() => this.onDataChanged());
+    this.groups.addListener(() => this.onDataChanged());
+    this.readings.addListener(() => this.onDataChanged());
+  }
 
+  componentWillUnmount() {
+    this.todos.removeListener;
+    this.groups.removeListener;
+    this.readings.removeListener;
+  }
+
+  // toJS needs to be applied to the mobx observable array in order to work properly with SectionList
   render() {
     return (
       <View style={SharedStyles.listRoot}>
-        <DisplayList data={this.todoListData} />
+        <DisplayList data={toJS(this.todoListData)} />
         <AddItemFABGroup
           open={this.isFABOpen}
           onPress={this.openFAB}
@@ -99,13 +123,9 @@ export class TodoList extends React.Component<IProps> {
     this.closeFAB();
   };
 
-  @computed
-  private get todoListData(): IDisplayItemSection[] {
-    const todoListStore = this.props.route.params.todoListStore;
-    const todos = todoListStore.pendingTodos;
-    const groups = todoListStore.pendingGroups;
-    const readings = todoListStore.pendingReadings;
-
-    return formatSections(todos, groups, readings);
+  @action
+  private onDataChanged(): void {
+    console.log('recalculating todolist data');
+    this.todoListData = formatSections(this.todos, this.groups, this.readings);
   }
 }
