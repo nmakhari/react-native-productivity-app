@@ -215,13 +215,17 @@ const Styles = StyleSheet.create({
     flex: 1,
   },
   list: {
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryGreyDark,
   },
   sectionHeaderText: {
     fontSize: 32,
     color: 'white',
     marginLeft: 20,
+    marginTop: 15,
+    marginBottom: 10,
     fontWeight: 'bold',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.primaryGreyLight,
   },
   listEmptySubtitle: {
     fontSize: 18,

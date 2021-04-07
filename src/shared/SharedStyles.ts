@@ -4,12 +4,12 @@ import { Colors } from './Colors';
 const SharedStyles = StyleSheet.create({
   screenRoot: {
     flex: 1,
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryGreyDark,
     justifyContent: 'space-between',
   },
   listRoot: {
     flex: 1,
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryGreyDark,
   },
   circularProgressChildText: {
     color: Colors.secondaryGreen,
