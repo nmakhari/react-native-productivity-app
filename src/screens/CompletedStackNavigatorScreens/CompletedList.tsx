@@ -8,7 +8,7 @@ import { RouteProp } from '@react-navigation/native';
 import { CompletedStackNavigatorParamsList } from '../../navigators/CompletedStackNavigator';
 import { action, makeObservable, observable, runInAction, toJS } from 'mobx';
 import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
-import { formatSections } from '../../shared/Utils';
+import { formatSections, ProgressState } from '../../shared/Utils';
 import SharedStyles from '../../shared/SharedStyles';
 import { ITodo } from '../../../db/Todo';
 import { IGroup } from '../../../db/Groups';
@@ -68,7 +68,11 @@ export class CompletedList extends React.Component<IProps> {
   render() {
     return (
       <View style={SharedStyles.listRoot}>
-        <DisplayList data={toJS(this.completedListData)} />
+        <DisplayList
+          todoListStore={this.props.route.params.todoListStore}
+          data={toJS(this.completedListData)}
+          progressState={ProgressState.Complete}
+        />
       </View>
     );
   }

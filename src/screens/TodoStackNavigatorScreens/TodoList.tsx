@@ -73,7 +73,11 @@ export class TodoList extends React.Component<IProps> {
   render() {
     return (
       <View style={SharedStyles.listRoot}>
-        <DisplayList data={toJS(this.todoListData)} />
+        <DisplayList
+          todoListStore={this.props.route.params.todoListStore}
+          data={toJS(this.todoListData)}
+          progressState={ProgressState.Pending}
+        />
         <AddItemFABGroup
           open={this.isFABOpen}
           onPress={this.openFAB}

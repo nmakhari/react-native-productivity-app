@@ -6,14 +6,25 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Colors } from '../shared/Colors';
 import { Text } from 'react-native';
 import SharedStyles from '../shared/SharedStyles';
+import { ProgressState } from '../shared/Utils';
 
 interface IProps {
   group: IGroup;
   onLongPress: (group: IGroup) => void;
-  // TODO: add functionality for sliding
+  progressState: ProgressState;
+  onSwipableLeftOpen: () => void;
+  onEditPressed: () => void;
+  onDeletePressed: () => void;
 }
 
-const GroupCard: FunctionComponent<IProps> = ({ group, onLongPress }) => {
+const GroupCard: FunctionComponent<IProps> = ({
+  group,
+  onLongPress,
+  progressState,
+  onSwipableLeftOpen,
+  onEditPressed,
+  onDeletePressed,
+}) => {
   const onLongPressTriggered = () => {
     onLongPress(group);
   };
@@ -25,6 +36,10 @@ const GroupCard: FunctionComponent<IProps> = ({ group, onLongPress }) => {
       logo={getLogo()}
       rightContent={getRightContent(group)}
       onLongPress={onLongPressTriggered}
+      progressState={progressState}
+      onSwipableLeftOpen={onSwipableLeftOpen}
+      onEditPressed={onEditPressed}
+      onDeletePressed={onDeletePressed}
     />
   );
 };

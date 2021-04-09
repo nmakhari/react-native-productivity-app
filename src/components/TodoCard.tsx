@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import Card from './Card';
 import { ITodo } from '../../db/Todo';
-import { ProgressState, getTodoState } from '../shared/Utils';
+import { ProgressState } from '../shared/Utils';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../shared/Colors';
 import { StyleSheet } from 'react-native';
@@ -9,20 +9,33 @@ import { StyleSheet } from 'react-native';
 interface IProps {
   todo: ITodo;
   onPress: (todo: ITodo) => void;
-  // TODO: add functionality for sliding
+  progressState: ProgressState;
+  onSwipableLeftOpen: () => void;
+  onEditPressed: () => void;
+  onDeletePressed: () => void;
 }
-const TodoCard: FunctionComponent<IProps> = ({ todo, onPress }) => {
+const TodoCard: FunctionComponent<IProps> = ({
+  todo,
+  onPress,
+  progressState,
+  onSwipableLeftOpen,
+  onEditPressed,
+  onDeletePressed,
+}) => {
   const onPressTriggered = () => {
     onPress(todo);
   };
 
-  const state = getTodoState(todo);
   return (
     <Card
       title={todo.name}
       description={todo.description}
-      rightContent={getRightContent(state)}
+      rightContent={getRightContent(progressState)}
       onPress={onPressTriggered}
+      progressState={progressState}
+      onSwipableLeftOpen={onSwipableLeftOpen}
+      onEditPressed={onEditPressed}
+      onDeletePressed={onDeletePressed}
     />
   );
 };

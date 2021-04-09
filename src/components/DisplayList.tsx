@@ -13,7 +13,7 @@ import { Colors } from '../shared/Colors';
 import { IGroup } from '../../db/Groups';
 import { IReading } from '../../db/Readings';
 import { ITodo } from '../../db/Todo';
-import { SectionTitles } from '../shared/Utils';
+import { ProgressState, SectionTitles } from '../shared/Utils';
 import TodoCard from '../components/TodoCard';
 import GroupCard from '../components/GroupCard';
 import ReadingCard from '../components/ReadingCard';
@@ -21,6 +21,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import DisplayItem from './DisplayItem';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
+import { ITodoListStore } from '../../stores/TodoListStore';
 
 export type DisplayItemType = IGroup | IReading | ITodo;
 
@@ -44,6 +45,8 @@ export interface IModalData {
 
 interface IProps {
   data: IDisplayItemSection[];
+  progressState: ProgressState;
+  todoListStore: ITodoListStore;
 }
 
 // contentContainerStyle on SectionList needs to be set to flexGrow 1 in order
@@ -120,6 +123,7 @@ export default class DisplayList extends React.Component<IProps> {
     item: DisplayItemType;
     section: SectionListData<DisplayItemType, IDisplayItemSection>;
   }) => {
+    const { progressState, todoListStore } = this.props;
     switch (section.title) {
       case SectionTitles.Groups.toString():
         return (
@@ -128,6 +132,16 @@ export default class DisplayList extends React.Component<IProps> {
             onLongPress={(group: IGroup) => {
               this.setModalDataGroup(group);
               this.openModal();
+            }}
+            progressState={progressState}
+            onSwipableLeftOpen={() => {
+              console.log('Group swiped left');
+            }}
+            onEditPressed={() => {
+              console.log('Group edit pressed');
+            }}
+            onDeletePressed={() => {
+              todoListStore.deleteGroup(item.id);
             }}
           />
         );
@@ -139,6 +153,16 @@ export default class DisplayList extends React.Component<IProps> {
               this.setModalDataTodo(todo);
               this.openModal();
             }}
+            progressState={progressState}
+            onSwipableLeftOpen={() => {
+              console.log('Todo swiped left');
+            }}
+            onEditPressed={() => {
+              console.log('Todo edit pressed');
+            }}
+            onDeletePressed={() => {
+              todoListStore.deleteTodo(item.id);
+            }}
           />
         );
       default:
@@ -148,6 +172,16 @@ export default class DisplayList extends React.Component<IProps> {
             onLongPress={(reading: IReading) => {
               this.setModalDataReading(reading);
               this.openModal();
+            }}
+            progressState={progressState}
+            onSwipableLeftOpen={() => {
+              console.log('Reading swiped left');
+            }}
+            onEditPressed={() => {
+              console.log('Reading edit pressed');
+            }}
+            onDeletePressed={() => {
+              todoListStore.deleteReading(item.id);
             }}
           />
         );
