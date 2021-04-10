@@ -33,7 +33,9 @@ export default class Card extends React.Component<IProps> {
     return (
       <Swipeable
         leftThreshold={windowWidth * 0.75}
-        renderLeftActions={this.renderLeftContent}
+        renderLeftActions={
+          this.props.onSwipableLeftOpen ? this.renderLeftContent : undefined
+        }
         onSwipeableLeftOpen={this.props.onSwipableLeftOpen}
         renderRightActions={this.renderRightContent}
         rightThreshold={50}>

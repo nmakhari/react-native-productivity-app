@@ -12,7 +12,6 @@ interface IProps {
   reading: IReading;
   onLongPress: (reading: IReading) => void;
   progressState: ProgressState;
-  onSwipableLeftOpen: () => void;
   onEditPressed: () => void;
   onDeletePressed: () => void;
 }
@@ -21,7 +20,6 @@ const ReadingCard: FunctionComponent<IProps> = ({
   reading,
   onLongPress,
   progressState,
-  onSwipableLeftOpen,
   onEditPressed,
   onDeletePressed,
 }) => {
@@ -36,7 +34,6 @@ const ReadingCard: FunctionComponent<IProps> = ({
       rightContent={getRightContent(reading)}
       onLongPress={onLongPressTriggered}
       progressState={progressState}
-      onSwipableLeftOpen={onSwipableLeftOpen}
       onEditPressed={onEditPressed}
       onDeletePressed={onDeletePressed}
     />

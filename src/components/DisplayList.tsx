@@ -134,9 +134,6 @@ export default class DisplayList extends React.Component<IProps> {
               this.openModal();
             }}
             progressState={progressState}
-            onSwipableLeftOpen={() => {
-              console.log('Group swiped left');
-            }}
             onEditPressed={() => {
               console.log('Group edit pressed');
             }}
@@ -154,9 +151,7 @@ export default class DisplayList extends React.Component<IProps> {
               this.openModal();
             }}
             progressState={progressState}
-            onSwipableLeftOpen={() => {
-              console.log('Todo swiped left');
-            }}
+            onSwipableLeftOpen={this.getProceedTodo(item as ITodo)}
             onEditPressed={() => {
               console.log('Todo edit pressed');
             }}
@@ -174,9 +169,6 @@ export default class DisplayList extends React.Component<IProps> {
               this.openModal();
             }}
             progressState={progressState}
-            onSwipableLeftOpen={() => {
-              console.log('Reading swiped left');
-            }}
             onEditPressed={() => {
               console.log('Reading edit pressed');
             }}
@@ -193,6 +185,22 @@ export default class DisplayList extends React.Component<IProps> {
   }: {
     section: IDisplayItemSection;
   }) => <Text style={Styles.sectionHeaderText}>{section.title}</Text>;
+
+  private getProceedTodo(todo: ITodo): (() => void) | undefined {
+    const { progressState, todoListStore } = this.props;
+    switch (progressState) {
+      case ProgressState.Pending:
+        return () => {
+          todoListStore.toggleTodoProgressState(todo.id);
+        };
+      case ProgressState.InProgress:
+        return () => {
+          todoListStore.toggleTodoDoneState(todo.id);
+        };
+      default:
+    }
+    return;
+  }
 
   @action
   private openModal = () => {

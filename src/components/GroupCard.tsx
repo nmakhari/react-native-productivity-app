@@ -12,7 +12,6 @@ interface IProps {
   group: IGroup;
   onLongPress: (group: IGroup) => void;
   progressState: ProgressState;
-  onSwipableLeftOpen: () => void;
   onEditPressed: () => void;
   onDeletePressed: () => void;
 }
@@ -21,7 +20,6 @@ const GroupCard: FunctionComponent<IProps> = ({
   group,
   onLongPress,
   progressState,
-  onSwipableLeftOpen,
   onEditPressed,
   onDeletePressed,
 }) => {
@@ -37,7 +35,6 @@ const GroupCard: FunctionComponent<IProps> = ({
       rightContent={getRightContent(group)}
       onLongPress={onLongPressTriggered}
       progressState={progressState}
-      onSwipableLeftOpen={onSwipableLeftOpen}
       onEditPressed={onEditPressed}
       onDeletePressed={onDeletePressed}
     />

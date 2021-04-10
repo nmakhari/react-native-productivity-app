@@ -10,7 +10,7 @@ interface IProps {
   todo: ITodo;
   onPress: (todo: ITodo) => void;
   progressState: ProgressState;
-  onSwipableLeftOpen: () => void;
+  onSwipableLeftOpen?: () => void;
   onEditPressed: () => void;
   onDeletePressed: () => void;
 }
