@@ -48,7 +48,7 @@ const GroupForm: React.FunctionComponent<IProps> = ({
       }
       onSubmit={(values) => {
         if (existingGroup) {
-          let updatedGroup: IGroup = {
+          const updatedGroup: IGroup = {
             id: existingGroup.id,
             name: values.name,
             creationDate: existingGroup.creationDate,

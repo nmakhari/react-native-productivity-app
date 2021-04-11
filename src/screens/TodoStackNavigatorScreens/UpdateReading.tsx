@@ -6,30 +6,37 @@ import ReadingForm from '../../components/ReadingForm';
 import { TabNavigatorParamList } from '../../navigators/TabNavigator';
 import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
 
-type AddReadingScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<TodoStackNavigatorParamList, 'AddReading'>,
+type UpdateReadingScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<TodoStackNavigatorParamList, 'UpdateReading'>,
   MaterialBottomTabNavigationProp<TabNavigatorParamList>
 >;
 
-type AddReadingScreenRouteProp = RouteProp<
+type UpdateReadingScreenRouteProp = RouteProp<
   TodoStackNavigatorParamList,
-  'AddReading'
+  'UpdateReading'
 >;
 
 interface IProps {
-  navigation: AddReadingScreenNavigationProp;
-  route: AddReadingScreenRouteProp;
+  navigation: UpdateReadingScreenNavigationProp;
+  route: UpdateReadingScreenRouteProp;
 }
 
-const AddReading: React.FunctionComponent<IProps> = ({ navigation, route }) => {
-  const { todoListStore } = route.params;
+const UpdateReading: React.FunctionComponent<IProps> = ({
+  navigation,
+  route,
+}) => {
+  const { todoListStore, existingReading } = route.params;
   const onFormSubmit = () => {
     navigation.pop();
   };
 
   return (
-    <ReadingForm todoListStore={todoListStore} onFormSubmit={onFormSubmit} />
+    <ReadingForm
+      todoListStore={todoListStore}
+      onFormSubmit={onFormSubmit}
+      existingReading={existingReading}
+    />
   );
 };
 
-export default AddReading;
+export default UpdateReading;

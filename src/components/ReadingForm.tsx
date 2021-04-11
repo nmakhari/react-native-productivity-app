@@ -6,15 +6,30 @@ import { Formik } from 'formik';
 import SharedStyles from '../shared/SharedStyles';
 import { Colors } from '../shared/Colors';
 import BasicButton from './BasicButton';
+import { IReading, IReadingTodo } from '../../db/Readings';
+
+export type ExistingReading = {
+  id: number;
+  creationDate: Date;
+  readings: Realm.List<IReadingTodo>;
+  initialValues: ReadingFormValues;
+};
+
+export type ReadingFormValues = {
+  name: string;
+  pagesComplete: string;
+  pagesTotal: string;
+};
 
 interface IProps {
   todoListStore: ITodoListStore;
   onFormSubmit: () => void;
+  existingReading?: ExistingReading;
 }
 
 const schema = yup.object().shape({
   name: yup.string().required('Reading Name is Required'),
-  totalPages: yup
+  pagesTotal: yup
     .number()
     .integer('Page Count must be an integer')
     .moreThan(0, 'Enter a valid page count')
@@ -24,21 +39,41 @@ const schema = yup.object().shape({
     .integer()
     .nullable()
     .min(0, 'Cannot complete less than 0 pages')
-    .max(yup.ref('totalPages'), 'Cannot complete more than total pages'),
+    .max(yup.ref('pagesTotal'), 'Cannot complete more than total pages'),
 });
 
 const ReadingForm: React.FunctionComponent<IProps> = ({
   todoListStore,
   onFormSubmit,
+  existingReading,
 }) => {
   return (
     <Formik
       validationSchema={schema}
-      initialValues={{ name: '', totalPages: '', pagesComplete: '' }}
+      initialValues={
+        existingReading
+          ? existingReading.initialValues
+          : { name: '', pagesTotal: '', pagesComplete: '' }
+      }
       onSubmit={(values) => {
+        if (existingReading) {
+          const updatedReading: IReading = {
+            id: existingReading.id,
+            name: values.name,
+            creationDate: existingReading.creationDate,
+            pagesComplete: values.pagesComplete
+              ? parseInt(values.pagesComplete, 10)
+              : 0,
+            pagesTotal: parseInt(values.pagesTotal, 10),
+            readings: existingReading.readings,
+          };
+          todoListStore.updateReading(updatedReading);
+          onFormSubmit();
+          return;
+        }
         todoListStore.createReading(
           values.name,
-          parseInt(values.totalPages, 10),
+          parseInt(values.pagesTotal, 10),
           values.pagesComplete ? parseInt(values.pagesComplete, 10) : 0,
         );
         onFormSubmit();
@@ -67,17 +102,17 @@ const ReadingForm: React.FunctionComponent<IProps> = ({
 
             <TextInput
               keyboardType="numeric"
-              onChangeText={handleChange('totalPages')}
-              onBlur={handleBlur('totalPages')}
-              value={values.totalPages.toString()}
+              onChangeText={handleChange('pagesTotal')}
+              onBlur={handleBlur('pagesTotal')}
+              value={values.pagesTotal.toString()}
               placeholder="Page Count"
               placeholderTextColor={Colors.textInputPlaceholder}
               style={Styles.secondaryText}
               multiline={false}
             />
-            {errors.totalPages && (
+            {errors.pagesTotal && (
               <Text style={SharedStyles.formErrorText}>
-                {errors.totalPages}
+                {errors.pagesTotal}
               </Text>
             )}
 
@@ -99,7 +134,7 @@ const ReadingForm: React.FunctionComponent<IProps> = ({
           </View>
 
           <BasicButton
-            title={'Create'}
+            title={existingReading ? 'Update' : 'Create'}
             onPress={handleSubmit}
             disabled={!isValid}
             style={Styles.button}

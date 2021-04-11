@@ -8,10 +8,11 @@ import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bott
 import { TabNavigatorParamList } from './TabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { ProgressState } from '../shared/Utils';
-import AddReading from '../screens/TodoStackNavigatorScreens/AddReading';
+import UpdateReading from '../screens/TodoStackNavigatorScreens/UpdateReading';
 import SharedStyles from '../shared/SharedStyles';
 import { ExistingTodo } from '../components/TodoForm';
 import { ExistingGroup } from '../components/GroupForm';
+import { ExistingReading } from '../components/ReadingForm';
 
 type TodoStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -36,7 +37,10 @@ export type TodoStackNavigatorParamList = {
     todoListStore: ITodoListStore;
     existingGroup?: ExistingGroup;
   };
-  AddReading: { todoListStore: ITodoListStore };
+  UpdateReading: {
+    todoListStore: ITodoListStore;
+    existingReading?: ExistingReading;
+  };
 };
 
 export default class TodoStackNavigator extends React.Component<IProps> {
@@ -83,8 +87,8 @@ export default class TodoStackNavigator extends React.Component<IProps> {
           }}
         />
         <this.stack.Screen
-          name="AddReading"
-          component={AddReading}
+          name="UpdateReading"
+          component={UpdateReading}
           initialParams={{
             todoListStore: todoListStore,
           }}

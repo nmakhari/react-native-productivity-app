@@ -79,6 +79,7 @@ export class TodoList extends React.Component<IProps> {
           progressState={ProgressState.Pending}
           onEditTodoPressed={this.onEditTodoPressed}
           onEditGroupPressed={this.onEditGroupPressed}
+          onEditReadingPressed={this.onEditReadingPressed}
         />
         <AddItemFABGroup
           open={this.isFABOpen}
@@ -152,9 +153,27 @@ export class TodoList extends React.Component<IProps> {
   };
 
   private onCreateReadingPressed = () => {
-    console.log('Reading pressed');
-    this.props.navigation.navigate('AddReading', {
+    console.log('Create Reading Pressed');
+    this.props.navigation.navigate('UpdateReading', {
       todoListStore: this.props.route.params.todoListStore,
+    });
+    this.closeFAB();
+  };
+
+  private onEditReadingPressed = (reading: IReading) => {
+    console.log('Edit Reading Pressed');
+    this.props.navigation.navigate('UpdateReading', {
+      todoListStore: this.props.route.params.todoListStore,
+      existingReading: {
+        id: reading.id,
+        creationDate: reading.creationDate,
+        readings: reading.readings,
+        initialValues: {
+          name: reading.name,
+          pagesTotal: reading.pagesTotal.toString(),
+          pagesComplete: reading.pagesComplete.toString(),
+        },
+      },
     });
     this.closeFAB();
   };
