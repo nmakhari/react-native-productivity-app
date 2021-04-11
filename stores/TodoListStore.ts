@@ -38,6 +38,7 @@ export interface ITodoListStore {
 
   createGroup(name: string, description?: string): IGroup | undefined;
   getGroup(id: number): IGroup | undefined;
+  updateGroup(group: IGroup): IGroup | undefined;
   deleteGroup(id: number): void;
 
   createGroupTodo(
@@ -46,6 +47,7 @@ export interface ITodoListStore {
     group: IGroup,
   ): IGroupTodo | undefined;
   getGroupTodo(id: number): IGroupTodo | undefined;
+  updateGroupTodo(groupTodo: IGroupTodo): IGroupTodo | undefined;
   toggleGroupTodoDoneState(id: number): void;
   toggleGroupTodoProgressState(id: number): void;
   deleteGroupTodo(id: number): void;
@@ -56,6 +58,7 @@ export interface ITodoListStore {
     pagesComplete?: number,
   ): IReading | undefined;
   getReading(id: number): IReading | undefined;
+  updateReading(reading: IReading): IReading | undefined;
   deleteReading(id: number): void;
 
   createReadingTodo(
@@ -65,6 +68,7 @@ export interface ITodoListStore {
     reading: IReading,
   ): IReadingTodo | undefined;
   getReadingTodo(id: number): IReadingTodo | undefined;
+  updateReadingTodo(readingTodo: IReadingTodo): IReadingTodo | undefined;
   toggleReadingTodoDoneState(id: number): void;
   toggleReadingTodoProgressState(id: number): void;
   deleteReadingTodo(id: number): void;
@@ -260,6 +264,24 @@ export class TodoListStore implements ITodoListStore {
     return realm.objectForPrimaryKey<IGroup>(GroupSchema.name, id);
   }
 
+  updateGroup(group: IGroup): IGroup | undefined {
+    try {
+      realm.write(() => {
+        realm.create(GroupSchema.name, group, Realm.UpdateMode.Modified);
+      });
+    } catch (error) {
+      console.log(
+        kLogTag +
+          ' error updating group => name: ' +
+          group.name +
+          ' error: ' +
+          error,
+      );
+      return;
+    }
+    return this.getGroup(group.id);
+  }
+
   deleteGroup(id: number) {
     const selectedGroup = this.getGroup(id);
 
@@ -335,6 +357,30 @@ export class TodoListStore implements ITodoListStore {
 
   getGroupTodo(id: number): IGroupTodo | undefined {
     return realm.objectForPrimaryKey<IGroupTodo>(GroupTodoSchema.name, id);
+  }
+
+  updateGroupTodo(groupTodo: IGroupTodo): IGroupTodo | undefined {
+    try {
+      realm.write(() => {
+        // TODO: This might not work correctly, if it doesn't update the group items, a group will need to be passed in and it's item
+        // must be searched for this group todo and then that index must be replaced with this, updated, grouptodo
+        realm.create(
+          GroupTodoSchema.name,
+          groupTodo,
+          Realm.UpdateMode.Modified,
+        );
+      });
+    } catch (error) {
+      console.log(
+        kLogTag +
+          ' error updating group todo name: ' +
+          groupTodo.name +
+          ' error: ' +
+          error,
+      );
+      return;
+    }
+    return this.getGroupTodo(groupTodo.id);
   }
 
   toggleGroupTodoDoneState(id: number) {
@@ -499,6 +545,24 @@ export class TodoListStore implements ITodoListStore {
     return realm.objectForPrimaryKey<IReading>(ReadingSchema.name, id);
   }
 
+  updateReading(reading: IReading): IReading | undefined {
+    try {
+      realm.write(() => {
+        realm.create(ReadingSchema.name, reading, Realm.UpdateMode.Modified);
+      });
+    } catch (error) {
+      console.log(
+        kLogTag +
+          ' error creating reading => name: ' +
+          reading.name +
+          ' error: ' +
+          error,
+      );
+      return;
+    }
+    return this.getReading(reading.id);
+  }
+
   deleteReading(id: number) {
     const selectedReading = this.getReading(id);
 
@@ -575,6 +639,31 @@ export class TodoListStore implements ITodoListStore {
 
   getReadingTodo(id: number): IReadingTodo | undefined {
     return realm.objectForPrimaryKey<IReadingTodo>(ReadingTodoSchema.name, id);
+  }
+
+  updateReadingTodo(readingTodo: IReadingTodo): IReadingTodo | undefined {
+    // TODO: If this doesn't work, do the same as specifiec for GroupTodo update
+    try {
+      realm.write(() => {
+        realm.create(
+          ReadingTodoSchema.name,
+          readingTodo,
+          Realm.UpdateMode.Modified,
+        );
+      });
+    } catch (error) {
+      console.log(
+        kLogTag +
+          ' error updating reading todo with name: ' +
+          readingTodo.name +
+          ' id: ' +
+          readingTodo.id +
+          ' error: ' +
+          error,
+      );
+      return;
+    }
+    return this.getReadingTodo(readingTodo.id);
   }
 
   toggleReadingTodoDoneState(id: number) {
