@@ -7,19 +7,22 @@ import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator
 import TodoForm from '../../components/TodoForm';
 
 type AddTodoScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<TodoStackNavigatorParamList, 'AddTodo'>,
+  StackNavigationProp<TodoStackNavigatorParamList, 'UpdateTodo'>,
   MaterialBottomTabNavigationProp<TabNavigatorParamList>
 >;
 
-type AddTodoScreenRouteProp = RouteProp<TodoStackNavigatorParamList, 'AddTodo'>;
+type AddTodoScreenRouteProp = RouteProp<
+  TodoStackNavigatorParamList,
+  'UpdateTodo'
+>;
 
 interface IProps {
   navigation: AddTodoScreenNavigationProp;
   route: AddTodoScreenRouteProp;
 }
 
-const AddTodo: React.FunctionComponent<IProps> = ({ navigation, route }) => {
-  const { todoListStore, progressState } = route.params;
+const UpdateTodo: React.FunctionComponent<IProps> = ({ navigation, route }) => {
+  const { todoListStore, progressState, existingTodo } = route.params;
   const onFormSubmit = () => {
     navigation.pop();
   };
@@ -28,8 +31,9 @@ const AddTodo: React.FunctionComponent<IProps> = ({ navigation, route }) => {
       todoListStore={todoListStore}
       progressState={progressState}
       onFormSubmit={onFormSubmit}
+      existingTodo={existingTodo}
     />
   );
 };
 
-export default AddTodo;
+export default UpdateTodo;

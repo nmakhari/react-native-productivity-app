@@ -77,6 +77,7 @@ export class TodoList extends React.Component<IProps> {
           todoListStore={this.props.route.params.todoListStore}
           data={toJS(this.todoListData)}
           progressState={ProgressState.Pending}
+          onEditTodoPressed={this.onEditTodoPressed}
         />
         <AddItemFABGroup
           open={this.isFABOpen}
@@ -101,12 +102,24 @@ export class TodoList extends React.Component<IProps> {
   };
 
   private onCreateTodoPressed = () => {
-    console.log('Todo pressed');
-    this.props.navigation.navigate('AddTodo', {
+    console.log('Create Todo pressed');
+    this.props.navigation.navigate('UpdateTodo', {
       todoListStore: this.props.route.params.todoListStore,
       progressState: ProgressState.Pending,
     });
     this.closeFAB();
+  };
+
+  private onEditTodoPressed = (todo: ITodo) => {
+    console.log('Edit Todo Pressed');
+    this.props.navigation.navigate('UpdateTodo', {
+      todoListStore: this.props.route.params.todoListStore,
+      progressState: ProgressState.Pending,
+      existingTodo: {
+        id: todo.id,
+        initialValues: { name: todo.name, description: todo.description },
+      },
+    });
   };
 
   private onCreateGroupPressed = () => {

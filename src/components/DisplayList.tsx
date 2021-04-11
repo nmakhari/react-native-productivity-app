@@ -47,6 +47,7 @@ interface IProps {
   data: IDisplayItemSection[];
   progressState: ProgressState;
   todoListStore: ITodoListStore;
+  onEditTodoPressed: (todo: ITodo) => void;
 }
 
 // contentContainerStyle on SectionList needs to be set to flexGrow 1 in order
@@ -123,7 +124,7 @@ export default class DisplayList extends React.Component<IProps> {
     item: DisplayItemType;
     section: SectionListData<DisplayItemType, IDisplayItemSection>;
   }) => {
-    const { progressState, todoListStore } = this.props;
+    const { progressState, todoListStore, onEditTodoPressed } = this.props;
     switch (section.title) {
       case SectionTitles.Groups.toString():
         return (
@@ -153,7 +154,7 @@ export default class DisplayList extends React.Component<IProps> {
             progressState={progressState}
             onSwipableLeftOpen={this.getProceedTodo(item as ITodo)}
             onEditPressed={() => {
-              console.log('Todo edit pressed');
+              onEditTodoPressed(item as ITodo);
             }}
             onDeletePressed={() => {
               todoListStore.deleteTodo(item.id);

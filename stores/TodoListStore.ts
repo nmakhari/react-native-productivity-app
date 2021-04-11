@@ -8,6 +8,7 @@ import realm, {
 import { IGroup, IGroupTodo } from '../db/Groups';
 import { IReading, IReadingTodo } from '../db/Readings';
 import { ITodo } from '../db/Todo';
+import Realm from 'realm';
 
 const kLogTag = 'TodoListStore';
 
@@ -30,6 +31,7 @@ export interface ITodoListStore {
 
   createTodo(name: string, description?: string): ITodo | undefined;
   getTodo(id: number): ITodo | undefined;
+  updateTodo(todo: ITodo): ITodo | undefined;
   toggleTodoDoneState(id: number): void;
   toggleTodoProgressState(id: number): void;
   deleteTodo(id: number): void;
@@ -121,7 +123,7 @@ export class TodoListStore implements ITodoListStore {
         realm.create(TodoSchema.name, newTodo);
       });
     } catch (error) {
-      console.log(kLogTag + ' error adding Todo' + ' error: ' + error);
+      console.log(kLogTag + ' error adding Todo error: ' + error);
       return;
     }
     return this.getTodo(id);
@@ -129,6 +131,18 @@ export class TodoListStore implements ITodoListStore {
 
   getTodo(id: number): ITodo | undefined {
     return realm.objectForPrimaryKey<ITodo>(TodoSchema.name, id);
+  }
+
+  updateTodo(todo: ITodo): ITodo | undefined {
+    try {
+      realm.write(() => {
+        realm.create(TodoSchema.name, todo, Realm.UpdateMode.Modified);
+      });
+    } catch (error) {
+      console.log(kLogTag + ' error adding Todo error: ' + error);
+      return;
+    }
+    return this.getTodo(todo.id);
   }
 
   toggleTodoDoneState(id: number) {

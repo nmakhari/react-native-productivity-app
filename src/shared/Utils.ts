@@ -8,9 +8,9 @@ import { IDisplayItemSection } from '../components/DisplayList';
 export type GenericTodo = ITodo | IGroupTodo | IReadingTodo;
 
 export enum ProgressState {
-  Pending,
-  InProgress,
-  Complete,
+  Pending = 'Pending',
+  InProgress = 'InProgress',
+  Complete = 'Complete',
 }
 
 export enum SectionTitles {
