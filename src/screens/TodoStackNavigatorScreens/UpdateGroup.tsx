@@ -6,31 +6,38 @@ import { TabNavigatorParamList } from '../../navigators/TabNavigator';
 import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
 import GroupForm from '../../components/GroupForm';
 
-type AddGroupScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<TodoStackNavigatorParamList, 'AddGroup'>,
+type UpdateGroupScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<TodoStackNavigatorParamList, 'UpdateGroup'>,
   MaterialBottomTabNavigationProp<TabNavigatorParamList>
 >;
 
-type AddGroupScreenRouteProp = RouteProp<
+type UpdateGroupScreenRouteProp = RouteProp<
   TodoStackNavigatorParamList,
-  'AddGroup'
+  'UpdateGroup'
 >;
 
 interface IProps {
-  navigation: AddGroupScreenNavigationProp;
-  route: AddGroupScreenRouteProp;
+  navigation: UpdateGroupScreenNavigationProp;
+  route: UpdateGroupScreenRouteProp;
 }
 
-const AddGroup: React.FunctionComponent<IProps> = ({ navigation, route }) => {
-  const { todoListStore } = route.params;
+const UpdateGroup: React.FunctionComponent<IProps> = ({
+  navigation,
+  route,
+}) => {
+  const { todoListStore, existingGroup } = route.params;
 
   const onFormSubmit = () => {
     navigation.pop();
   };
 
   return (
-    <GroupForm todoListStore={todoListStore} onFormSubmit={onFormSubmit} />
+    <GroupForm
+      todoListStore={todoListStore}
+      onFormSubmit={onFormSubmit}
+      existingGroup={existingGroup}
+    />
   );
 };
 
-export default AddGroup;
+export default UpdateGroup;

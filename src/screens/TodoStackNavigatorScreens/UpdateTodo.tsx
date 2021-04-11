@@ -6,19 +6,19 @@ import { TabNavigatorParamList } from '../../navigators/TabNavigator';
 import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
 import TodoForm from '../../components/TodoForm';
 
-type AddTodoScreenNavigationProp = CompositeNavigationProp<
+type UpdateTodoScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<TodoStackNavigatorParamList, 'UpdateTodo'>,
   MaterialBottomTabNavigationProp<TabNavigatorParamList>
 >;
 
-type AddTodoScreenRouteProp = RouteProp<
+type UpdateTodoScreenRouteProp = RouteProp<
   TodoStackNavigatorParamList,
   'UpdateTodo'
 >;
 
 interface IProps {
-  navigation: AddTodoScreenNavigationProp;
-  route: AddTodoScreenRouteProp;
+  navigation: UpdateTodoScreenNavigationProp;
+  route: UpdateTodoScreenRouteProp;
 }
 
 const UpdateTodo: React.FunctionComponent<IProps> = ({ navigation, route }) => {

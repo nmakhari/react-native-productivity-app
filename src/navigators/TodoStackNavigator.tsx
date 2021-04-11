@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TodoList } from '../screens/TodoStackNavigatorScreens/TodoList';
 import UpdateTodo from '../screens/TodoStackNavigatorScreens/UpdateTodo';
-import AddGroup from '../screens/TodoStackNavigatorScreens/AddGroup';
+import UpdateGroup from '../screens/TodoStackNavigatorScreens/UpdateGroup';
 import { ITodoListStore } from '../../stores/TodoListStore';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { TabNavigatorParamList } from './TabNavigator';
@@ -11,6 +11,7 @@ import { ProgressState } from '../shared/Utils';
 import AddReading from '../screens/TodoStackNavigatorScreens/AddReading';
 import SharedStyles from '../shared/SharedStyles';
 import { ExistingTodo } from '../components/TodoForm';
+import { ExistingGroup } from '../components/GroupForm';
 
 type TodoStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -31,8 +32,11 @@ export type TodoStackNavigatorParamList = {
     progressState: ProgressState;
     existingTodo?: ExistingTodo;
   };
-  AddGroup: { todoListStore: ITodoListStore; progressState: ProgressState };
-  AddReading: { todoListStore: ITodoListStore; progressState: ProgressState };
+  UpdateGroup: {
+    todoListStore: ITodoListStore;
+    existingGroup?: ExistingGroup;
+  };
+  AddReading: { todoListStore: ITodoListStore };
 };
 
 export default class TodoStackNavigator extends React.Component<IProps> {
@@ -67,11 +71,10 @@ export default class TodoStackNavigator extends React.Component<IProps> {
           }}
         />
         <this.stack.Screen
-          name="AddGroup"
-          component={AddGroup}
+          name="UpdateGroup"
+          component={UpdateGroup}
           initialParams={{
             todoListStore: todoListStore,
-            progressState: ProgressState.Pending,
           }}
           options={{
             title: 'New Group',
@@ -84,7 +87,6 @@ export default class TodoStackNavigator extends React.Component<IProps> {
           component={AddReading}
           initialParams={{
             todoListStore: todoListStore,
-            progressState: ProgressState.Pending,
           }}
           options={{
             title: 'New Reading',

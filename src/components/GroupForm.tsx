@@ -6,10 +6,26 @@ import { Formik } from 'formik';
 import SharedStyles from '../shared/SharedStyles';
 import { Colors } from '../shared/Colors';
 import BasicButton from './BasicButton';
+import { IGroup, IGroupTodo } from '../../db/Groups';
+
+export type ExistingGroup = {
+  id: number;
+  creationDate: Date;
+  pointsCompleted: number;
+  pointsTotal: number;
+  items: Realm.List<IGroupTodo>;
+  initialValues: GroupFormValues;
+};
+
+export type GroupFormValues = {
+  name: string;
+  description?: string;
+};
 
 interface IProps {
   todoListStore: ITodoListStore;
   onFormSubmit: () => void;
+  existingGroup?: ExistingGroup;
 }
 
 const schema = yup.object().shape({
@@ -20,12 +36,31 @@ const schema = yup.object().shape({
 const GroupForm: React.FunctionComponent<IProps> = ({
   todoListStore,
   onFormSubmit,
+  existingGroup,
 }) => {
   return (
     <Formik
       validationSchema={schema}
-      initialValues={{ name: '', description: '' }}
+      initialValues={
+        existingGroup
+          ? existingGroup.initialValues
+          : { name: '', description: '' }
+      }
       onSubmit={(values) => {
+        if (existingGroup) {
+          let updatedGroup: IGroup = {
+            id: existingGroup.id,
+            name: values.name,
+            creationDate: existingGroup.creationDate,
+            description: values.description,
+            pointsCompleted: existingGroup.pointsCompleted,
+            pointsTotal: existingGroup.pointsTotal,
+            items: existingGroup.items,
+          };
+          todoListStore.updateGroup(updatedGroup);
+          onFormSubmit();
+          return;
+        }
         todoListStore.createGroup(values.name, values.description);
         onFormSubmit();
       }}>
@@ -70,7 +105,7 @@ const GroupForm: React.FunctionComponent<IProps> = ({
           </>
 
           <BasicButton
-            title={'Create'}
+            title={existingGroup ? 'Update' : 'Create'}
             onPress={handleSubmit}
             disabled={!isValid}
             style={Styles.button}
