@@ -13,6 +13,7 @@ import { StyleSheet } from 'react-native';
 import { Colors } from '../shared/Colors';
 import { ProgressState } from '../shared/Utils';
 import AddReading from '../screens/TodoStackNavigatorScreens/AddReading';
+import SharedStyles from '../shared/SharedStyles';
 
 type TodoStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -61,7 +62,7 @@ export default class TodoStackNavigator extends React.Component<IProps> {
           }}
           options={{
             title: 'New Todo',
-            headerStyle: Styles.navHeader,
+            headerStyle: SharedStyles.navHeader,
             headerTintColor: 'white',
           }}
         />
@@ -74,7 +75,7 @@ export default class TodoStackNavigator extends React.Component<IProps> {
           }}
           options={{
             title: 'New Group',
-            headerStyle: Styles.navHeader,
+            headerStyle: SharedStyles.navHeader,
             headerTintColor: 'white',
           }}
         />
@@ -87,7 +88,7 @@ export default class TodoStackNavigator extends React.Component<IProps> {
           }}
           options={{
             title: 'New Reading',
-            headerStyle: Styles.navHeader,
+            headerStyle: SharedStyles.navHeader,
             headerTintColor: 'white',
           }}
         />
@@ -100,9 +101,3 @@ export default class TodoStackNavigator extends React.Component<IProps> {
     );
   }
 }
-
-const Styles = StyleSheet.create({
-  navHeader: {
-    backgroundColor: Colors.primaryGreyDark,
-  },
-});

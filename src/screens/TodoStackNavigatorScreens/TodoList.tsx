@@ -56,7 +56,7 @@ export class TodoList extends React.Component<IProps> {
       );
     });
   }
-  // Todo: Create data formatting for each section independently so that only the changed section is recalculated
+  // TODO: Create data formatting for each section independently so that only the changed section is recalculated
   componentDidMount() {
     this.todos.addListener(() => this.onDataChanged());
     this.groups.addListener(() => this.onDataChanged());

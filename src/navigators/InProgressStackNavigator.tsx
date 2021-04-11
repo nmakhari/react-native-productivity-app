@@ -5,6 +5,11 @@ import { InProgressList } from '../screens/InProgressStackNavigatorScreens/InPro
 import { TabNavigatorParamList } from './TabNavigator';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
+import SharedStyles from '../shared/SharedStyles';
+import { ProgressState } from '../shared/Utils';
+import AddTodo from '../screens/InProgressStackNavigatorScreens/AddTodo';
+import AddGroup from '../screens/InProgressStackNavigatorScreens/AddGroup';
+import AddReading from '../screens/InProgressStackNavigatorScreens/AddReading';
 
 type InProgressStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -23,6 +28,9 @@ interface IProps {
 
 export type InProgressStackNavigatorParamsList = {
   InProgressList: { todoListStore: ITodoListStore };
+  AddTodo: { todoListStore: ITodoListStore; progressState: ProgressState };
+  AddGroup: { todoListStore: ITodoListStore; progressState: ProgressState };
+  AddReading: { todoListStore: ITodoListStore; progressState: ProgressState };
 };
 
 export default class InProgressStackNavigator extends React.Component<IProps> {
@@ -42,6 +50,45 @@ export default class InProgressStackNavigator extends React.Component<IProps> {
           component={InProgressList}
           initialParams={{ todoListStore: todoListStore }}
           options={{ headerShown: false }}
+        />
+        <this.stack.Screen
+          name="AddTodo"
+          component={AddTodo}
+          initialParams={{
+            todoListStore: todoListStore,
+            progressState: ProgressState.InProgress,
+          }}
+          options={{
+            title: 'New Todo',
+            headerStyle: SharedStyles.navHeader,
+            headerTintColor: 'white',
+          }}
+        />
+        <this.stack.Screen
+          name="AddGroup"
+          component={AddGroup}
+          initialParams={{
+            todoListStore: todoListStore,
+            progressState: ProgressState.InProgress,
+          }}
+          options={{
+            title: 'New Group',
+            headerStyle: SharedStyles.navHeader,
+            headerTintColor: 'white',
+          }}
+        />
+        <this.stack.Screen
+          name="AddReading"
+          component={AddReading}
+          initialParams={{
+            todoListStore: todoListStore,
+            progressState: ProgressState.InProgress,
+          }}
+          options={{
+            title: 'New Reading',
+            headerStyle: SharedStyles.navHeader,
+            headerTintColor: 'white',
+          }}
         />
       </this.stack.Navigator>
     );

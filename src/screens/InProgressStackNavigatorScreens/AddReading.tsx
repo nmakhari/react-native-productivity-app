@@ -3,16 +3,16 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import ReadingForm from '../../components/ReadingForm';
+import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
 import { TabNavigatorParamList } from '../../navigators/TabNavigator';
-import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
 
 type AddReadingScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<TodoStackNavigatorParamList, 'AddReading'>,
+  StackNavigationProp<InProgressStackNavigatorParamsList, 'AddReading'>,
   MaterialBottomTabNavigationProp<TabNavigatorParamList>
 >;
 
 type AddReadingScreenRouteProp = RouteProp<
-  TodoStackNavigatorParamList,
+  InProgressStackNavigatorParamsList,
   'AddReading'
 >;
 

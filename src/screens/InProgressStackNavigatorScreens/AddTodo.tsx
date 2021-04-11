@@ -3,15 +3,18 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { TabNavigatorParamList } from '../../navigators/TabNavigator';
-import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
 import TodoForm from '../../components/TodoForm';
+import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
 
 type AddTodoScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<TodoStackNavigatorParamList, 'AddTodo'>,
+  StackNavigationProp<InProgressStackNavigatorParamsList, 'AddTodo'>,
   MaterialBottomTabNavigationProp<TabNavigatorParamList>
 >;
 
-type AddTodoScreenRouteProp = RouteProp<TodoStackNavigatorParamList, 'AddTodo'>;
+type AddTodoScreenRouteProp = RouteProp<
+  InProgressStackNavigatorParamsList,
+  'AddTodo'
+>;
 
 interface IProps {
   navigation: AddTodoScreenNavigationProp;

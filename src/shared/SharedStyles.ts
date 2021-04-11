@@ -19,6 +19,9 @@ const SharedStyles = StyleSheet.create({
     color: Colors.secondaryGreen,
     fontSize: 10,
   },
+  navHeader: {
+    backgroundColor: Colors.primaryGreyDark,
+  },
 });
 
 export default SharedStyles;

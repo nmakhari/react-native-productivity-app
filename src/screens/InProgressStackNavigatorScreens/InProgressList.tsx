@@ -14,6 +14,7 @@ import { ITodo } from '../../../db/Todo';
 import { IGroup } from '../../../db/Groups';
 import { IReading } from '../../../db/Readings';
 import { observer } from 'mobx-react';
+import AddItemFABGroup from '../../components/AddItemFABGroup';
 
 type InProgressScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<InProgressStackNavigatorParamsList, 'InProgressList'>,
@@ -32,7 +33,9 @@ interface IProps {
 
 @observer
 export class InProgressList extends React.Component<IProps> {
+  @observable private isFABOpen: boolean;
   @observable private inProgressListData: IDisplayItemSection[];
+
   private todos: Realm.Results<ITodo & Realm.Object>;
   private groups: Realm.Results<IGroup & Realm.Object>;
   private readings: Realm.Results<IReading & Realm.Object>;
@@ -45,6 +48,7 @@ export class InProgressList extends React.Component<IProps> {
     this.groups = todoListStore.inProgressGroups;
     this.readings = todoListStore.inProgressReadings;
     runInAction(() => {
+      this.isFABOpen = false;
       this.inProgressListData = formatSections(
         this.todos,
         this.groups,
@@ -74,9 +78,34 @@ export class InProgressList extends React.Component<IProps> {
           data={toJS(this.inProgressListData)}
           progressState={ProgressState.InProgress}
         />
+        <AddItemFABGroup
+          open={this.isFABOpen}
+          onPress={this.openFAB}
+          onClosePressed={this.closeFAB}
+          onTodoPressed={this.onCreateTodoPressed}
+        />
       </View>
     );
   }
+
+  @action
+  private openFAB = () => {
+    this.isFABOpen = true;
+  };
+
+  @action
+  private closeFAB = () => {
+    this.isFABOpen = false;
+  };
+
+  private onCreateTodoPressed = () => {
+    console.log('Todo pressed');
+    this.props.navigation.navigate('AddTodo', {
+      todoListStore: this.props.route.params.todoListStore,
+      progressState: ProgressState.InProgress,
+    });
+    this.closeFAB();
+  };
 
   @action
   private onDataChanged(): void {

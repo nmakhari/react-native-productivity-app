@@ -6,9 +6,9 @@ interface IProps {
   open: boolean;
   onPress: () => void;
   onClosePressed: () => void;
-  onTodoPressed: () => void;
-  onGroupPressed: () => void;
-  onReadingPressed: () => void;
+  onTodoPressed?: () => void;
+  onGroupPressed?: () => void;
+  onReadingPressed?: () => void;
 }
 
 const AddItemFABGroup: React.FunctionComponent<IProps> = ({
@@ -19,6 +19,36 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
   onGroupPressed,
   onReadingPressed,
 }) => {
+  const actions = [];
+  if (onTodoPressed) {
+    actions.push({
+      icon: 'format-list-checkbox',
+      label: 'Todo',
+      color: Colors.secondaryGreen,
+      onPress: onTodoPressed,
+      small: false,
+    });
+  }
+
+  if (onGroupPressed) {
+    actions.push({
+      icon: 'lightbulb-group',
+      label: 'Group',
+      color: Colors.secondaryGreen,
+      onPress: onGroupPressed,
+      small: false,
+    });
+  }
+
+  if (onReadingPressed) {
+    actions.push({
+      icon: 'book-open-page-variant',
+      label: 'Reading',
+      color: Colors.secondaryGreen,
+      onPress: onReadingPressed,
+      small: false,
+    });
+  }
   return (
     <Provider>
       <Portal>
@@ -28,29 +58,7 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
           visible={true}
           icon={open ? 'close' : 'plus'}
           color={'black'}
-          actions={[
-            {
-              icon: 'book-open-page-variant',
-              label: 'Reading',
-              color: Colors.secondaryGreen,
-              onPress: onReadingPressed,
-              small: false,
-            },
-            {
-              icon: 'lightbulb-group',
-              label: 'Group',
-              color: Colors.secondaryGreen,
-              onPress: onGroupPressed,
-              small: false,
-            },
-            {
-              icon: 'format-list-checkbox',
-              label: 'Todo',
-              color: Colors.secondaryGreen,
-              onPress: onTodoPressed,
-              small: false,
-            },
-          ]}
+          actions={actions}
           onPress={() => {
             if (open) {
               onClosePressed();

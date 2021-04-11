@@ -3,16 +3,16 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { TabNavigatorParamList } from '../../navigators/TabNavigator';
-import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
 import GroupForm from '../../components/GroupForm';
+import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
 
 type AddGroupScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<TodoStackNavigatorParamList, 'AddGroup'>,
+  StackNavigationProp<InProgressStackNavigatorParamsList, 'AddGroup'>,
   MaterialBottomTabNavigationProp<TabNavigatorParamList>
 >;
 
 type AddGroupScreenRouteProp = RouteProp<
-  TodoStackNavigatorParamList,
+  InProgressStackNavigatorParamsList,
   'AddGroup'
 >;
 
