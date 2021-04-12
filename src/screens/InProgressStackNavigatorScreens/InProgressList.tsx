@@ -77,6 +77,9 @@ export class InProgressList extends React.Component<IProps> {
           todoListStore={this.props.route.params.todoListStore}
           data={toJS(this.inProgressListData)}
           progressState={ProgressState.InProgress}
+          onEditTodoPressed={this.onEditTodoPressed}
+          onEditGroupPressed={this.onEditGroupPressed}
+          onEditReadingPressed={this.onEditReadingPressed}
         />
         <AddItemFABGroup
           open={this.isFABOpen}
@@ -100,9 +103,75 @@ export class InProgressList extends React.Component<IProps> {
 
   private onCreateTodoPressed = () => {
     console.log('Todo pressed');
-    this.props.navigation.navigate('AddTodo', {
+    this.props.navigation.navigate('UpdateTodo', {
       todoListStore: this.props.route.params.todoListStore,
       progressState: ProgressState.InProgress,
+    });
+    this.closeFAB();
+  };
+
+  private onEditTodoPressed = (todo: ITodo) => {
+    console.log('Edit Todo Pressed');
+    this.props.navigation.navigate('UpdateTodo', {
+      todoListStore: this.props.route.params.todoListStore,
+      progressState: ProgressState.InProgress,
+      existingTodo: {
+        id: todo.id,
+        initialValues: { name: todo.name, description: todo.description },
+      },
+    });
+    this.closeFAB();
+  };
+
+  private onCreateGroupPressed = () => {
+    console.log('Create Group pressed');
+    this.props.navigation.navigate('UpdateGroup', {
+      todoListStore: this.props.route.params.todoListStore,
+    });
+    this.closeFAB();
+  };
+
+  private onEditGroupPressed = (group: IGroup) => {
+    console.log('Edit Group Pressed');
+    this.props.navigation.navigate('UpdateGroup', {
+      todoListStore: this.props.route.params.todoListStore,
+      existingGroup: {
+        id: group.id,
+        creationDate: group.creationDate,
+        pointsCompleted: group.pointsCompleted,
+        pointsTotal: group.pointsTotal,
+        items: group.items,
+        initialValues: {
+          name: group.name,
+          description: group.description,
+        },
+      },
+    });
+    this.closeFAB();
+  };
+
+  private onCreateReadingPressed = () => {
+    console.log('Create Reading Pressed');
+    this.props.navigation.navigate('UpdateReading', {
+      todoListStore: this.props.route.params.todoListStore,
+    });
+    this.closeFAB();
+  };
+
+  private onEditReadingPressed = (reading: IReading) => {
+    console.log('Edit Reading Pressed');
+    this.props.navigation.navigate('UpdateReading', {
+      todoListStore: this.props.route.params.todoListStore,
+      existingReading: {
+        id: reading.id,
+        creationDate: reading.creationDate,
+        readings: reading.readings,
+        initialValues: {
+          name: reading.name,
+          pagesTotal: reading.pagesTotal.toString(),
+          pagesComplete: reading.pagesComplete.toString(),
+        },
+      },
     });
     this.closeFAB();
   };

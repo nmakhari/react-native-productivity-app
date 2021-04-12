@@ -7,9 +7,12 @@ import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bott
 import { RouteProp } from '@react-navigation/native';
 import SharedStyles from '../shared/SharedStyles';
 import { ProgressState } from '../shared/Utils';
-import AddTodo from '../screens/InProgressStackNavigatorScreens/AddTodo';
-import AddGroup from '../screens/InProgressStackNavigatorScreens/AddGroup';
-import AddReading from '../screens/InProgressStackNavigatorScreens/AddReading';
+import UpdateTodo from '../screens/InProgressStackNavigatorScreens/UpdateTodo';
+import UpdateGroup from '../screens/InProgressStackNavigatorScreens/UpdateGroup';
+import UpdateReading from '../screens/InProgressStackNavigatorScreens/UpdateReading';
+import { ExistingTodo } from '../components/TodoForm';
+import { ExistingGroup } from '../components/GroupForm';
+import { ExistingReading } from '../components/ReadingForm';
 
 type InProgressStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -28,9 +31,16 @@ interface IProps {
 
 export type InProgressStackNavigatorParamsList = {
   InProgressList: { todoListStore: ITodoListStore };
-  AddTodo: { todoListStore: ITodoListStore; progressState: ProgressState };
-  AddGroup: { todoListStore: ITodoListStore; progressState: ProgressState };
-  AddReading: { todoListStore: ITodoListStore; progressState: ProgressState };
+  UpdateTodo: {
+    todoListStore: ITodoListStore;
+    progressState: ProgressState;
+    existingTodo?: ExistingTodo;
+  };
+  UpdateGroup: { todoListStore: ITodoListStore; existingGroup?: ExistingGroup };
+  UpdateReading: {
+    todoListStore: ITodoListStore;
+    existingReading?: ExistingReading;
+  };
 };
 
 export default class InProgressStackNavigator extends React.Component<IProps> {
@@ -52,8 +62,8 @@ export default class InProgressStackNavigator extends React.Component<IProps> {
           options={{ headerShown: false }}
         />
         <this.stack.Screen
-          name="AddTodo"
-          component={AddTodo}
+          name="UpdateTodo"
+          component={UpdateTodo}
           initialParams={{
             todoListStore: todoListStore,
             progressState: ProgressState.InProgress,
@@ -65,11 +75,10 @@ export default class InProgressStackNavigator extends React.Component<IProps> {
           }}
         />
         <this.stack.Screen
-          name="AddGroup"
-          component={AddGroup}
+          name="UpdateGroup"
+          component={UpdateGroup}
           initialParams={{
             todoListStore: todoListStore,
-            progressState: ProgressState.InProgress,
           }}
           options={{
             title: 'New Group',
@@ -78,11 +87,10 @@ export default class InProgressStackNavigator extends React.Component<IProps> {
           }}
         />
         <this.stack.Screen
-          name="AddReading"
-          component={AddReading}
+          name="UpdateReading"
+          component={UpdateReading}
           initialParams={{
             todoListStore: todoListStore,
-            progressState: ProgressState.InProgress,
           }}
           options={{
             title: 'New Reading',
