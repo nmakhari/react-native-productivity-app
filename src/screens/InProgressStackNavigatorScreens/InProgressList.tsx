@@ -123,14 +123,6 @@ export class InProgressList extends React.Component<IProps> {
     this.closeFAB();
   };
 
-  private onCreateGroupPressed = () => {
-    console.log('Create Group pressed');
-    this.props.navigation.navigate('UpdateGroup', {
-      todoListStore: this.props.route.params.todoListStore,
-    });
-    this.closeFAB();
-  };
-
   private onEditGroupPressed = (group: IGroup) => {
     console.log('Edit Group Pressed');
     this.props.navigation.navigate('UpdateGroup', {
@@ -146,14 +138,6 @@ export class InProgressList extends React.Component<IProps> {
           description: group.description,
         },
       },
-    });
-    this.closeFAB();
-  };
-
-  private onCreateReadingPressed = () => {
-    console.log('Create Reading Pressed');
-    this.props.navigation.navigate('UpdateReading', {
-      todoListStore: this.props.route.params.todoListStore,
     });
     this.closeFAB();
   };

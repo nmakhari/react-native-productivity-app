@@ -5,6 +5,14 @@ import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bott
 import { TabNavigatorParamList } from './TabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { ITodoListStore } from '../../stores/TodoListStore';
+import { ProgressState } from '../shared/Utils';
+import { ExistingGroup } from '../components/GroupForm';
+import { ExistingTodo } from '../components/TodoForm';
+import { ExistingReading } from '../components/ReadingForm';
+import SharedStyles from '../shared/SharedStyles';
+import UpdateTodo from '../screens/CompletedStackNavigatorScreens/UpdateTodo';
+import UpdateGroup from '../screens/CompletedStackNavigatorScreens/UpdateGroup';
+import UpdateReading from '../screens/CompletedStackNavigatorScreens/UpdateReading';
 
 type CompletedStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
   TabNavigatorParamList,
@@ -23,6 +31,16 @@ interface IProps {
 
 export type CompletedStackNavigatorParamsList = {
   CompletedList: { todoListStore: ITodoListStore };
+  UpdateTodo: {
+    todoListStore: ITodoListStore;
+    progressState: ProgressState;
+    existingTodo?: ExistingTodo;
+  };
+  UpdateGroup: { todoListStore: ITodoListStore; existingGroup?: ExistingGroup };
+  UpdateReading: {
+    todoListStore: ITodoListStore;
+    existingReading?: ExistingReading;
+  };
 };
 
 export class CompletedStackNavigator extends React.Component<IProps> {
@@ -42,6 +60,43 @@ export class CompletedStackNavigator extends React.Component<IProps> {
           component={CompletedList}
           initialParams={{ todoListStore: todoListStore }}
           options={{ headerShown: false }}
+        />
+        <this.stack.Screen
+          name="UpdateTodo"
+          component={UpdateTodo}
+          initialParams={{
+            todoListStore: todoListStore,
+            progressState: ProgressState.Complete,
+          }}
+          options={{
+            title: 'New Todo',
+            headerStyle: SharedStyles.navHeader,
+            headerTintColor: 'white',
+          }}
+        />
+        <this.stack.Screen
+          name="UpdateGroup"
+          component={UpdateGroup}
+          initialParams={{
+            todoListStore: todoListStore,
+          }}
+          options={{
+            title: 'New Group',
+            headerStyle: SharedStyles.navHeader,
+            headerTintColor: 'white',
+          }}
+        />
+        <this.stack.Screen
+          name="UpdateReading"
+          component={UpdateReading}
+          initialParams={{
+            todoListStore: todoListStore,
+          }}
+          options={{
+            title: 'New Reading',
+            headerStyle: SharedStyles.navHeader,
+            headerTintColor: 'white',
+          }}
         />
       </this.stack.Navigator>
     );

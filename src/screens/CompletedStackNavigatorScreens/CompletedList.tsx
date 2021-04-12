@@ -72,10 +72,60 @@ export class CompletedList extends React.Component<IProps> {
           todoListStore={this.props.route.params.todoListStore}
           data={toJS(this.completedListData)}
           progressState={ProgressState.Complete}
+          onEditTodoPressed={this.onEditTodoPressed}
+          onEditGroupPressed={this.onEditGroupPressed}
+          onEditReadingPressed={this.onEditReadingPressed}
         />
       </View>
     );
   }
+
+  private onEditTodoPressed = (todo: ITodo) => {
+    console.log('Edit Todo Pressed');
+    this.props.navigation.navigate('UpdateTodo', {
+      todoListStore: this.props.route.params.todoListStore,
+      progressState: ProgressState.Complete,
+      existingTodo: {
+        id: todo.id,
+        initialValues: { name: todo.name, description: todo.description },
+      },
+    });
+  };
+
+  private onEditGroupPressed = (group: IGroup) => {
+    console.log('Edit Group Pressed');
+    this.props.navigation.navigate('UpdateGroup', {
+      todoListStore: this.props.route.params.todoListStore,
+      existingGroup: {
+        id: group.id,
+        creationDate: group.creationDate,
+        pointsCompleted: group.pointsCompleted,
+        pointsTotal: group.pointsTotal,
+        items: group.items,
+        initialValues: {
+          name: group.name,
+          description: group.description,
+        },
+      },
+    });
+  };
+
+  private onEditReadingPressed = (reading: IReading) => {
+    console.log('Edit Reading Pressed');
+    this.props.navigation.navigate('UpdateReading', {
+      todoListStore: this.props.route.params.todoListStore,
+      existingReading: {
+        id: reading.id,
+        creationDate: reading.creationDate,
+        readings: reading.readings,
+        initialValues: {
+          name: reading.name,
+          pagesTotal: reading.pagesTotal.toString(),
+          pagesComplete: reading.pagesComplete.toString(),
+        },
+      },
+    });
+  };
 
   @action
   private onDataChanged(): void {
