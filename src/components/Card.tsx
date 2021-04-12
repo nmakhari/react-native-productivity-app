@@ -28,10 +28,12 @@ interface IProps {
 }
 
 export default class Card extends React.Component<IProps> {
+  private swipeableRef: Swipeable | null;
   render() {
     const windowWidth = Dimensions.get('window').width;
     return (
       <Swipeable
+        ref={(ref) => (this.swipeableRef = ref)}
         leftThreshold={windowWidth * 0.75}
         renderLeftActions={
           this.props.onSwipableLeftOpen ? this.renderLeftContent : undefined
@@ -82,10 +84,18 @@ export default class Card extends React.Component<IProps> {
 
     return (
       <View style={Styles.rightActionRoot}>
-        <TouchableOpacity onPress={onEditPressed}>
+        <TouchableOpacity
+          onPress={() => {
+            this.swipeableRef?.close();
+            onEditPressed();
+          }}>
           <Text style={Styles.rightActionEditText}>Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onDeletePressed}>
+        <TouchableOpacity
+          onPress={() => {
+            this.swipeableRef?.close();
+            onDeletePressed();
+          }}>
           <Text style={Styles.rightActionDeleteText}>Delete</Text>
         </TouchableOpacity>
       </View>
