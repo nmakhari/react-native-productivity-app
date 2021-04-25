@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
-import { TabNavigatorParamList } from '../../navigators/TabNavigator';
+import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
 import { action, makeObservable, observable, runInAction, toJS } from 'mobx';
@@ -18,7 +18,7 @@ import AddItemFABGroup from '../../components/AddItemFABGroup';
 
 type InProgressScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<InProgressStackNavigatorParamsList, 'InProgressList'>,
-  MaterialBottomTabNavigationProp<TabNavigatorParamList>
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
 >;
 
 type InProgressListScreenRouteProp = RouteProp<

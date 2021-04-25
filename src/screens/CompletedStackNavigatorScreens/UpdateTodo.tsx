@@ -4,11 +4,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import TodoForm from '../../components/TodoForm';
 import { CompletedStackNavigatorParamsList } from '../../navigators/CompletedStackNavigator';
-import { TabNavigatorParamList } from '../../navigators/TabNavigator';
+import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 
 type UpdateTodoScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<CompletedStackNavigatorParamsList, 'UpdateTodo'>,
-  MaterialBottomTabNavigationProp<TabNavigatorParamList>
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
 >;
 
 type UpdateTodoScreenRouteProp = RouteProp<

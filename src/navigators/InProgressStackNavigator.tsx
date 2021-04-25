@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ITodoListStore } from '../../stores/TodoListStore';
 import { InProgressList } from '../screens/InProgressStackNavigatorScreens/InProgressList';
-import { TabNavigatorParamList } from './TabNavigator';
+import { MainTabNavigatorParamList } from './MainTabNavigator';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 import SharedStyles from '../shared/SharedStyles';
@@ -15,12 +15,12 @@ import { ExistingGroup } from '../components/GroupForm';
 import { ExistingReading } from '../components/ReadingForm';
 
 type InProgressStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
-  TabNavigatorParamList,
+  MainTabNavigatorParamList,
   'InProgress'
 >;
 
 type InProgressStackNavigatorRouteProp = RouteProp<
-  TabNavigatorParamList,
+  MainTabNavigatorParamList,
   'InProgress'
 >;
 

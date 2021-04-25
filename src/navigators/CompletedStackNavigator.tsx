@@ -2,7 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { CompletedList } from '../screens/CompletedStackNavigatorScreens/CompletedList';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
-import { TabNavigatorParamList } from './TabNavigator';
+import { MainTabNavigatorParamList } from './MainTabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { ITodoListStore } from '../../stores/TodoListStore';
 import { ProgressState } from '../shared/Utils';
@@ -15,12 +15,12 @@ import UpdateGroup from '../screens/CompletedStackNavigatorScreens/UpdateGroup';
 import UpdateReading from '../screens/CompletedStackNavigatorScreens/UpdateReading';
 
 type CompletedStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
-  TabNavigatorParamList,
+  MainTabNavigatorParamList,
   'Completed'
 >;
 
 type CompletedStackNavigatorRouteProp = RouteProp<
-  TabNavigatorParamList,
+  MainTabNavigatorParamList,
   'Completed'
 >;
 

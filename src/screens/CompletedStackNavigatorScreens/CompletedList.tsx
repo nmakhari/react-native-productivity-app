@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
-import { TabNavigatorParamList } from '../../navigators/TabNavigator';
+import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { CompletedStackNavigatorParamsList } from '../../navigators/CompletedStackNavigator';
 import { action, makeObservable, observable, runInAction, toJS } from 'mobx';
@@ -17,7 +17,7 @@ import { observer } from 'mobx-react';
 
 type CompletedListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<CompletedStackNavigatorParamsList, 'CompletedList'>,
-  MaterialBottomTabNavigationProp<TabNavigatorParamList>
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
 >;
 
 type CompletedListScreenRouteProp = RouteProp<

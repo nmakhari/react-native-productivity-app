@@ -8,15 +8,15 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Colors } from '../shared/Colors';
 import { ITodoListStore, TodoListStore } from '../../stores/TodoListStore';
 
-export type TabNavigatorParamList = {
+export type MainTabNavigatorParamList = {
   Todo: { todoListStore: ITodoListStore };
   InProgress: { todoListStore: ITodoListStore };
   Completed: { todoListStore: ITodoListStore };
 };
 
-const Tab = createMaterialBottomTabNavigator<TabNavigatorParamList>();
+const Tab = createMaterialBottomTabNavigator<MainTabNavigatorParamList>();
 
-const TabNavigator: FunctionComponent = () => {
+const MainTabNavigator: FunctionComponent = () => {
   const todoListStore = new TodoListStore();
 
   return (
@@ -75,7 +75,7 @@ const TabNavigator: FunctionComponent = () => {
   );
 };
 
-export default TabNavigator;
+export default MainTabNavigator;
 
 const Styles = StyleSheet.create({
   NavigationBar: {

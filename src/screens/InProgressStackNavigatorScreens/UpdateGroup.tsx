@@ -2,13 +2,13 @@ import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bott
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { TabNavigatorParamList } from '../../navigators/TabNavigator';
+import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 import GroupForm from '../../components/GroupForm';
 import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
 
 type UpdateGroupScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<InProgressStackNavigatorParamsList, 'UpdateGroup'>,
-  MaterialBottomTabNavigationProp<TabNavigatorParamList>
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
 >;
 
 type UpdateGroupScreenRouteProp = RouteProp<

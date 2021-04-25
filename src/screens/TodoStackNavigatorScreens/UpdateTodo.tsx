@@ -2,13 +2,13 @@ import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bott
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { TabNavigatorParamList } from '../../navigators/TabNavigator';
+import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
 import TodoForm from '../../components/TodoForm';
 
 type UpdateTodoScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<TodoStackNavigatorParamList, 'UpdateTodo'>,
-  MaterialBottomTabNavigationProp<TabNavigatorParamList>
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
 >;
 
 type UpdateTodoScreenRouteProp = RouteProp<

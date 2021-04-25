@@ -4,11 +4,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import GroupForm from '../../components/GroupForm';
 import { CompletedStackNavigatorParamsList } from '../../navigators/CompletedStackNavigator';
-import { TabNavigatorParamList } from '../../navigators/TabNavigator';
+import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 
 type UpdateGroupScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<CompletedStackNavigatorParamsList, 'UpdateGroup'>,
-  MaterialBottomTabNavigationProp<TabNavigatorParamList>
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
 >;
 
 type UpdateGroupScreenRouteProp = RouteProp<

@@ -5,7 +5,7 @@ import UpdateTodo from '../screens/TodoStackNavigatorScreens/UpdateTodo';
 import UpdateGroup from '../screens/TodoStackNavigatorScreens/UpdateGroup';
 import { ITodoListStore } from '../../stores/TodoListStore';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
-import { TabNavigatorParamList } from './TabNavigator';
+import { MainTabNavigatorParamList } from './MainTabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import { ProgressState } from '../shared/Utils';
 import UpdateReading from '../screens/TodoStackNavigatorScreens/UpdateReading';
@@ -15,11 +15,11 @@ import { ExistingGroup } from '../components/GroupForm';
 import { ExistingReading } from '../components/ReadingForm';
 
 type TodoStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
-  TabNavigatorParamList,
+  MainTabNavigatorParamList,
   'Todo'
 >;
 
-type TodoStackNavigatorRouteProp = RouteProp<TabNavigatorParamList, 'Todo'>;
+type TodoStackNavigatorRouteProp = RouteProp<MainTabNavigatorParamList, 'Todo'>;
 
 interface IProps {
   navigation: TodoStackNavigatorNavigationProp;

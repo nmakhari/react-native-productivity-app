@@ -4,11 +4,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import ReadingForm from '../../components/ReadingForm';
 import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
-import { TabNavigatorParamList } from '../../navigators/TabNavigator';
+import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 
 type UpdateReadingScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<InProgressStackNavigatorParamsList, 'UpdateReading'>,
-  MaterialBottomTabNavigationProp<TabNavigatorParamList>
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
 >;
 
 type UpdateReadingScreenRouteProp = RouteProp<

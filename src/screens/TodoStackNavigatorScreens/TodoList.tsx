@@ -7,7 +7,7 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
-import { TabNavigatorParamList } from '../../navigators/TabNavigator';
+import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 import { RouteProp } from '@react-navigation/native';
 import SharedStyles from '../../shared/SharedStyles';
 import { View } from 'react-native';
@@ -18,7 +18,7 @@ import { IReading } from '../../../db/Readings';
 
 type TodoListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<TodoStackNavigatorParamList, 'TodoList'>,
-  MaterialBottomTabNavigationProp<TabNavigatorParamList>
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
 >;
 
 type TodoListScreenRouteProp = RouteProp<
