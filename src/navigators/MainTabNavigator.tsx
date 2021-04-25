@@ -6,7 +6,25 @@ import { CompletedStackNavigator } from './CompletedStackNavigator';
 import { StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../shared/Colors';
-import { ITodoListStore, TodoListStore } from '../../stores/TodoListStore';
+import { ITodoListStore } from '../../stores/TodoListStore';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackNavigatorParamList } from './RootStackNavigator';
+import { RouteProp } from '@react-navigation/native';
+
+type MainTabNavigatorNavigationProp = StackNavigationProp<
+  RootStackNavigatorParamList,
+  'MainTabNavigator'
+>;
+
+type MainTabNavigatorRouteProp = RouteProp<
+  RootStackNavigatorParamList,
+  'MainTabNavigator'
+>;
+
+interface IProps {
+  navigation: MainTabNavigatorNavigationProp;
+  route: MainTabNavigatorRouteProp;
+}
 
 export type MainTabNavigatorParamList = {
   Todo: { todoListStore: ITodoListStore };
@@ -16,8 +34,8 @@ export type MainTabNavigatorParamList = {
 
 const Tab = createMaterialBottomTabNavigator<MainTabNavigatorParamList>();
 
-const MainTabNavigator: FunctionComponent = () => {
-  const todoListStore = new TodoListStore();
+const MainTabNavigator: FunctionComponent<IProps> = ({ route }) => {
+  const todoListStore = route.params.todoListStore;
 
   return (
     <Tab.Navigator

@@ -1,9 +1,12 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
 import React from 'react';
 import { CompletedList } from '../screens/CompletedStackNavigatorScreens/CompletedList';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
 import { MainTabNavigatorParamList } from './MainTabNavigator';
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { ITodoListStore } from '../../stores/TodoListStore';
 import { ProgressState } from '../shared/Utils';
 import { ExistingGroup } from '../components/GroupForm';
@@ -13,10 +16,11 @@ import SharedStyles from '../shared/SharedStyles';
 import UpdateTodo from '../screens/CompletedStackNavigatorScreens/UpdateTodo';
 import UpdateGroup from '../screens/CompletedStackNavigatorScreens/UpdateGroup';
 import UpdateReading from '../screens/CompletedStackNavigatorScreens/UpdateReading';
+import { RootStackNavigatorParamList } from './RootStackNavigator';
 
-type CompletedStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
-  MainTabNavigatorParamList,
-  'Completed'
+export type CompletedStackNavigatorNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<RootStackNavigatorParamList, 'MainTabNavigator'>,
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList, 'Completed'>
 >;
 
 type CompletedStackNavigatorRouteProp = RouteProp<

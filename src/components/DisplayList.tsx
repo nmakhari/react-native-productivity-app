@@ -47,6 +47,8 @@ interface IProps {
   data: IDisplayItemSection[];
   progressState: ProgressState;
   todoListStore: ITodoListStore;
+  onGroupPressed: (group: IGroup) => void;
+  onReadingPressed: (reading: IReading) => void;
   onEditTodoPressed: (todo: ITodo) => void;
   onEditGroupPressed: (group: IGroup) => void;
   onEditReadingPressed: (reading: IReading) => void;
@@ -129,6 +131,8 @@ export default class DisplayList extends React.Component<IProps> {
     const {
       progressState,
       todoListStore,
+      onGroupPressed,
+      onReadingPressed,
       onEditTodoPressed,
       onEditGroupPressed,
       onEditReadingPressed,
@@ -138,6 +142,7 @@ export default class DisplayList extends React.Component<IProps> {
         return (
           <GroupCard
             group={item as IGroup}
+            onPress={onGroupPressed}
             onLongPress={(group: IGroup) => {
               this.setModalDataGroup(group);
               this.openModal();
@@ -173,6 +178,7 @@ export default class DisplayList extends React.Component<IProps> {
         return (
           <ReadingCard
             reading={item as IReading}
+            onPress={onReadingPressed}
             onLongPress={(reading: IReading) => {
               this.setModalDataReading(reading);
               this.openModal();

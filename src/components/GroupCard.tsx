@@ -10,6 +10,7 @@ import { ProgressState } from '../shared/Utils';
 
 interface IProps {
   group: IGroup;
+  onPress: (group: IGroup) => void;
   onLongPress: (group: IGroup) => void;
   progressState: ProgressState;
   onEditPressed: () => void;
@@ -18,6 +19,7 @@ interface IProps {
 
 const GroupCard: FunctionComponent<IProps> = ({
   group,
+  onPress,
   onLongPress,
   progressState,
   onEditPressed,
@@ -27,12 +29,17 @@ const GroupCard: FunctionComponent<IProps> = ({
     onLongPress(group);
   };
 
+  const onPressTriggered = () => {
+    onPress(group);
+  };
+
   return (
     <Card
       title={group.name}
       description={group.description}
       logo={getLogo()}
       rightContent={getRightContent(group)}
+      onPress={onPressTriggered}
       onLongPress={onLongPressTriggered}
       progressState={progressState}
       onEditPressed={onEditPressed}

@@ -2,10 +2,11 @@ import React from 'react';
 import { View } from 'react-native';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
-import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 import { RouteProp } from '@react-navigation/native';
-import { CompletedStackNavigatorParamsList } from '../../navigators/CompletedStackNavigator';
+import {
+  CompletedStackNavigatorNavigationProp,
+  CompletedStackNavigatorParamsList,
+} from '../../navigators/CompletedStackNavigator';
 import { action, makeObservable, observable, runInAction, toJS } from 'mobx';
 import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
 import { formatSections, ProgressState } from '../../shared/Utils';
@@ -17,7 +18,7 @@ import { observer } from 'mobx-react';
 
 type CompletedListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<CompletedStackNavigatorParamsList, 'CompletedList'>,
-  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
+  CompletedStackNavigatorNavigationProp
 >;
 
 type CompletedListScreenRouteProp = RouteProp<
@@ -33,6 +34,7 @@ interface IProps {
 @observer
 export class CompletedList extends React.Component<IProps> {
   @observable private completedListData: IDisplayItemSection[];
+
   private todos: Realm.Results<ITodo & Realm.Object>;
   private groups: Realm.Results<IGroup & Realm.Object>;
   private readings: Realm.Results<IReading & Realm.Object>;
@@ -71,6 +73,8 @@ export class CompletedList extends React.Component<IProps> {
         <DisplayList
           todoListStore={this.props.route.params.todoListStore}
           data={toJS(this.completedListData)}
+          onGroupPressed={this.onGroupPressed}
+          onReadingPressed={this.onReadingPressed}
           progressState={ProgressState.Complete}
           onEditTodoPressed={this.onEditTodoPressed}
           onEditGroupPressed={this.onEditGroupPressed}
@@ -79,6 +83,22 @@ export class CompletedList extends React.Component<IProps> {
       </View>
     );
   }
+
+  private onGroupPressed = (group: IGroup) => {
+    console.log('Group Pressed');
+    this.props.navigation.navigate('ChildTabNavigator', {
+      todoListStore: this.props.route.params.todoListStore,
+      groupId: group.id,
+    });
+  };
+
+  private onReadingPressed = (reading: IReading) => {
+    console.log('Reading Pressed');
+    this.props.navigation.navigate('ChildTabNavigator', {
+      todoListStore: this.props.route.params.todoListStore,
+      readingId: reading.id,
+    });
+  };
 
   private onEditTodoPressed = (todo: ITodo) => {
     console.log('Edit Todo Pressed');

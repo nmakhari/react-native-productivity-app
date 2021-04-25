@@ -10,6 +10,7 @@ import { ProgressState } from '../shared/Utils';
 
 interface IProps {
   reading: IReading;
+  onPress: (reading: IReading) => void;
   onLongPress: (reading: IReading) => void;
   progressState: ProgressState;
   onEditPressed: () => void;
@@ -18,6 +19,7 @@ interface IProps {
 
 const ReadingCard: FunctionComponent<IProps> = ({
   reading,
+  onPress,
   onLongPress,
   progressState,
   onEditPressed,
@@ -27,11 +29,16 @@ const ReadingCard: FunctionComponent<IProps> = ({
     onLongPress(reading);
   };
 
+  const onPressTriggered = () => {
+    onPress(reading);
+  };
+
   return (
     <Card
       title={reading.name}
       logo={getLogo()}
       rightContent={getRightContent(reading)}
+      onPress={onPressTriggered}
       onLongPress={onLongPressTriggered}
       progressState={progressState}
       onEditPressed={onEditPressed}

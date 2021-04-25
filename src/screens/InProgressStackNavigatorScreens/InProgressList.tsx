@@ -2,10 +2,11 @@ import React from 'react';
 import { View } from 'react-native';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
-import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
 import { RouteProp } from '@react-navigation/native';
-import { InProgressStackNavigatorParamsList } from '../../navigators/InProgressStackNavigator';
+import {
+  InProgressStackNavigatorNavigationProp,
+  InProgressStackNavigatorParamsList,
+} from '../../navigators/InProgressStackNavigator';
 import { action, makeObservable, observable, runInAction, toJS } from 'mobx';
 import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
 import { formatSections, ProgressState } from '../../shared/Utils';
@@ -18,7 +19,7 @@ import AddItemFABGroup from '../../components/AddItemFABGroup';
 
 type InProgressScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<InProgressStackNavigatorParamsList, 'InProgressList'>,
-  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
+  InProgressStackNavigatorNavigationProp
 >;
 
 type InProgressListScreenRouteProp = RouteProp<
@@ -76,6 +77,8 @@ export class InProgressList extends React.Component<IProps> {
         <DisplayList
           todoListStore={this.props.route.params.todoListStore}
           data={toJS(this.inProgressListData)}
+          onGroupPressed={this.onGroupPressed}
+          onReadingPressed={this.onReadingPressed}
           progressState={ProgressState.InProgress}
           onEditTodoPressed={this.onEditTodoPressed}
           onEditGroupPressed={this.onEditGroupPressed}
@@ -99,6 +102,22 @@ export class InProgressList extends React.Component<IProps> {
   @action
   private closeFAB = () => {
     this.isFABOpen = false;
+  };
+
+  private onGroupPressed = (group: IGroup) => {
+    console.log('Group Pressed');
+    this.props.navigation.navigate('ChildTabNavigator', {
+      todoListStore: this.props.route.params.todoListStore,
+      groupId: group.id,
+    });
+  };
+
+  private onReadingPressed = (reading: IReading) => {
+    console.log('Reading Pressed');
+    this.props.navigation.navigate('ChildTabNavigator', {
+      todoListStore: this.props.route.params.todoListStore,
+      readingId: reading.id,
+    });
   };
 
   private onCreateTodoPressed = () => {

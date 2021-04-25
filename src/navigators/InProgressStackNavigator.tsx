@@ -1,10 +1,13 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
 import { ITodoListStore } from '../../stores/TodoListStore';
 import { InProgressList } from '../screens/InProgressStackNavigatorScreens/InProgressList';
 import { MainTabNavigatorParamList } from './MainTabNavigator';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import SharedStyles from '../shared/SharedStyles';
 import { ProgressState } from '../shared/Utils';
 import UpdateTodo from '../screens/InProgressStackNavigatorScreens/UpdateTodo';
@@ -13,10 +16,11 @@ import UpdateReading from '../screens/InProgressStackNavigatorScreens/UpdateRead
 import { ExistingTodo } from '../components/TodoForm';
 import { ExistingGroup } from '../components/GroupForm';
 import { ExistingReading } from '../components/ReadingForm';
+import { RootStackNavigatorParamList } from './RootStackNavigator';
 
-type InProgressStackNavigatorNavigationProp = MaterialBottomTabNavigationProp<
-  MainTabNavigatorParamList,
-  'InProgress'
+export type InProgressStackNavigatorNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<RootStackNavigatorParamList, 'MainTabNavigator'>,
+  MaterialBottomTabNavigationProp<MainTabNavigatorParamList, 'InProgress'>
 >;
 
 type InProgressStackNavigatorRouteProp = RouteProp<

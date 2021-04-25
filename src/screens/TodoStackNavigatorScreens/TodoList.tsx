@@ -5,9 +5,10 @@ import DisplayList, { IDisplayItemSection } from '../../components/DisplayList';
 import { formatSections, ProgressState } from '../../shared/Utils';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { TodoStackNavigatorParamList } from '../../navigators/TodoStackNavigator';
-import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
-import { MainTabNavigatorParamList } from '../../navigators/MainTabNavigator';
+import {
+  TodoStackNavigatorNavigationProp,
+  TodoStackNavigatorParamList,
+} from '../../navigators/TodoStackNavigator';
 import { RouteProp } from '@react-navigation/native';
 import SharedStyles from '../../shared/SharedStyles';
 import { View } from 'react-native';
@@ -18,7 +19,7 @@ import { IReading } from '../../../db/Readings';
 
 type TodoListScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<TodoStackNavigatorParamList, 'TodoList'>,
-  MaterialBottomTabNavigationProp<MainTabNavigatorParamList>
+  TodoStackNavigatorNavigationProp
 >;
 
 type TodoListScreenRouteProp = RouteProp<
@@ -76,6 +77,8 @@ export class TodoList extends React.Component<IProps> {
         <DisplayList
           todoListStore={this.props.route.params.todoListStore}
           data={toJS(this.todoListData)}
+          onGroupPressed={this.onGroupPressed}
+          onReadingPressed={this.onReadingPressed}
           progressState={ProgressState.Pending}
           onEditTodoPressed={this.onEditTodoPressed}
           onEditGroupPressed={this.onEditGroupPressed}
@@ -110,6 +113,22 @@ export class TodoList extends React.Component<IProps> {
       progressState: ProgressState.Pending,
     });
     this.closeFAB();
+  };
+
+  private onGroupPressed = (group: IGroup) => {
+    console.log('Group Pressed');
+    this.props.navigation.navigate('ChildTabNavigator', {
+      todoListStore: this.props.route.params.todoListStore,
+      groupId: group.id,
+    });
+  };
+
+  private onReadingPressed = (reading: IReading) => {
+    console.log('Reading Pressed');
+    this.props.navigation.navigate('ChildTabNavigator', {
+      todoListStore: this.props.route.params.todoListStore,
+      readingId: reading.id,
+    });
   };
 
   private onEditTodoPressed = (todo: ITodo) => {
