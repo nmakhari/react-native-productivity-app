@@ -8,7 +8,9 @@ interface IProps {
   onClosePressed: () => void;
   onTodoPressed?: () => void;
   onGroupPressed?: () => void;
+  onGroupTodoPressed?: () => void;
   onReadingPressed?: () => void;
+  onReadingTodoPressed?: () => void;
 }
 
 const AddItemFABGroup: React.FunctionComponent<IProps> = ({
@@ -17,7 +19,9 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
   onClosePressed,
   onTodoPressed,
   onGroupPressed,
+  onGroupTodoPressed,
   onReadingPressed,
+  onReadingTodoPressed,
 }) => {
   const actions = [];
   if (onTodoPressed) {
@@ -49,6 +53,27 @@ const AddItemFABGroup: React.FunctionComponent<IProps> = ({
       small: false,
     });
   }
+
+  if (onGroupTodoPressed) {
+    actions.push({
+      icon: 'format-list-checkbox',
+      label: 'Todo',
+      color: Colors.secondaryGreen,
+      onPress: onGroupTodoPressed,
+      small: false,
+    });
+  }
+
+  if (onReadingTodoPressed) {
+    actions.push({
+      icon: 'book-open-page-variant',
+      label: 'Todo',
+      color: Colors.secondaryGreen,
+      onPress: onReadingTodoPressed,
+      small: false,
+    });
+  }
+
   return (
     <Provider>
       <Portal>
