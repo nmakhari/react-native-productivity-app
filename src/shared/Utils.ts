@@ -17,6 +17,8 @@ export enum SectionTitles {
   Groups = 'Groups',
   Todos = 'Todos',
   Readings = 'Readings',
+  GroupTodos = 'GroupTodos',
+  ReadingTodos = 'ReadingTodos',
 }
 
 export function getTodoState(genericTodo: GenericTodo): ProgressState {
@@ -34,6 +36,8 @@ export function formatSections(
   todos?: Realm.Results<ITodo>,
   groups?: Realm.Results<IGroup>,
   readings?: Realm.Results<IReading>,
+  groupTodos?: Realm.Results<IGroupTodo>,
+  readingTodos?: Realm.Results<IReadingTodo>,
 ): IDisplayItemSection[] {
   let ret: IDisplayItemSection[] = [];
 
@@ -73,5 +77,28 @@ export function formatSections(
     ret.push(section);
   }
 
+  if (groupTodos && groupTodos.length > 0) {
+    let section: IDisplayItemSection = {
+      title: SectionTitles.GroupTodos.toString(),
+      data: [],
+    };
+    groupTodos.forEach((groupTodo) => {
+      section.data.push(groupTodo);
+    });
+
+    ret.push(section);
+  }
+
+  if (readingTodos && readingTodos.length > 0) {
+    let section: IDisplayItemSection = {
+      title: SectionTitles.ReadingTodos.toString(),
+      data: [],
+    };
+    readingTodos.forEach((readingTodo) => {
+      section.data.push(readingTodo);
+    });
+
+    ret.push(section);
+  }
   return ret;
 }
