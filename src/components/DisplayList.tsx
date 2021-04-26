@@ -54,6 +54,8 @@ interface IProps {
   onEditTodoPressed: (todo: ITodo) => void;
   onEditGroupPressed: (group: IGroup) => void;
   onEditReadingPressed: (reading: IReading) => void;
+  onEditGroupTodoPressed: (groupTodo: IGroupTodo) => void;
+  onEditReadingTodoPressed: (readingTodo: IReadingTodo) => void;
 }
 
 // contentContainerStyle on SectionList needs to be set to flexGrow 1 in order
@@ -138,6 +140,8 @@ export default class DisplayList extends React.Component<IProps> {
       onEditTodoPressed,
       onEditGroupPressed,
       onEditReadingPressed,
+      onEditGroupTodoPressed,
+      onEditReadingTodoPressed,
     } = this.props;
     switch (section.title) {
       case SectionTitles.Groups.toString():
@@ -203,10 +207,10 @@ export default class DisplayList extends React.Component<IProps> {
             }}
             progressState={progressState}
             onEditPressed={() => {
-              console.log('ON GROUP TODO EDIT CHANGEME');
+              onEditGroupTodoPressed(item as IGroupTodo);
             }}
             onDeletePressed={() => {
-              console.log('ON GROUP TODO DELETE CHANGEME');
+              todoListStore.deleteGroupTodo(item.id);
             }}
           />
         );
@@ -219,10 +223,10 @@ export default class DisplayList extends React.Component<IProps> {
             }}
             progressState={progressState}
             onEditPressed={() => {
-              console.log('ON READING TODO EDIT CHANGEME');
+              onEditReadingTodoPressed(item as IReadingTodo);
             }}
             onDeletePressed={() => {
-              console.log('ON READING TODO DELETE CHANGEME');
+              todoListStore.deleteReadingTodo(item.id);
             }}
           />
         );

@@ -83,6 +83,8 @@ export class TodoList extends React.Component<IProps> {
           onEditTodoPressed={this.onEditTodoPressed}
           onEditGroupPressed={this.onEditGroupPressed}
           onEditReadingPressed={this.onEditReadingPressed}
+          onEditGroupTodoPressed={() => {}}
+          onEditReadingTodoPressed={() => {}}
         />
         <AddItemFABGroup
           open={this.isFABOpen}
