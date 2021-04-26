@@ -29,6 +29,18 @@ export interface ITodoListStore {
   readonly completedGroups: Realm.Results<IGroup & Realm.Object>;
   readonly completedReadings: Realm.Results<IReading & Realm.Object>;
 
+  getPendingGroupTodos(
+    groupId: number,
+  ): Realm.Results<IGroupTodo & Realm.Object>;
+  getInProgressGroupTodos(
+    groupId: number,
+  ): Realm.Results<IGroupTodo & Realm.Object>;
+  getCompletedGroupTodos(
+    groupId: number,
+  ): Realm.Results<IGroupTodo & Realm.Object>;
+
+  // Mirror for reading todos
+
   createTodo(name: string, description?: string): ITodo | undefined;
   getTodo(id: number): ITodo | undefined;
   updateTodo(todo: ITodo): ITodo | undefined;
@@ -852,5 +864,38 @@ export class TodoListStore implements ITodoListStore {
     return this.readings.filtered(
       'SUBQUERY(readings, $reading, $reading.done = true AND $reading.in_progress = false).@count > 0 OR pagesComplete = pagesTotal SORT(id DESC)',
     );
+  }
+
+  getPendingGroupTodos(
+    groupId: number,
+  ): Realm.Results<IGroupTodo & Realm.Object> {
+    return realm
+      .objects<IGroupTodo>(GroupTodoSchema.name)
+      .filtered(
+        'SUBQUERY(group, $parent, $parent.id = $0) AND in_progress = false AND done = false SORT(id DESC)',
+        groupId,
+      );
+  }
+
+  getInProgressGroupTodos(
+    groupId: number,
+  ): Realm.Results<IGroupTodo & Realm.Object> {
+    return realm
+      .objects<IGroupTodo>(GroupTodoSchema.name)
+      .filtered(
+        'SUBQUERY(group, $parent, $parent.id = $0) AND in_progress = true AND done = false SORT(id DESC)',
+        groupId,
+      );
+  }
+
+  getCompletedGroupTodos(
+    groupId: number,
+  ): Realm.Results<IGroupTodo & Realm.Object> {
+    return realm
+      .objects<IGroupTodo>(GroupTodoSchema.name)
+      .filtered(
+        'SUBQUERY(group, $parent, $parent.id = $0) AND in_progress = false AND done = true SORT(id DESC)',
+        groupId,
+      );
   }
 }

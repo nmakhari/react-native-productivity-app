@@ -14,6 +14,7 @@ interface IProps {
   onEditPressed: () => void;
   onDeletePressed: () => void;
 }
+
 const TodoCard: FunctionComponent<IProps> = ({
   todo,
   onPress,
