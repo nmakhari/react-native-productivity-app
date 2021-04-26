@@ -10,8 +10,8 @@ import {
   Dimensions,
 } from 'react-native';
 import { Colors } from '../shared/Colors';
-import { IGroup } from '../../db/Groups';
-import { IReading } from '../../db/Readings';
+import { IGroup, IGroupTodo } from '../../db/Groups';
+import { IReading, IReadingTodo } from '../../db/Readings';
 import { ITodo } from '../../db/Todo';
 import { ProgressState, SectionTitles } from '../shared/Utils';
 import TodoCard from '../components/TodoCard';
@@ -22,6 +22,8 @@ import DisplayItem from './DisplayItem';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import { ITodoListStore } from '../../stores/TodoListStore';
+import GroupTodoCard from './GroupTodoCard';
+import ReadingTodoCard from './ReadingTodoCard';
 
 export type DisplayItemType = IGroup | IReading | ITodo;
 
@@ -174,7 +176,7 @@ export default class DisplayList extends React.Component<IProps> {
             }}
           />
         );
-      default:
+      case SectionTitles.Readings.toString():
         return (
           <ReadingCard
             reading={item as IReading}
@@ -189,6 +191,38 @@ export default class DisplayList extends React.Component<IProps> {
             }}
             onDeletePressed={() => {
               todoListStore.deleteReading(item.id);
+            }}
+          />
+        );
+      case SectionTitles.GroupTodos.toString():
+        return (
+          <GroupTodoCard
+            groupTodo={item as IGroupTodo}
+            onPress={() => {
+              console.log('ON GROUP TODO PRESSED CHANGEME');
+            }}
+            progressState={progressState}
+            onEditPressed={() => {
+              console.log('ON GROUP TODO EDIT CHANGEME');
+            }}
+            onDeletePressed={() => {
+              console.log('ON GROUP TODO DELETE CHANGEME');
+            }}
+          />
+        );
+      default:
+        return (
+          <ReadingTodoCard
+            readingTodo={item as IReadingTodo}
+            onPress={() => {
+              console.log('ON READING TODO PRESSED CHANGEME');
+            }}
+            progressState={progressState}
+            onEditPressed={() => {
+              console.log('ON READING TODO EDIT CHANGEME');
+            }}
+            onDeletePressed={() => {
+              console.log('ON READING TODO DELETE CHANGEME');
             }}
           />
         );
