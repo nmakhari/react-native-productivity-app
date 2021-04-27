@@ -3,16 +3,19 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import GroupTodoForm from '../../components/GroupTodoForm';
+import { ChildInProgressStackNavigatorParamList } from '../../navigators/ChildInProgressStackNavigator';
 import { ChildTabNavigatorParamList } from '../../navigators/ChildTabNavigator';
-import { ChildTodoStackNavigatorParamList } from '../../navigators/ChildTodoStackNavigator';
 
 type UpdateGroupTodoScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<ChildTodoStackNavigatorParamList, 'UpdateGroupTodo'>,
+  StackNavigationProp<
+    ChildInProgressStackNavigatorParamList,
+    'UpdateGroupTodo'
+  >,
   MaterialBottomTabNavigationProp<ChildTabNavigatorParamList>
 >;
 
 type UpdateTodoScreenRouteProp = RouteProp<
-  ChildTodoStackNavigatorParamList,
+  ChildInProgressStackNavigatorParamList,
   'UpdateGroupTodo'
 >;
 
