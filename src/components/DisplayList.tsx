@@ -205,6 +205,7 @@ export default class DisplayList extends React.Component<IProps> {
             onPress={() => {
               console.log('ON GROUP TODO PRESSED CHANGEME');
             }}
+            onSwipableLeftOpen={this.getProceedGroupTodo(item as IGroupTodo)}
             progressState={progressState}
             onEditPressed={() => {
               onEditGroupTodoPressed(item as IGroupTodo);
@@ -221,6 +222,9 @@ export default class DisplayList extends React.Component<IProps> {
             onPress={() => {
               console.log('ON READING TODO PRESSED CHANGEME');
             }}
+            onSwipableLeftOpen={this.getProceedReadingTodo(
+              item as IReadingTodo,
+            )}
             progressState={progressState}
             onEditPressed={() => {
               onEditReadingTodoPressed(item as IReadingTodo);
@@ -249,6 +253,40 @@ export default class DisplayList extends React.Component<IProps> {
       case ProgressState.InProgress:
         return () => {
           todoListStore.toggleTodoDoneState(todo.id);
+        };
+      default:
+    }
+    return;
+  }
+
+  private getProceedGroupTodo(groupTodo: IGroupTodo): (() => void) | undefined {
+    const { progressState, todoListStore } = this.props;
+    switch (progressState) {
+      case ProgressState.Pending:
+        return () => {
+          todoListStore.toggleGroupTodoProgressState(groupTodo.id);
+        };
+      case ProgressState.InProgress:
+        return () => {
+          todoListStore.toggleGroupTodoDoneState(groupTodo.id);
+        };
+      default:
+    }
+    return;
+  }
+
+  private getProceedReadingTodo(
+    readingTodo: IReadingTodo,
+  ): (() => void) | undefined {
+    const { progressState, todoListStore } = this.props;
+    switch (progressState) {
+      case ProgressState.Pending:
+        return () => {
+          todoListStore.toggleReadingTodoProgressState(readingTodo.id);
+        };
+      case ProgressState.InProgress:
+        return () => {
+          todoListStore.toggleReadingTodoDoneState(readingTodo.id);
         };
       default:
     }

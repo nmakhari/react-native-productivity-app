@@ -107,17 +107,33 @@ const GroupTodoForm: React.FunctionComponent<IProps> = ({
         isValid,
       }) => (
         <View style={SharedStyles.screenRoot}>
-          <TextInput
-            onChangeText={handleChange('name')}
-            onBlur={handleBlur('name')}
-            value={values.name}
-            placeholder="Task"
-            placeholderTextColor={Colors.textInputPlaceholder}
-            style={Styles.titleText}
-          />
-          {errors.name && (
-            <Text style={SharedStyles.formErrorText}>{errors.name}</Text>
-          )}
+          <View>
+            <TextInput
+              onChangeText={handleChange('name')}
+              onBlur={handleBlur('name')}
+              value={values.name}
+              placeholder="Task"
+              placeholderTextColor={Colors.textInputPlaceholder}
+              style={Styles.titleText}
+            />
+            {errors.name && (
+              <Text style={SharedStyles.formErrorText}>{errors.name}</Text>
+            )}
+
+            <TextInput
+              keyboardType="numeric"
+              onChangeText={handleChange('points')}
+              onBlur={handleBlur('points')}
+              value={values.points.toString()}
+              placeholder="Point Value"
+              placeholderTextColor={Colors.textInputPlaceholder}
+              style={Styles.secondaryText}
+              multiline={false}
+            />
+            {errors.points && (
+              <Text style={SharedStyles.formErrorText}>{errors.points}</Text>
+            )}
+          </View>
 
           {existingGroupTodo && (
             <RadioButton.Group
@@ -156,20 +172,6 @@ const GroupTodoForm: React.FunctionComponent<IProps> = ({
                 uncheckedColor={Colors.primaryGreyLight}
               />
             </RadioButton.Group>
-          )}
-
-          <TextInput
-            keyboardType="numeric"
-            onChangeText={handleChange('points')}
-            onBlur={handleBlur('points')}
-            value={values.points.toString()}
-            placeholder="Point Value"
-            placeholderTextColor={Colors.textInputPlaceholder}
-            style={Styles.secondaryText}
-            multiline={false}
-          />
-          {errors.points && (
-            <Text style={SharedStyles.formErrorText}>{errors.points}</Text>
           )}
 
           <BasicButton

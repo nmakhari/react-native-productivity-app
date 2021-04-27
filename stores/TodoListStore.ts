@@ -324,7 +324,9 @@ export class TodoListStore implements ITodoListStore {
     if (selectedGroup) {
       let id = 1;
 
-      const currentGroupTodos = selectedGroup.items.sorted('id', true);
+      const currentGroupTodos = realm
+        .objects<IGroupTodo>(GroupTodoSchema.name)
+        .sorted('id', true);
 
       if (currentGroupTodos.length > 0) {
         id = currentGroupTodos[0].id + 1;
@@ -373,9 +375,22 @@ export class TodoListStore implements ITodoListStore {
 
   updateGroupTodo(groupTodo: IGroupTodo): IGroupTodo | undefined {
     try {
+      const prevState = this.getGroupTodo(groupTodo.id);
+      if (!prevState) {
+        return;
+      }
+
+      // use predefined methods to propagate completion to parent
+      const { done, in_progress } = prevState;
+      if (in_progress !== groupTodo.in_progress) {
+        this.toggleGroupTodoProgressState(groupTodo.id);
+      }
+
+      if (done !== groupTodo.done) {
+        this.toggleGroupTodoDoneState(groupTodo.id);
+      }
+
       realm.write(() => {
-        // TODO: This might not work correctly, if it doesn't update the group items, a group will need to be passed in and it's item
-        // must be searched for this group todo and then that index must be replaced with this, updated, grouptodo
         realm.create(
           GroupTodoSchema.name,
           groupTodo,
@@ -606,7 +621,9 @@ export class TodoListStore implements ITodoListStore {
     if (selectedReading) {
       let id = 1;
 
-      const currentReadingTodos = selectedReading.readings.sorted('id', true);
+      const currentReadingTodos = realm
+        .objects<IReadingTodo>(ReadingTodoSchema.name)
+        .sorted('id', true);
 
       if (currentReadingTodos.length > 0) {
         id = currentReadingTodos[0].id + 1;
@@ -654,8 +671,21 @@ export class TodoListStore implements ITodoListStore {
   }
 
   updateReadingTodo(readingTodo: IReadingTodo): IReadingTodo | undefined {
-    // TODO: If this doesn't work, do the same as specifiec for GroupTodo update
     try {
+      const prevState = this.getReadingTodo(readingTodo.id);
+      if (!prevState) {
+        return;
+      }
+      // use predefined methods to propagate completion to parent
+      const { done, in_progress } = prevState;
+      if (in_progress !== readingTodo.in_progress) {
+        this.toggleReadingTodoProgressState(readingTodo.id);
+      }
+
+      if (done !== readingTodo.done) {
+        this.toggleReadingTodoDoneState(readingTodo.id);
+      }
+
       realm.write(() => {
         realm.create(
           ReadingTodoSchema.name,
@@ -872,7 +902,7 @@ export class TodoListStore implements ITodoListStore {
     return realm
       .objects<IGroupTodo>(GroupTodoSchema.name)
       .filtered(
-        'SUBQUERY(group, $parent, $parent.id = $0) AND in_progress = false AND done = false SORT(id DESC)',
+        'group.id = $0 AND in_progress = false AND done = false SORT(id DESC)',
         groupId,
       );
   }
@@ -883,7 +913,7 @@ export class TodoListStore implements ITodoListStore {
     return realm
       .objects<IGroupTodo>(GroupTodoSchema.name)
       .filtered(
-        'SUBQUERY(group, $parent, $parent.id = $0) AND in_progress = true AND done = false SORT(id DESC)',
+        'group.id = $0 AND in_progress = true AND done = false SORT(id DESC)',
         groupId,
       );
   }
@@ -894,7 +924,7 @@ export class TodoListStore implements ITodoListStore {
     return realm
       .objects<IGroupTodo>(GroupTodoSchema.name)
       .filtered(
-        'SUBQUERY(group, $parent, $parent.id = $0) AND in_progress = false AND done = true SORT(id DESC)',
+        'group.id = $0 AND in_progress = false AND done = true SORT(id DESC)',
         groupId,
       );
   }
