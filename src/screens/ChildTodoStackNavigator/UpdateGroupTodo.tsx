@@ -11,14 +11,14 @@ type UpdateGroupTodoScreenNavigationProp = CompositeNavigationProp<
   MaterialBottomTabNavigationProp<ChildTabNavigatorParamList>
 >;
 
-type UpdateTodoScreenRouteProp = RouteProp<
+type UpdateGroupTodoScreenRouteProp = RouteProp<
   ChildTodoStackNavigatorParamList,
   'UpdateGroupTodo'
 >;
 
 interface IProps {
   navigation: UpdateGroupTodoScreenNavigationProp;
-  route: UpdateTodoScreenRouteProp;
+  route: UpdateGroupTodoScreenRouteProp;
 }
 
 const UpdateGroupTodo: React.FunctionComponent<IProps> = ({

@@ -3,48 +3,54 @@ import { ProgressState } from '../shared/Utils';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import React from 'react';
-import { IGroup, IGroupTodo } from '../../db/Groups';
 import SharedStyles from '../shared/SharedStyles';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { Colors } from '../shared/Colors';
 import { RadioButton } from 'react-native-paper';
 import BasicButton from './BasicButton';
+import { IReading, IReadingTodo } from '../../db/Readings';
 
-export type ExistingGroupTodo = {
+export type ExistingReadingTodo = {
   id: number;
-  group: IGroup;
+  reading: IReading;
   initialValues: GroupTodoFormValues;
 };
 
 export type GroupTodoFormValues = {
   name: string;
-  points: string;
+  pageStart: string;
+  pageEnd: string;
 };
 
 interface IProps {
   todoListStore: ITodoListStore;
-  parentGroupId: number;
+  parentReadingId: number;
   progressState: ProgressState;
   onFormSubmit: () => void;
-  existingGroupTodo?: ExistingGroupTodo;
+  existingReadingTodo?: ExistingReadingTodo;
 }
 
 const schema = yup.object().shape({
   name: yup.string().required('Task Name is Required'),
-  points: yup
+  pageStart: yup
     .number()
-    .integer('Point Value must be an Integer')
-    .moreThan(-1, 'Enter a valid Point Value')
-    .max(50, 'Task Point Value should be <= 50')
-    .required('Task Point Value is Required'),
+    .integer('Start Page must be an Integer')
+    .moreThan(-1, 'Enter a valid start page')
+    .max(150, 'Task Point Value should be <= 150')
+    .required('Start Page is Required'),
+  pageEnd: yup
+    .number()
+    .integer('End Page must be an Integer')
+    .moreThan(yup.ref('pageStart'), 'End Page must be after start')
+    .required('End Page is required'),
 });
 
-const GroupTodoForm: React.FunctionComponent<IProps> = ({
+const ReadingTodoForm: React.FunctionComponent<IProps> = ({
   todoListStore,
-  parentGroupId,
+  parentReadingId,
   progressState,
   onFormSubmit,
-  existingGroupTodo,
+  existingReadingTodo,
 }) => {
   const [progress, setProgress] = React.useState(progressState);
 
@@ -52,46 +58,53 @@ const GroupTodoForm: React.FunctionComponent<IProps> = ({
     <Formik
       validationSchema={schema}
       initialValues={
-        existingGroupTodo?.initialValues ?? { name: '', points: '' }
+        existingReadingTodo?.initialValues ?? {
+          name: '',
+          pageStart: '',
+          pageEnd: '',
+        }
       }
       onSubmit={(values) => {
-        const pointValue = values.points ? parseInt(values.points, 10) : 0;
+        const pageStart = values.pageStart ? parseInt(values.pageStart, 10) : 0;
+        const pageEnd = values.pageEnd ? parseInt(values.pageEnd, 10) : 0;
 
-        if (existingGroupTodo) {
-          const updatedGroupTodo: IGroupTodo = {
-            id: existingGroupTodo.id,
+        if (existingReadingTodo) {
+          const updatedReadingTodo: IReadingTodo = {
+            id: existingReadingTodo.id,
             name: values.name,
-            group: existingGroupTodo.group,
-            points: pointValue,
+            reading: existingReadingTodo.reading,
+            pageStart: pageStart,
+            pageEnd: pageEnd,
             done: false,
             in_progress: false,
           };
           switch (progress) {
             case ProgressState.Complete:
-              updatedGroupTodo.done = true;
+              updatedReadingTodo.done = true;
               break;
             case ProgressState.InProgress:
-              updatedGroupTodo.in_progress = true;
+              updatedReadingTodo.in_progress = true;
               break;
           }
-          todoListStore.updateGroupTodo(updatedGroupTodo);
+          todoListStore.updateReadingTodo(updatedReadingTodo);
           onFormSubmit();
           return;
         }
-        const parentGroup = todoListStore.getGroup(parentGroupId);
-        if (parentGroup) {
-          const newGroupTodo = todoListStore.createGroupTodo(
+        const parentReading = todoListStore.getReading(parentReadingId);
+        if (parentReading) {
+          const newReadingTodo = todoListStore.createReadingTodo(
             values.name,
-            pointValue,
-            parentGroup,
+            pageStart,
+            pageEnd,
+            parentReading,
           );
-          if (newGroupTodo) {
+          if (newReadingTodo) {
             switch (progressState) {
               case ProgressState.Complete:
-                todoListStore.toggleGroupTodoDoneState(newGroupTodo.id);
+                todoListStore.toggleReadingTodoDoneState(newReadingTodo.id);
                 break;
               case ProgressState.InProgress:
-                todoListStore.toggleGroupTodoProgressState(newGroupTodo.id);
+                todoListStore.toggleReadingTodoProgressState(newReadingTodo.id);
                 break;
             }
           }
@@ -122,20 +135,34 @@ const GroupTodoForm: React.FunctionComponent<IProps> = ({
 
             <TextInput
               keyboardType="numeric"
-              onChangeText={handleChange('points')}
-              onBlur={handleBlur('points')}
-              value={values.points}
-              placeholder="Point Value"
+              onChangeText={handleChange('pageStart')}
+              onBlur={handleBlur('pageStart')}
+              value={values.pageStart}
+              placeholder="Start Page"
               placeholderTextColor={Colors.textInputPlaceholder}
               style={Styles.secondaryText}
               multiline={false}
             />
-            {errors.points && (
-              <Text style={SharedStyles.formErrorText}>{errors.points}</Text>
+            {errors.pageStart && (
+              <Text style={SharedStyles.formErrorText}>{errors.pageStart}</Text>
+            )}
+
+            <TextInput
+              keyboardType="numeric"
+              onChangeText={handleChange('pageEnd')}
+              onBlur={handleBlur('pageEnd')}
+              value={values.pageEnd}
+              placeholder="End Page"
+              placeholderTextColor={Colors.textInputPlaceholder}
+              style={Styles.secondaryText}
+              multiline={false}
+            />
+            {errors.pageEnd && (
+              <Text style={SharedStyles.formErrorText}>{errors.pageEnd}</Text>
             )}
           </View>
 
-          {existingGroupTodo && (
+          {existingReadingTodo && (
             <RadioButton.Group
               onValueChange={(value) => {
                 switch (value) {
@@ -175,7 +202,7 @@ const GroupTodoForm: React.FunctionComponent<IProps> = ({
           )}
 
           <BasicButton
-            title={existingGroupTodo ? 'Update' : 'Create'}
+            title={existingReadingTodo ? 'Update' : 'Create'}
             onPress={handleSubmit}
             disabled={!isValid}
             style={Styles.button}
@@ -186,7 +213,7 @@ const GroupTodoForm: React.FunctionComponent<IProps> = ({
   );
 };
 
-export default GroupTodoForm;
+export default ReadingTodoForm;
 
 const Styles = StyleSheet.create({
   titleText: {

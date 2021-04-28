@@ -47,9 +47,9 @@ export class ChildTodoList extends React.Component<IProps> {
       if (groupId && groupId > -1) {
         this.groupTodos = todoListStore.getPendingGroupTodos(groupId);
       }
-      // if (readingId && readingId > -1) {
-      //     this.readings = todoListStore.getPendingReadings(readingId);
-      // }
+      if (readingId && readingId > -1) {
+        this.readingTodos = todoListStore.getPendingReadingTodos(readingId);
+      }
       this.todoListData = formatSections(
         undefined,
         undefined,
@@ -126,6 +126,13 @@ export class ChildTodoList extends React.Component<IProps> {
 
   private onCreateReadingTodoPressed = () => {
     console.log('Create Reading Todo Pressed');
+    const { todoListStore, readingId } = this.props.route.params;
+    this.props.navigation.navigate('UpdateReadingTodo', {
+      todoListStore: todoListStore,
+      progressState: ProgressState.Pending,
+      parentReadingId: readingId ?? -1,
+    });
+    this.closeFAB();
   };
 
   private onEditGroupTodoPressed = (groupTodo: IGroupTodo) => {
@@ -148,11 +155,22 @@ export class ChildTodoList extends React.Component<IProps> {
 
   private onEditReadingTodoPressed = (readingTodo: IReadingTodo) => {
     console.log('Edit reading todo pressed');
+    const { todoListStore, readingId } = this.props.route.params;
+    this.props.navigation.navigate('UpdateReadingTodo', {
+      todoListStore: todoListStore,
+      parentReadingId: readingId ?? -1,
+      progressState: ProgressState.Pending,
+      existingReadingTodo: {
+        id: readingTodo.id,
+        reading: readingTodo.reading,
+        initialValues: {
+          name: readingTodo.name,
+          pageStart: readingTodo.pageStart.toString(),
+          pageEnd: readingTodo.pageEnd.toString(),
+        },
+      },
+    });
   };
-
-  // on delete group todo pressed
-
-  // on delete reading todo pressed
 
   @action
   private onDataChanged(): void {

@@ -31,7 +31,7 @@ const ReadingTodoCard: FunctionComponent<IProps> = ({
       title={readingTodo.name}
       rightContent={
         <Text style={Styles.pointText}>
-          {readingTodo.pageStart} + {readingTodo.pageEnd}
+          {readingTodo.pageStart} - {readingTodo.pageEnd}
         </Text>
       }
       onPress={onPressTriggered}

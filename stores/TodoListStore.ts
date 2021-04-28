@@ -39,7 +39,15 @@ export interface ITodoListStore {
     groupId: number,
   ): Realm.Results<IGroupTodo & Realm.Object>;
 
-  // Mirror for reading todos
+  getPendingReadingTodos(
+    readingId: number,
+  ): Realm.Results<IReadingTodo & Realm.Object>;
+  getInProgressReadingTodos(
+    readingId: number,
+  ): Realm.Results<IReadingTodo & Realm.Object>;
+  getCompletedReadingTodos(
+    readingId: number,
+  ): Realm.Results<IReadingTodo & Realm.Object>;
 
   createTodo(name: string, description?: string): ITodo | undefined;
   getTodo(id: number): ITodo | undefined;
@@ -926,6 +934,37 @@ export class TodoListStore implements ITodoListStore {
       .filtered(
         'group.id = $0 AND in_progress = false AND done = true SORT(id DESC)',
         groupId,
+      );
+  }
+
+  getPendingReadingTodos(
+    readingId: number,
+  ): Realm.Results<IReadingTodo & Realm.Object> {
+    return realm
+      .objects<IReadingTodo>(ReadingTodoSchema.name)
+      .filtered(
+        'reading.id = $0 AND in_progress = false AND done = false SORT(id desc)',
+        readingId,
+      );
+  }
+  getInProgressReadingTodos(
+    readingId: number,
+  ): Realm.Results<IReadingTodo & Realm.Object> {
+    return realm
+      .objects<IReadingTodo>(ReadingTodoSchema.name)
+      .filtered(
+        'reading.id = $0 AND in_progress = true AND done = false SORT(id desc)',
+        readingId,
+      );
+  }
+  getCompletedReadingTodos(
+    readingId: number,
+  ): Realm.Results<IReadingTodo & Realm.Object> {
+    return realm
+      .objects<IReadingTodo>(ReadingTodoSchema.name)
+      .filtered(
+        'reading.id = $0 AND in_progress = false AND done = true SORT(id desc)',
+        readingId,
       );
   }
 }
