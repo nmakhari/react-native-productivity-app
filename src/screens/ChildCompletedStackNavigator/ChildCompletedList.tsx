@@ -87,12 +87,7 @@ export class ChildCompletedList extends React.Component<IProps> {
         <DisplayList
           todoListStore={this.props.route.params.todoListStore}
           data={toJS(this.todoListData)}
-          onGroupPressed={() => {}}
-          onReadingPressed={() => {}}
           progressState={ProgressState.Complete}
-          onEditTodoPressed={() => {}}
-          onEditGroupPressed={() => {}}
-          onEditReadingPressed={() => {}}
           onEditGroupTodoPressed={this.onEditGroupTodoPressed}
           onEditReadingTodoPressed={this.onEditReadingTodoPressed}
         />

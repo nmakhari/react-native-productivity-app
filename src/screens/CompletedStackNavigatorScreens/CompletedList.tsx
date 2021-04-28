@@ -79,8 +79,6 @@ export class CompletedList extends React.Component<IProps> {
           onEditTodoPressed={this.onEditTodoPressed}
           onEditGroupPressed={this.onEditGroupPressed}
           onEditReadingPressed={this.onEditReadingPressed}
-          onEditGroupTodoPressed={() => {}}
-          onEditReadingTodoPressed={() => {}}
         />
       </View>
     );

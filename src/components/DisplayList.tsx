@@ -49,13 +49,13 @@ interface IProps {
   data: IDisplayItemSection[];
   progressState: ProgressState;
   todoListStore: ITodoListStore;
-  onGroupPressed: (group: IGroup) => void;
-  onReadingPressed: (reading: IReading) => void;
-  onEditTodoPressed: (todo: ITodo) => void;
-  onEditGroupPressed: (group: IGroup) => void;
-  onEditReadingPressed: (reading: IReading) => void;
-  onEditGroupTodoPressed: (groupTodo: IGroupTodo) => void;
-  onEditReadingTodoPressed: (readingTodo: IReadingTodo) => void;
+  onGroupPressed?: (group: IGroup) => void;
+  onReadingPressed?: (reading: IReading) => void;
+  onEditTodoPressed?: (todo: ITodo) => void;
+  onEditGroupPressed?: (group: IGroup) => void;
+  onEditReadingPressed?: (reading: IReading) => void;
+  onEditGroupTodoPressed?: (groupTodo: IGroupTodo) => void;
+  onEditReadingTodoPressed?: (readingTodo: IReadingTodo) => void;
 }
 
 // contentContainerStyle on SectionList needs to be set to flexGrow 1 in order
@@ -148,14 +148,16 @@ export default class DisplayList extends React.Component<IProps> {
         return (
           <GroupCard
             group={item as IGroup}
-            onPress={onGroupPressed}
+            onPress={onGroupPressed ?? (() => {})}
             onLongPress={(group: IGroup) => {
               this.setModalDataGroup(group);
               this.openModal();
             }}
             progressState={progressState}
             onEditPressed={() => {
-              onEditGroupPressed(item as IGroup);
+              if (onEditGroupPressed) {
+                onEditGroupPressed(item as IGroup);
+              }
             }}
             onDeletePressed={() => {
               todoListStore.deleteGroup(item.id);
@@ -173,7 +175,9 @@ export default class DisplayList extends React.Component<IProps> {
             progressState={progressState}
             onSwipableLeftOpen={this.getProceedTodo(item as ITodo)}
             onEditPressed={() => {
-              onEditTodoPressed(item as ITodo);
+              if (onEditTodoPressed) {
+                onEditTodoPressed(item as ITodo);
+              }
             }}
             onDeletePressed={() => {
               todoListStore.deleteTodo(item.id);
@@ -184,14 +188,16 @@ export default class DisplayList extends React.Component<IProps> {
         return (
           <ReadingCard
             reading={item as IReading}
-            onPress={onReadingPressed}
+            onPress={onReadingPressed ?? (() => {})}
             onLongPress={(reading: IReading) => {
               this.setModalDataReading(reading);
               this.openModal();
             }}
             progressState={progressState}
             onEditPressed={() => {
-              onEditReadingPressed(item as IReading);
+              if (onEditReadingPressed) {
+                onEditReadingPressed(item as IReading);
+              }
             }}
             onDeletePressed={() => {
               todoListStore.deleteReading(item.id);
@@ -208,7 +214,9 @@ export default class DisplayList extends React.Component<IProps> {
             onSwipableLeftOpen={this.getProceedGroupTodo(item as IGroupTodo)}
             progressState={progressState}
             onEditPressed={() => {
-              onEditGroupTodoPressed(item as IGroupTodo);
+              if (onEditGroupTodoPressed) {
+                onEditGroupTodoPressed(item as IGroupTodo);
+              }
             }}
             onDeletePressed={() => {
               todoListStore.deleteGroupTodo(item.id);
@@ -227,7 +235,9 @@ export default class DisplayList extends React.Component<IProps> {
             )}
             progressState={progressState}
             onEditPressed={() => {
-              onEditReadingTodoPressed(item as IReadingTodo);
+              if (onEditReadingTodoPressed) {
+                onEditReadingTodoPressed(item as IReadingTodo);
+              }
             }}
             onDeletePressed={() => {
               todoListStore.deleteReadingTodo(item.id);
