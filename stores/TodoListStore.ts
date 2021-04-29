@@ -877,7 +877,7 @@ export class TodoListStore implements ITodoListStore {
 
   get inProgressGroups(): Realm.Results<IGroup & Realm.Object> {
     return this.groups.filtered(
-      'SUBQUERY(items, $item, $item.done = false AND $item.in_progress = true).@count > 0 SORT(id DESC)',
+      'SUBQUERY(items, $item, $item.done = false AND $item.in_progress = true).@count > 0 OR pointsCompleted < pointsTotal SORT(id DESC)',
     );
   }
 
@@ -895,13 +895,13 @@ export class TodoListStore implements ITodoListStore {
 
   get completedGroups(): Realm.Results<IGroup & Realm.Object> {
     return this.groups.filtered(
-      'SUBQUERY(items, $item, $item.done = true AND $item.in_progress = false).@count > 0 SORT(id DESC)',
+      'SUBQUERY(items, $item, $item.done = true AND $item.in_progress = false).@count = items.@count AND pointsCompleted = pointsTotal SORT(id DESC)',
     );
   }
 
   get completedReadings(): Realm.Results<IReading & Realm.Object> {
     return this.readings.filtered(
-      'SUBQUERY(readings, $reading, $reading.done = true AND $reading.in_progress = false).@count > 0 OR pagesComplete = pagesTotal SORT(id DESC)',
+      'SUBQUERY(readings, $reading, $reading.done = true AND $reading.in_progress = false).@count = readings.@count AND pagesComplete = pagesTotal SORT(id DESC)',
     );
   }
 
