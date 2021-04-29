@@ -877,7 +877,7 @@ export class TodoListStore implements ITodoListStore {
 
   get inProgressGroups(): Realm.Results<IGroup & Realm.Object> {
     return this.groups.filtered(
-      'SUBQUERY(items, $item, $item.done = false AND $item.in_progress = true).@count > 0 OR pointsCompleted < pointsTotal SORT(id DESC)',
+      'SUBQUERY(items, $item, $item.done = false AND $item.in_progress = true).@count > 0 OR pointsCompleted < pointsTotal AND pointsCompleted > 0 SORT(id DESC)',
     );
   }
 
