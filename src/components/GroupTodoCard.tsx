@@ -45,5 +45,6 @@ const Styles = StyleSheet.create({
   pointText: {
     color: Colors.secondaryGreen,
     fontSize: 25,
+    paddingTop: 10,
   },
 });

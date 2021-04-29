@@ -391,11 +391,11 @@ export class TodoListStore implements ITodoListStore {
       // use predefined methods to propagate completion to parent
       const { done, in_progress } = prevState;
       if (in_progress !== groupTodo.in_progress) {
-        this.toggleGroupTodoProgressState(groupTodo.id);
+        this.toggleGroupTodoProgressState(prevState.id);
       }
 
       if (done !== groupTodo.done) {
-        this.toggleGroupTodoDoneState(groupTodo.id);
+        this.toggleGroupTodoDoneState(prevState.id);
       }
 
       realm.write(() => {
@@ -486,8 +486,9 @@ export class TodoListStore implements ITodoListStore {
         realm.write(() => {
           selectedGroupTodo.in_progress = !selectedGroupTodo.in_progress;
 
-          if (selectedGroupTodo.in_progress) {
-            selectedGroupTodo.done = false;
+          // if currently in the in progress state, make sure done is correctly toggled off
+          if (selectedGroupTodo.in_progress && selectedGroupTodo.done) {
+            this.toggleGroupTodoDoneState(selectedGroupTodo.id);
           }
         });
       } catch (error) {
@@ -687,11 +688,11 @@ export class TodoListStore implements ITodoListStore {
       // use predefined methods to propagate completion to parent
       const { done, in_progress } = prevState;
       if (in_progress !== readingTodo.in_progress) {
-        this.toggleReadingTodoProgressState(readingTodo.id);
+        this.toggleReadingTodoProgressState(prevState.id);
       }
 
       if (done !== readingTodo.done) {
-        this.toggleReadingTodoDoneState(readingTodo.id);
+        this.toggleReadingTodoDoneState(prevState.id);
       }
 
       realm.write(() => {
@@ -740,11 +741,11 @@ export class TodoListStore implements ITodoListStore {
           selectedReadingTodo.done = !selectedReadingTodo.done;
           if (selectedReadingTodo.done) {
             parentReading.pagesComplete +=
-              selectedReadingTodo.pageEnd - selectedReadingTodo.pageStart;
+              selectedReadingTodo.pageEnd - selectedReadingTodo.pageStart + 1;
             selectedReadingTodo.in_progress = false;
           } else {
             parentReading.pagesComplete -=
-              selectedReadingTodo.pageEnd - selectedReadingTodo.pageStart;
+              selectedReadingTodo.pageEnd - selectedReadingTodo.pageStart + 1;
           }
         });
       } catch (error) {
@@ -790,8 +791,8 @@ export class TodoListStore implements ITodoListStore {
       try {
         realm.write(() => {
           selectedReadingTodo.in_progress = !selectedReadingTodo.in_progress;
-          if (selectedReadingTodo.in_progress) {
-            selectedReadingTodo.done = false;
+          if (selectedReadingTodo.in_progress && selectedReadingTodo.done) {
+            this.toggleReadingTodoDoneState(selectedReadingTodo.id);
           }
         });
       } catch (error) {

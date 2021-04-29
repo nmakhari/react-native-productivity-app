@@ -13,6 +13,8 @@ import { ExistingGroupTodo } from '../components/GroupTodoForm';
 import SharedStyles from '../shared/SharedStyles';
 import UpdateGroupTodo from '../screens/ChildCompletedStackNavigator/UpdateGroupTodo';
 import { ChildCompletedList } from '../screens/ChildCompletedStackNavigator/ChildCompletedList';
+import { ExistingReadingTodo } from '../components/ReadingTodoForm';
+import UpdateReadingTodo from '../screens/ChildTodoStackNavigator/UpdateReadingTodo';
 
 export type ChildCompletedStackNavigatorNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RootStackNavigatorParamList, 'ChildTabNavigator'>,
@@ -41,12 +43,12 @@ export type ChildCompletedStackNavigatorParamList = {
     parentGroupId: number;
     existingGroupTodo?: ExistingGroupTodo;
   };
-  // UpdateReadingTodo: {
-  //     todoListStore: ITodoListStore;
-  //     progressState: ProgressState;
-  //     parentReadingId: number;
-  //     existingReadingTodo?: ExistingReadingTodo;
-  // };
+  UpdateReadingTodo: {
+    todoListStore: ITodoListStore;
+    progressState: ProgressState;
+    parentReadingId: number;
+    existingReadingTodo?: ExistingReadingTodo;
+  };
 };
 
 const Stack = createStackNavigator<ChildCompletedStackNavigatorParamList>();
@@ -82,23 +84,22 @@ const ChildCompletedStackNavigator: React.FunctionComponent<IProps> = ({
           headerTintColor: 'white',
         }}
       />
+      <Stack.Screen
+        name="UpdateReadingTodo"
+        component={UpdateReadingTodo}
+        initialParams={{
+          todoListStore: todoListStore,
+          progressState: ProgressState.Complete,
+          parentReadingId: readingId,
+        }}
+        options={{
+          title: 'Reading Todo',
+          headerStyle: SharedStyles.navHeader,
+          headerTintColor: 'white',
+        }}
+      />
     </Stack.Navigator>
   );
 };
-
-/*
-    <Stack.Screen
-        name="UpdateGroupTodo"
-        component={ChildTodoList}
-        initialParams={{ todoListStore: todoListStore, progressState: ProgressState.InProgress }}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="UpdateReadingTodo"
-        component={ChildTodoList}
-        initialParams={{ todoListStore: todoListStore, progressState: ProgressState.InProgress, parentReadingId: readingId }}
-        options={{ headerShown: false }}
-      />
-*/
 
 export default ChildCompletedStackNavigator;

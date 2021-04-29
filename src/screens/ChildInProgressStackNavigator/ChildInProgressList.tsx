@@ -50,9 +50,9 @@ export class ChildInProgressList extends React.Component<IProps> {
       if (groupId && groupId > -1) {
         this.groupTodos = todoListStore.getInProgressGroupTodos(groupId);
       }
-      // if (readingId && readingId > -1) {
-      //     this.readings = todoListStore.getPendingReadings(readingId);
-      // }
+      if (readingId && readingId > -1) {
+        this.readingTodos = todoListStore.getInProgressReadingTodos(readingId);
+      }
       this.todoListData = formatSections(
         undefined,
         undefined,
@@ -151,11 +151,22 @@ export class ChildInProgressList extends React.Component<IProps> {
 
   private onEditReadingTodoPressed = (readingTodo: IReadingTodo) => {
     console.log('Edit reading todo pressed');
+    const { todoListStore, readingId } = this.props.route.params;
+    this.props.navigation.navigate('UpdateReadingTodo', {
+      todoListStore: todoListStore,
+      parentReadingId: readingId ?? -1,
+      progressState: ProgressState.InProgress,
+      existingReadingTodo: {
+        id: readingTodo.id,
+        reading: readingTodo.reading,
+        initialValues: {
+          name: readingTodo.name,
+          pageStart: readingTodo.pageStart.toString(),
+          pageEnd: readingTodo.pageEnd.toString(),
+        },
+      },
+    });
   };
-
-  // on delete group todo pressed
-
-  // on delete reading todo pressed
 
   @action
   private onDataChanged(): void {
